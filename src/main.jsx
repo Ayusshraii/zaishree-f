@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // Import your providers
-import { CartProvider } from "./context/CartContext";
+import { CartProvider } from "./context/Cartcontext";
 import { WishlistProvider } from "./context/WishlistContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(

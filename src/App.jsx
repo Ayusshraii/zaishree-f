@@ -17,8 +17,7 @@ import BondProducts from "./pages/Bondproducts";
 const App = () => {
   return (
     <AuthProvider>
-      <CartProvider>
-        <WishlistProvider>
+
           <Routes>
             <Route path="/" element={<Userlayout />} />
             <Route path="/subscription" element={<Subscription />} />
@@ -32,8 +31,7 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/bond/:slug" element={<BondProducts />} />
           </Routes>
-        </WishlistProvider>
-      </CartProvider>
+
     </AuthProvider>
   );
 };

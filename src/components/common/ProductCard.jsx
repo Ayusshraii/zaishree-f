@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { FaStar, FaHeart, FaRegHeart } from "react-icons/fa";
 import { FiShoppingBag } from "react-icons/fi";
-import { useCart } from "../../context/CartContext";
+import { useCart } from "../../context/Cartcontext";
 import { useWishlist } from "../../context/WishlistContext";
 
 const ProductCard = ({ product }) => {

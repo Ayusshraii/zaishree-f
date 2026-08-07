@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "../components/common/Navbar";
 import { FiMinus, FiPlus, FiTrash2, FiShoppingBag } from "react-icons/fi";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../context/Cartcontext";
 
 const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, cartTotal } = useCart();

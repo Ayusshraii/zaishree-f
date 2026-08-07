@@ -4,7 +4,7 @@ import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
 import { FiHeart, FiTruck, FiRotateCcw, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { FaHeart } from "react-icons/fa";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../context/Cartcontext";
 import { useWishlist } from "../context/WishlistContext";
 import { getPricingSettings } from "../services/pricingService";
 

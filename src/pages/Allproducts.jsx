@@ -68,7 +68,7 @@ const Products = () => {
     selectedCategories.length + selectedMaterials.length + (maxPrice < 60000 ? 1 : 0);
 
   const FilterSidebar = () => (
-    <div className="space-y-8">
+    <div className="space-y-8 ">
       <div className="flex items-center justify-between">
         <h3 className="font-serif text-lg text-[#141311]">Filters</h3>
         {activeFilterCount > 0 && (
@@ -141,11 +141,11 @@ const Products = () => {
 
   return (
     <>
-      <div className="border-1 border-gray-300">
+      <div className="border-1 border-gray-300 text-[#5a1b1be0]">
         <Navbar />
       </div>
 
-      <div className="text-center text-bold text-3xl p-7 underline">
+      <div className="text-center text-bold text-3xl p-7 font-serif text-[#5a1b1be0]">
         All Products
       </div>
 
@@ -156,7 +156,7 @@ const Products = () => {
             onClick={() => setMobileFiltersOpen(true)}
             className="flex items-center gap-2 text-sm font-medium border border-gray-300 rounded-full px-4 py-2"
           >
-            <FiFilter className="w-4 h-4" />
+            <FiFilter className="w-4 h-4 text-[#5a1b1be0]" />
             Filters {activeFilterCount > 0 && `(${activeFilterCount})`}
           </button>
 

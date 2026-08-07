@@ -70,10 +70,10 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#141311] text-[#F7F3EA] font-sans">
+    <footer className="bg-[#4B0F14]  text-[#F7F3EA] font-sans">
       {/* Trust strip */}
-      <div className="border-b border-[#2A2822]">
-        <div className="max-w-7xl mx-auto px-6 py-6 grid grid-cols-2 sm:grid-cols-4 gap-6">
+      <div className="border-b border-[#2A2822] ">
+        <div className="max-w-4xl mx-auto px-6 py-6 grid grid-cols-2 sm:grid-cols-4 gap-6">
           {trustBadges.map(({ icon: Icon, label }) => (
             <div
               key={label}
@@ -89,7 +89,7 @@ export default function Footer() {
       </div>
 
       {/* Main content */}
-      <div className="max-w-7xl mx-auto px-6 py-14">
+      <div className="max-w-5xl mx-auto px-6 py-14">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-10 lg:gap-8">
           {/* Brand + newsletter */}
           <div className="sm:col-span-2 lg:col-span-1">

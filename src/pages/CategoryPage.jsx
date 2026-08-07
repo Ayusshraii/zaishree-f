@@ -33,12 +33,12 @@ const CategoryPage = () => {
 
   return (
     <>
-      <div className="border-1 border-gray-300">
+      <div className="border-1 border-gray-300 ">
         <Navbar />
       </div>
 
       <div className="text-center p-7">
-        <h1 className="text-3xl font-serif underline">{slugToTitle(slug)}</h1>
+        <h1 className="text-3xl font-serif  text-[#5a1b1be0]">{slugToTitle(slug)}</h1>
         <p className="text-sm text-gray-500 mt-2">
           {filteredProducts.length} product{filteredProducts.length !== 1 && "s"}
         </p>

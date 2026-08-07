@@ -57,8 +57,8 @@ const reviews = [
 
 const Reviews = () => {
   return (
-    <section className="bg-[#F7F3EA] py-20">
-      <div className="max-w-7xl mx-auto px-5">
+    <section className="bg-[#F7F3EA] text-[#5a1b1be0] py-10">
+      <div className="max-w-9xl  px-20">
         <h2 className="text-4xl font-serif text-center mb-3">
           What Our Customers Say
         </h2>
@@ -69,48 +69,49 @@ const Reviews = () => {
 
         <Swiper
           modules={[Navigation, Autoplay]}
-          navigation
+          
+          
           autoplay={{
             delay: 3500,
             disableOnInteraction: false,
           }}
           loop={true}
-          spaceBetween={25}
+          spaceBetween={10}
           breakpoints={{
             320: {
-              slidesPerView: 1,
-            },
-            768: {
               slidesPerView: 2,
             },
-            1024: {
+            768: {
               slidesPerView: 3,
+            },
+            1024: {
+              slidesPerView: 4,
             },
           }}
         >
           {reviews.map((review) => (
             <SwiperSlide key={review.id}>
-              <div className="bg-white rounded-2xl  p-6 h-[320px] flex flex-col justify-between">
-                <div>
-                  <FaQuoteLeft className="text-3xl text-yellow-500 mb-4" />
+              <div className="bg-white rounded-2xl w-[250px]  p-3 h-[250px] flex flex-col gap-10">
+                <div className="">
+                  <FaQuoteLeft className=" text-yellow-500 mb-4" />
 
                   <p className="text-gray-600 leading-7">
                     "{review.review}"
                   </p>
                 </div>
 
-                <div className="mt-6">
+                <div className="">
                   <div className="flex items-center gap-4">
                     <img
                       src={review.image}
                       alt={review.name}
-                      className="w-14 h-14 rounded-full object-cover"
+                      className="w-10 h-10 rounded-full object-cover"
                     />
 
                     <div>
-                      <h3 className="font-semibold">{review.name}</h3>
+                      <h3 className="font-semibold text-sm">{review.name}</h3>
 
-                      <p className="text-sm text-gray-500">
+                      <p className="text-xs text-gray-500">
                         {review.location}
                       </p>
 

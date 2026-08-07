@@ -66,7 +66,7 @@ const bonds = [
 
 const ShopByBond = () => {
   return (
-    <section className="py-10 max-w-7xl mx-auto px-6">
+    <section className="py-10 max-w-7xl mx-auto px-6 text-[#5a1b1be0]">
       <div className="mb-8 text-center">
         <h2 className="text-3xl font-serif mb-2">Shop by Bond</h2>
         <p className="text-sm text-gray-500">
@@ -101,10 +101,10 @@ const ShopByBond = () => {
                 <img
                   src={bond.image}
                   alt={bond.label}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-105  transition-transform duration-500"
                 />
               </div>
-              <p className="text-sm font-medium text-gray-800 text-center group-hover:text-amber-600 transition-colors">
+              <p className="text-sm font-medium text-gray-800 text-center group-hover:text-[#5a1b1be0] transition-colors">
                 {bond.label}
               </p>
             </Link>

@@ -34,7 +34,7 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="group relative">
+    <div className="group relative text-[#5a1b1be0]">
       <button
         onClick={handleWishlistClick}
         aria-label={inWishlist ? "Remove from wishlist" : "Add to wishlist"}

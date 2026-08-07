@@ -76,6 +76,27 @@ const ShopByCategory = () => {
       image:
         "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=500&q=80",
     },
+       {
+      id: 9,
+      name: "pendent",
+      metal: "gold",
+      image:
+        "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&q=80",
+    },
+       {
+      id: 10,
+      name: "chains",
+      metal: "gold",
+      image:
+        "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&q=80",
+    },{
+     id: 11,
+      name: "bangles",
+      metal: "gold",
+      image:
+        "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&q=80",
+    },
+      
   ];
 
   const filteredCategories = categories.filter(
@@ -83,7 +104,7 @@ const ShopByCategory = () => {
   );
 
   return (
-    <section className="bg-[#F7F3EA] py-16">
+    <section className="bg-[#F7F3EA] text-[#5a1b1be0] py-16">
       <div className="max-w-7xl mx-auto px-5">
         <h2 className="text-4xl font-serif text-center mb-10">
           Shop By Category
@@ -126,27 +147,53 @@ const ShopByCategory = () => {
 
         {/* Categories */}
         
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {filteredCategories.map((category) => (
-            <Link
-              key={category.id}
-             to={`/category/${category.metal}-${category.name.toLowerCase()}`}
-              className="group bg-white rounded-xl overflow-hidden shadow hover:shadow-xl transition"
-            >
-              <img
-                src={category.image}
-                alt={category.name}
-                className="h-64 w-full object-cover group-hover:scale-105 transition duration-500"
-              />
-
-              <div className="p-4">
-                <h3 className="text-xl font-semibold text-center">
-                  {category.name}
-                </h3>
-              </div>
-            </Link>
-          ))}
+        <Swiper
+  modules={[Navigation, Autoplay]}
+  navigation
+  autoplay={{
+    delay: 3000,
+    disableOnInteraction: false,
+  }}
+  loop={true}
+  spaceBetween={20}
+  breakpoints={{
+    320: {
+      slidesPerView: 2,
+    },
+    640: {
+      slidesPerView: 3,
+    },
+    768: {
+      slidesPerView: 4,
+    },
+    1024: {
+      slidesPerView: 6,
+    },
+  }}
+>
+  {filteredCategories.map((category) => (
+    <SwiperSlide key={category.id}>
+      <Link
+        to={`/category/${category.metal}-${category.name.toLowerCase()}`}
+        className="flex flex-col items-center group"
+      >
+        {/* Circle */}
+        <div className="w-32 h-32 rounded-full overflow-hidden border-2 border-gray-200 shadow-md group-hover:shadow-xl transition duration-300">
+          <img
+            src={category.image}
+            alt={category.name}
+            className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+          />
         </div>
+
+        {/* Name */}
+        <h3 className="mt-4 text-base font-semibold text-gray-800 text-center">
+          {category.name}
+        </h3>
+      </Link>
+    </SwiperSlide>
+  ))}
+</Swiper>
       </div>
     </section>
   );

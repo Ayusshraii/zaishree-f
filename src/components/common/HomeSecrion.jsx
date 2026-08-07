@@ -127,7 +127,7 @@ const sections = [
 
 const HomeSections = () => {
   return (
-    <div className="max-w-7xl mx-auto px-6">
+    <div className="max-w-7xl mx-auto px-6 text-[#5a1b1be0]">
       {sections.map((section) => (
         <ProductSection key={section.id} section={section} />
       ))}

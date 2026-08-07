@@ -29,11 +29,20 @@ const Wishlist = () => {
         <Navbar />
       </div>
 
-      <div className="text-center text-bold text-3xl p-7 underline">
-        My Wishlist
-      </div>
+      <div className="h-screen px-6 py-10 bg-[#FBF4EC]">
+        {/* Header row */}
+        <div className="flex justify-between items-center border-b border-gray-200 pb-4 mb-8">
+          <h1 className="font-serif text-2xl sm:text-3xl text-gray-900">
+            Your Wishlist ({wishlistItems.length})
+          </h1>
+          <a
+            href="/"
+            className="text-xs uppercase tracking-wider  text-gray-600 hover:text-black transition-colors"
+          >
+            Continue Shopping
+          </a>
+        </div>
 
-      <div className="max-w-6xl mx-auto px-6 pb-14">
         {wishlistItems.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <FiHeart className="w-14 h-14 text-gray-300 mb-4" />
@@ -45,23 +54,26 @@ const Wishlist = () => {
             </p>
             <a
               href="/"
-              className="px-6 py-2 bg-[#141311] text-white text-sm uppercase tracking-wide hover:bg-[#2A2822] transition-colors"
+              className="px-6 py-2 bg-[#4B0F14] rounded-xl text-white text-sm uppercase tracking-wide hover:bg-[#2A2822] transition-colors"
             >
               Continue shopping
             </a>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
             {wishlistItems.map((product) => {
               const inCart = isInCart(product.id);
               return (
-                <div key={product.id} className="group relative">
+                <div
+                  key={product.id}
+                  className="group relative border border-gray-200 rounded-md p-3"
+                >
                   <button
                     onClick={() => handleRemove(product.id)}
                     aria-label="Remove from wishlist"
-                    className="absolute top-2 right-2 z-10 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-sm hover:bg-white transition-colors"
+                    className="absolute top-5 right-5 z-10 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-sm hover:bg-white transition-colors"
                   >
-                    <FiHeart className="w-4 h-4 text-red-500 fill-current" />
+                    <FiHeart className="w-4 h-4 text-[#7A2E42] fill-current" />
                   </button>
 
                   <div className="aspect-square overflow-hidden bg-gray-100 rounded-md mb-3">
@@ -72,20 +84,37 @@ const Wishlist = () => {
                     />
                   </div>
 
-                  <h3 className="text-sm font-medium text-gray-900 mb-1 truncate">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-1 truncate">
                     {product.name}
                   </h3>
-                  <p className="text-sm text-gray-700 mb-3">
+
+                  {(product.sku || product.metal) && (
+                    <div className="mb-2">
+                      {product.sku && (
+                        <p className="text-[11px] uppercase tracking-wider text-rose-700/80 font-medium">
+                          Ref: {product.sku}
+                        </p>
+                      )}
+                      {product.metal && (
+                        <p className="text-xs text-gray-600 mt-0.5">
+                          <span className="font-semibold uppercase">Metal:</span>{" "}
+                          {product.metal}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  <p className="text-sm font-semibold text-gray-900 mb-3">
                     ₹{product.price.toLocaleString("en-IN")}
                   </p>
 
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleAddToCart(product)}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2 border text-xs uppercase tracking-wide transition-colors ${
+                      className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-xs uppercase tracking-wide transition-colors ${
                         inCart
-                          ? "border-gray-300 text-gray-400 cursor-default"
-                          : "border-[#141311] hover:bg-[#141311] hover:text-white"
+                          ? "border border-gray-300 text-gray-400 cursor-default"
+                          : "bg-[#141311] text-white hover:bg-[#2A2822]"
                       }`}
                     >
                       <FiShoppingBag className="w-3.5 h-3.5" />
@@ -95,7 +124,7 @@ const Wishlist = () => {
                     <button
                       onClick={() => handleRemove(product.id)}
                       aria-label="Remove from wishlist"
-                      className="w-10 flex items-center justify-center border border-gray-300 text-gray-500 hover:border-red-400 hover:text-red-500 transition-colors"
+                      className="w-10 flex items-center justify-center border border-gray-300 rounded-md text-gray-500 hover:border-red-400 hover:text-red-500 transition-colors"
                     >
                       <FiTrash2 className="w-4 h-4" />
                     </button>

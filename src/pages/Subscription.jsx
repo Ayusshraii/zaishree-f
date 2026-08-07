@@ -1,16 +1,11 @@
 import React, { useState } from "react";
 import { FaCheck } from "react-icons/fa";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination } from "swiper/modules";
-
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
 
 const plans = [
   {
     id: 1,
     name: "Silver Plan",
+    description: "The perfect introduction to curated luxury.",
     price: "₹999",
     duration: "3 Months",
     benefits: [
@@ -23,32 +18,35 @@ const plans = [
   {
     id: 2,
     name: "Gold Plan",
+    description: "Elevated privileges for the discerning collector.",
     price: "₹1999",
     duration: "6 Months",
+    popular: true,
     benefits: [
-      "10% Discount",
-      "Free Shipping",
-      "Birthday Voucher",
-      "Priority Support",
-      "Exclusive Collection",
+      "First look at new collections",
+      "Unlimited complimentary cleaning",
+      "Priority expedited shipping",
+      "10% exclusive discount on all purchases",
+      "Birthday voucher",
     ],
   },
   {
     id: 3,
     name: "Diamond Plan",
+    description: "The ultimate expression of bespoke luxury.",
     price: "₹3999",
     duration: "12 Months",
     benefits: [
-      "15% Discount",
-      "Unlimited Shipping",
-      "VIP Support",
-      "Free Cleaning",
-      "Anniversary Gift",
+      "All Gold tier benefits",
+      "Dedicated personal jewellery concierge",
+      "Invitations to exclusive closed-door events",
+      "Bespoke design consultation annually",
     ],
   },
   {
     id: 4,
     name: "Wedding Plan",
+    description: "Bridal privileges for your once-in-a-lifetime moment.",
     price: "₹5999",
     duration: "12 Months",
     benefits: [
@@ -61,97 +59,106 @@ const plans = [
 ];
 
 const Subscription = () => {
-  const [selectedPlan, setSelectedPlan] = useState(2);
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   return (
-    <section className="bg-white py-5 px-5">
-      <div className="max-w-7xl mx-auto">
-
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-serif">
-            Subscription Plans
+    <section className="bg-white py-16 px-5">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-14 max-w-2xl mx-auto">
+          <h1 className="text-4xl sm:text-5xl font-serif text-gray-900">
+            Elevate Your Elegance
           </h1>
-
-          <p className="text-gray-500 ">
-            Choose the membership that suits you best.
+          <p className="text-gray-500 mt-3 text-sm sm:text-base">
+            Join to unlock a world of exclusive privileges,
+            bespoke services, and first access to our most exquisite
+            collections.
           </p>
         </div>
 
-        <Swiper
-          modules={[Navigation]}
-          navigation
-          spaceBetween={30}
-          breakpoints={{
-            320: {
-              slidesPerView: 1,
-            },
-            768: {
-              slidesPerView: 2,
-            },
-            1200: {
-              slidesPerView: 3,
-            },
-          }}
-        >
-          {plans.map((plan) => (
-            <SwiperSlide key={plan.id}>
+        {/* Plans grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+          {plans.map((plan) => {
+            const isSelected = selectedPlan === plan.id;
+            const isHighlighted = isSelected || (selectedPlan === null && plan.popular);
+
+            return (
               <div
+                key={plan.id}
                 onClick={() => setSelectedPlan(plan.id)}
-                className={`cursor-pointer rounded-3xl border-2 bg-white p-8 transition duration-300 shadow-md hover:shadow-xl ${
-                  selectedPlan === plan.id
-                    ? "bg-red-500 "
-                    : "border-gray-200"
+                className={`relative cursor-pointer rounded-md p-6 transition-all duration-300 flex flex-col h-full ${
+                  isHighlighted
+                    ? "bg-[#4B0F14] text-white shadow-lg md:-translate-y-2"
+                    : "bg-white border border-gray-200 text-gray-900"
                 }`}
               >
-                {selectedPlan === plan.id && (
-                  <div className="mb-4">
-                    <span className="bg-red-500 text-white text-xs px-3 py-1 rounded-full">
-                      Selected
-                    </span>
-                  </div>
+                {plan.popular && (
+                  <span className="absolute top-0 right-0 bg-[#141311] text-white text-[10px] font-semibold uppercase tracking-wider px-3 py-1 rounded-bl-md rounded-tr-md">
+                    Most Popular
+                  </span>
                 )}
 
-                <h2 className="text-3xl font-bold">
-                  {plan.name}
+                <h2
+                  className={`text-lg font-serif mb-2 ${
+                    isHighlighted ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  {plan.name.replace(" Plan", "")}
                 </h2>
 
-                <h3 className="text-4xl font-bold mt-5">
-                  {plan.price}
-                </h3>
-
-                <p className="text-gray-500 mt-2">
-                  {plan.duration}
+                <p
+                  className={`text-xs mb-5 leading-relaxed ${
+                    isHighlighted ? "text-white/80" : "text-gray-500"
+                  }`}
+                >
+                  {plan.description}
                 </p>
 
-                <hr className="my-7" />
+                <div className="mb-5">
+                  <span className="text-2xl font-semibold">
+                    {plan.price}
+                  </span>
+                  <span
+                    className={`text-xs ml-1 ${
+                      isHighlighted ? "text-white/70" : "text-gray-500"
+                    }`}
+                  >
+                    / {plan.duration}
+                  </span>
+                </div>
 
-                <div className="space-y-4">
+                <div className="space-y-2.5 flex-1 mb-6">
                   {plan.benefits.map((item, index) => (
-                    <div
-                      key={index}
-                      className="flex gap-3"
-                    >
-                      <FaCheck className="text-green-500 mt-1" />
-                      <p>{item}</p>
+                    <div key={index} className="flex gap-2 items-start">
+                      <FaCheck
+                        className={`mt-0.5 w-3 h-3 shrink-0 ${
+                          isHighlighted ? "text-white" : "text-green-600"
+                        }`}
+                      />
+                      <p
+                        className={`text-xs ${
+                          isHighlighted ? "text-white/90" : "text-gray-700"
+                        }`}
+                      >
+                        {item}
+                      </p>
                     </div>
                   ))}
                 </div>
 
                 <button
-                  className={`mt-10 w-full py-3 rounded-xl font-semibold transition ${
-                    selectedPlan === plan.id
-                      ? "bg-red-500 text-white"
-                      : "bg-black text-white hover:bg-gray-800"
+                  className={`w-full py-2.5 text-xs font-semibold uppercase tracking-widest rounded-md transition-colors mt-auto ${
+                    isHighlighted
+                      ? "bg-white text-[#7A2E42] hover:bg-gray-100"
+                      : "border border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white"
                   }`}
                 >
-                  {selectedPlan === plan.id
-                    ? "Current Plan"
-                    : "Subscribe Now"}
+                  {isSelected ? "Selected" : `Join ${plan.name.replace(" Plan", "")}`}
                 </button>
               </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

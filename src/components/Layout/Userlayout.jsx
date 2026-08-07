@@ -13,10 +13,10 @@ const Userlayout = () => {
    <>
  <div className='border-b-1 border-gray-300'><Header/></div>
  <div className=''><Banner /></div> 
- <ShopByCategory/>
-  <HomeSections />
-  <ShopByBond/>
-  <Reviews/>
+ <ShopByCategory className=''/>
+  <HomeSections  className=''/>
+  <ShopByBond className=''/>
+  <Reviews className=''/>
  <Footer/>
    </>
   )

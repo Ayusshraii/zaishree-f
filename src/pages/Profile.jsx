@@ -59,15 +59,23 @@ const Profile = () => {
             You're not signed in
           </h2>
           <p className="text-sm text-gray-500 mb-6 max-w-xs">
-            Create an account to view your profile, track orders, and access
-            AURUM Club membership benefits.
+            Log in or create an account to view your profile, track orders,
+            and access Zaishree Club membership benefits.
           </p>
-          <Link
-            to="/auth"
-            className="px-6 py-2.5 bg-[#4B0F14] rounded-2xl text-white text-sm uppercase tracking-wide hover:bg-[#3A0C10] transition-colors"
-          >
-            Sign Up
-          </Link>
+          <div className="flex gap-3">
+            <Link
+              to="/login"
+              className="px-6 py-2.5 border border-[#4B0F14] rounded-2xl text-[#4B0F14] text-sm uppercase tracking-wide hover:bg-[#4B0F14] hover:text-white transition-colors"
+            >
+              Log In
+            </Link>
+            <Link
+              to="/signup"
+              className="px-6 py-2.5 bg-[#4B0F14] rounded-2xl text-white text-sm uppercase tracking-wide hover:bg-[#3A0C10] transition-colors"
+            >
+              Sign Up
+            </Link>
+          </div>
         </div>
         <Footer />
       </>
@@ -142,7 +150,7 @@ const Profile = () => {
                 <div className="relative">
                   <div className="flex justify-between items-start mb-6">
                     <h3 className="text-sm font-semibold text-gray-900">
-                      AURUM Club
+                      Zaishree Club
                     </h3>
                     <div className="w-8 h-8 rounded-full bg-[#7A2E42] flex items-center justify-center">
                       <FiAward className="w-4 h-4 text-white" />

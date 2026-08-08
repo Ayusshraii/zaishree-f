@@ -9,10 +9,10 @@ import Cart from "./pages/Cart";
 import Wishlist from "./pages/Wishlist";
 import CategoryPage from "./pages/CategoryPage";
 import { AuthProvider } from "./context/AuthContext";
-
-import Authpage from "./pages/Authpage";
+import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import BondProducts from "./pages/Bondproducts";
+import Login from "./pages/Login";
 
 const App = () => {
   return (
@@ -26,9 +26,10 @@ const App = () => {
             <Route path="/cart" element={<Cart />} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/category/:slug" element={<CategoryPage />} />
-            <Route path="/auth" element={<Authpage />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/bond/:slug" element={<BondProducts />} />
+            <Route  path="/login" element={<Login />} />
           </Routes>
 
     </AuthProvider>

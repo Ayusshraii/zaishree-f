@@ -1,30 +1,162 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 import { CgProfile } from "react-icons/cg";
-import { CiShoppingCart, CiHeart, CiSearch, CiLocationOn } from "react-icons/ci";
-import { FiMenu, FiX, FiCrosshair, FiLoader } from "react-icons/fi";
 
-// Fallback used whenever we can't detect or look up the user's location
-const DEFAULT_LOCATION = { city: "Delhi", pincode: "110001" };
+import {
+  CiShoppingCart,
+  CiHeart,
+  CiSearch,
+  CiLocationOn,
+} from "react-icons/ci";
 
-const Navbar = () => {
+import {
+  FiMenu,
+  FiX,
+  FiCamera,
+  FiMic,
+} from "react-icons/fi";
+
+import { PiDotsThreeOutlineFill } from "react-icons/pi";
+
+import {
+  GiJewelCrown,
+  GiGoldBar,
+  GiDiamondRing,
+  GiEarrings,
+  GiRing,
+  GiWatch,
+  GiGems,
+  GiPearlNecklace,
+  GiPresent,
+  GiCutDiamond,
+} from "react-icons/gi";
+
+// ============================================================
+// PINCODE → CITY
+// ============================================================
+
+const PINCODE_CITY_MAP = {
+  "400001": "Mumbai",
+  "110001": "Delhi",
+  "560001": "Bengaluru",
+  "600001": "Chennai",
+  "700001": "Kolkata",
+  "500001": "Hyderabad",
+  "411001": "Pune",
+  "380001": "Ahmedabad",
+  "302001": "Jaipur",
+  "226001": "Lucknow",
+};
+
+// ============================================================
+// DEFAULT LOCATION
+// ============================================================
+
+const DEFAULT_CITY = "Delhi";
+const DEFAULT_PINCODE = "110001";
+
+// ============================================================
+// CATEGORIES
+// ============================================================
+
+const categories = [
+  {
+    label: "All Jewellery",
+    icon: GiJewelCrown,
+    to: "/Products",
+  },
+  {
+    label: "Gold",
+    icon: GiGoldBar,
+    to: "/Products?category=gold",
+  },
+  {
+    label: "Diamond",
+    icon: GiDiamondRing,
+    to: "/Products?category=diamond",
+  },
+  {
+    label: "Earrings",
+    icon: GiEarrings,
+    to: "/Products?category=earrings",
+  },
+  {
+    label: "Rings",
+    icon: GiRing,
+    to: "/Products?category=rings",
+  },
+  {
+    label: "Daily Wear",
+    icon: GiWatch,
+    to: "/Products?category=daily-wear",
+  },
+  {
+    label: "Gemstone",
+    icon: GiGems,
+    to: "/Products?category=gemstone",
+  },
+  {
+    label: "Wedding",
+    icon: GiPearlNecklace,
+    to: "/Products?category=wedding",
+  },
+  {
+    label: "Precious",
+    icon: GiCutDiamond,
+    to: "/Products?category=precious",
+  },
+  {
+    label: "Gifting",
+    icon: GiPresent,
+    to: "/Products?category=gifting",
+  },
+  {
+    label: "More",
+    icon: PiDotsThreeOutlineFill,
+    to: "/Products",
+  },
+];
+
+// ============================================================
+// NAVBAR
+// ============================================================
+
+const Navbar = ({ cartCount = 0 }) => {
+  // ==========================================================
+  // SEARCH
+  // ==========================================================
+
   const [keyword, setKeyword] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
+  // ==========================================================
+  // LOCATION
+  // ==========================================================
+
   const [pincode, setPincode] = useState("");
   const [city, setCity] = useState("");
-  const [isDefaultLocation, setIsDefaultLocation] = useState(false);
   const [showLocationBox, setShowLocationBox] = useState(false);
   const [locationError, setLocationError] = useState("");
   const [detecting, setDetecting] = useState(false);
+
   const locationRef = useRef(null);
+
+  // ==========================================================
+  // MOBILE
+  // ==========================================================
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
+  // ==========================================================
+  // SEARCH
+  // ==========================================================
+
   const handleSearch = async (e) => {
     const value = e.target.value;
+
     setKeyword(value);
 
     if (value.length < 2) {
@@ -34,42 +166,78 @@ const Navbar = () => {
 
     try {
       const { data } = await axios.get(
-        `/api/products/suggestions?keyword=${value}`
+        `/api/products/suggestions?keyword=${encodeURIComponent(
+          value
+        )}`
       );
-      setSuggestions(data);
+
+      setSuggestions(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Error fetching suggestions:", err);
+      setSuggestions([]);
     }
   };
 
-  const applyDefaultLocation = (errorMessage) => {
-    setCity(DEFAULT_LOCATION.city);
-    setPincode(DEFAULT_LOCATION.pincode);
-    setIsDefaultLocation(true);
-    setLocationError(errorMessage || "");
-    // Don't persist the default to localStorage — leave it unset so we
-    // retry auto-detection on the next visit instead of getting stuck.
+  // ==========================================================
+  // APPLY LOCATION
+  // ==========================================================
+
+  const applyLocation = (cityName, pin) => {
+    setCity(cityName);
+    setPincode(pin || "");
+
+    localStorage.setItem("userCity", cityName);
+
+    if (pin) {
+      localStorage.setItem("userPincode", pin);
+    }
   };
 
-  // Reverse-geocode lat/lng into city + postcode using OpenStreetMap Nominatim (free, no key)
-  const reverseGeocode = async (lat, lon) => {
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=14`,
-      {
-        headers: {
-          Accept: "application/json",
-        },
-      }
-    );
-    if (!res.ok) throw new Error("Reverse geocode failed");
-    return res.json();
-  };
+  // ==========================================================
+  // PINCODE
+  // ==========================================================
 
-  const detectLocation = useCallback(() => {
+  const handlePincodeChange = (e) => {
+    const value = e.target.value.replace(/\D/g, "");
+
+    setPincode(value);
     setLocationError("");
 
-    if (!("geolocation" in navigator)) {
-      applyDefaultLocation("Location not supported — showing default");
+    if (value.length === 6) {
+      const cityName = PINCODE_CITY_MAP[value];
+
+      if (cityName) {
+        applyLocation(cityName, value);
+        setShowLocationBox(false);
+      } else {
+        setCity("");
+        setLocationError("Pincode not found");
+      }
+    } else {
+      setCity("");
+    }
+  };
+
+  // ==========================================================
+  // DETECT LOCATION
+  // ==========================================================
+
+  const detectLocation = () => {
+    const savedCity = localStorage.getItem("userCity");
+    const savedPincode = localStorage.getItem("userPincode");
+
+    if (savedCity) {
+      setCity(savedCity);
+
+      if (savedPincode) {
+        setPincode(savedPincode);
+      }
+
+      return;
+    }
+
+    if (!navigator.geolocation) {
+      applyLocation(DEFAULT_CITY, DEFAULT_PINCODE);
       return;
     }
 
@@ -79,383 +247,1158 @@ const Navbar = () => {
       async (position) => {
         try {
           const { latitude, longitude } = position.coords;
-          const data = await reverseGeocode(latitude, longitude);
 
-          const address = data.address || {};
-          const cityName =
-            address.city || address.town || address.village || address.county;
-          const postcode = address.postcode || "";
+          const response = await fetch(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+          );
 
-          if (cityName) {
-            setCity(cityName);
-            setPincode(postcode);
-            setIsDefaultLocation(false);
-            localStorage.setItem("userCity", cityName);
-            localStorage.setItem("userPincode", postcode);
-            setShowLocationBox(false);
-          } else {
-            applyDefaultLocation("Couldn't determine your city — showing default");
-          }
+          const data = await response.json();
+
+          const detectedCity =
+            data.city ||
+            data.locality ||
+            data.principalSubdivision ||
+            DEFAULT_CITY;
+
+          const detectedPin = data.postcode || "";
+
+          applyLocation(detectedCity, detectedPin);
         } catch (err) {
-          applyDefaultLocation("Couldn't fetch your location — showing default");
+          console.error("Reverse geocode failed:", err);
+
+          applyLocation(DEFAULT_CITY, DEFAULT_PINCODE);
         } finally {
           setDetecting(false);
         }
       },
+
       (err) => {
+        console.error(
+          "Geolocation denied/unavailable:",
+          err
+        );
+
+        applyLocation(DEFAULT_CITY, DEFAULT_PINCODE);
+
         setDetecting(false);
-        const message =
-          err.code === err.PERMISSION_DENIED
-            ? "Location permission denied — showing default"
-            : "Couldn't get your location — showing default";
-        applyDefaultLocation(message);
       },
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
-    );
-  }, []);
 
-  const handlePincodeChange = async (e) => {
-    const value = e.target.value.replace(/\D/g, ""); // digits only
-    setPincode(value);
-    setLocationError("");
-
-    if (value.length === 6) {
-      try {
-        const res = await fetch(`https://api.postalpincode.in/pincode/${value}`);
-        const data = await res.json();
-
-        if (data[0].Status === "Success") {
-          const postOffice = data[0].PostOffice[0];
-          const cityName = postOffice.District || postOffice.Name;
-          setCity(cityName);
-          setIsDefaultLocation(false);
-          localStorage.setItem("userPincode", value);
-          localStorage.setItem("userCity", cityName);
-          setShowLocationBox(false);
-        } else {
-          setCity("");
-          setLocationError("Invalid pincode");
-        }
-      } catch (err) {
-        setLocationError("Couldn't fetch location");
+      {
+        timeout: 8000,
       }
-    } else {
-      setCity("");
-    }
+    );
   };
 
-  // On mount: load saved location, or auto-detect (falling back to default) if none saved
+  // ==========================================================
+  // INITIAL LOCATION
+  // ==========================================================
+
   useEffect(() => {
-    const savedCity = localStorage.getItem("userCity");
-    const savedPincode = localStorage.getItem("userPincode");
+    detectLocation();
 
-    if (savedCity) {
-      setCity(savedCity);
-      if (savedPincode) setPincode(savedPincode);
-      setIsDefaultLocation(false);
-    } else {
-      detectLocation();
-    }
-  }, [detectLocation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // Close location dropdown when clicking outside
+  // ==========================================================
+  // CLOSE LOCATION DROPDOWN
+  // ==========================================================
+
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (locationRef.current && !locationRef.current.contains(event.target)) {
+      if (
+        locationRef.current &&
+        !locationRef.current.contains(event.target)
+      ) {
         setShowLocationBox(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+
+    document.addEventListener(
+      "mousedown",
+      handleClickOutside
+    );
+
+    return () => {
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
+    };
   }, []);
 
-  // Lock body scroll when mobile menu is open
+  // ==========================================================
+  // BODY SCROLL
+  // ==========================================================
+
   useEffect(() => {
-    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
+    document.body.style.overflow = mobileMenuOpen
+      ? "hidden"
+      : "";
+
     return () => {
       document.body.style.overflow = "";
     };
   }, [mobileMenuOpen]);
 
-  const navLinks = [
-    { label: "Shop All", to: "/Products" },
-    { label: "Collections", to: "/Products" },
-    { label: "Subscription", to: "/subscription" },
-  ];
+  // ==========================================================
+  // LOCATION DROPDOWN
+  // ==========================================================
 
-  const LocationDropdownContent = () => (
-    <>
-      <button
-        onClick={detectLocation}
-        disabled={detecting}
-        className="w-full flex items-center justify-center gap-2 text-xs font-medium py-2 mb-3 border border-gray-300 rounded-lg hover:border-gray-500 transition-colors disabled:opacity-60"
+  const LocationDropdown = () => (
+    <div
+      className="
+        absolute
+        top-full
+        right-0
+        mt-2
+        bg-white
+        shadow-xl
+        rounded-xl
+        p-4
+        w-64
+        max-w-[calc(100vw-2rem)]
+        z-[100]
+        border
+        border-gray-200
+      "
+    >
+      <p
+        className="
+          text-sm
+          font-semibold
+          mb-2
+          text-[#5a1b1b]
+        "
       >
-        {detecting ? (
-          <FiLoader className="animate-spin w-3.5 h-3.5" />
-        ) : (
-          <FiCrosshair className="w-3.5 h-3.5" />
-        )}
-        {detecting ? "Detecting..." : "Use my current location"}
-      </button>
+        {detecting
+          ? "Detecting location…"
+          : "Enter Pincode"}
+      </p>
 
-      <div className="flex items-center gap-2 mb-3">
-        <div className="flex-1 h-px bg-gray-200" />
-        <span className="text-[10px] uppercase text-gray-400">or</span>
-        <div className="flex-1 h-px bg-gray-200" />
-      </div>
-
-      <p className="text-sm font-semibold mb-2">Enter Pincode</p>
       <input
         type="text"
         maxLength={6}
         value={pincode}
         onChange={handlePincodeChange}
         placeholder="e.g. 400001"
-        className="border rounded-lg px-2 py-1 w-full outline-none text-sm bg-white"
+        className="
+          border
+          border-gray-300
+          rounded-lg
+          px-3
+          py-2
+          w-full
+          outline-none
+          text-sm
+        "
       />
+
       {locationError && (
-        <p className="text-amber-600 text-xs mt-1">{locationError}</p>
-      )}
-      {city && (
-        <p className="text-green-600 text-xs mt-2">
-          {isDefaultLocation ? "Default location: " : "Delivering to: "}
-          <b>{city}</b>
-          {pincode && ` — ${pincode}`}
+        <p className="text-red-500 text-xs mt-1">
+          {locationError}
         </p>
       )}
-    </>
+
+      {city && (
+        <p
+          className="
+            text-[#5a1b1b]/70
+            text-xs
+            mt-2
+          "
+        >
+          Delivering to:{" "}
+          <span className="font-semibold">
+            {city}
+            {pincode ? `, ${pincode}` : ""}
+          </span>
+        </p>
+      )}
+
+      <button
+        type="button"
+        onClick={detectLocation}
+        className="
+          text-xs
+          text-[#7A2E42]
+          font-medium
+          mt-3
+          hover:underline
+        "
+      >
+        Use current location
+      </button>
+    </div>
   );
+
+  // ==========================================================
+  // JSX
+  // ==========================================================
 
   return (
     <>
-      <div className="flex justify-between items-center text-[#5a1b1be0] m-2 relative">
-        {/* Hamburger — mobile only */}
-        <button
-          onClick={() => setMobileMenuOpen(true)}
-          className="md:hidden p-1"
-          aria-label="Open menu"
+      {/* ======================================================
+          HEADER
+          ====================================================== */}
+
+      <header
+        className="
+          w-full
+          bg-white
+          border-t-2
+          border-[#5a1b1b]
+        "
+      >
+        {/* ====================================================
+            DESKTOP CONTAINER
+
+            ALL DESKTOP ELEMENTS ARE INSIDE THESE
+            TWO VERTICAL LINES
+            ==================================================== */}
+
+        <div
+          className="
+            hidden
+            lg:block
+            w-[calc(100%-220px)]
+            mx-auto
+           
+            border-gray-300
+          "
         >
-          <FiMenu className="text-2xl" />
-        </button>
+          {/* ==================================================
+              ROW 1
+              ================================================== */}
 
-        {/* Logo */}
-        <div>
-          <Link to="/">
-            <img
-              className="h-11 md:h-14 w-auto mx-auto"
-              src="https://www.zaishree.com/wp-content/uploads/elementor/thumbs/IMG_1966-rpwnjj8b2n46pvnz6u1lot8cwx1a8ouvq1b6gfjlo8.png"
-              alt="LOGO"
-            />
-          </Link>
-        </div>
+          <div
+            className="
+              flex
+              items-center
+              min-h-[92px]
+              px-6
+              gap-6
+              border-b
+              border-gray-200
+            "
+          >
+            {/* =================================================
+                LOGO
+                ================================================= */}
 
-        {/* Desktop nav links */}
-        <div className="hidden md:flex space-x-4 text-xl font-serif">
-          {navLinks.map((link) => (
-            <Link
-              key={link.label}
-              className="transform hover:scale-110 transition duration-300"
-              to={link.to}
+            <div
+              className="
+                flex
+                items-center
+                
+                shrink-0
+                w-[180px]
+              "
             >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-
-        {/* Right side icons */}
-        <div className="flex justify-center items-center space-x-2 md:space-x-3">
-          {/* Location Tab — desktop only */}
-          <div className="relative hidden md:block" ref={locationRef}>
-            <button
-              onClick={() => setShowLocationBox(!showLocationBox)}
-              className="flex items-center gap-1 text-sm border-2 p-2.5 rounded-2xl hover:scale-105 transition"
-            >
-              {detecting ? (
-                <FiLoader className="animate-spin text-xl" />
-              ) : (
-                <CiLocationOn className="text-xl" />
-              )}
-              <span className="max-w-[100px] truncate">
-                {detecting ? "Detecting..." : city ? city : "Select Location"}
-              </span>
-            </button>
-
-            {showLocationBox && (
-              <div className="absolute top-10 left-0 bg-white shadow-lg rounded-xl p-3 w-64 z-50 border">
-                <LocationDropdownContent />
-              </div>
-            )}
-          </div>
-
-          {/* Search — desktop: full bar, mobile: icon that expands */}
-          <div className="hidden md:block relative">
-            <div className="flex justify-center items-center border-2 rounded-2xl p-2">
-              <input
-                className="outline-none"
-                type="text"
-                value={keyword}
-                onChange={handleSearch}
-                placeholder="Search jewellery..."
-              />
-              <button>
-                <CiSearch className="relative text-xl" />
-              </button>
+              <Link
+                to="/"
+                className="
+                  flex
+                  items-center
+                  justify-center
+                "
+              >
+                <img
+                  className="
+                    h-11
+                    w-auto
+                    object-contain
+                    max-w-[150px]
+                  "
+                  src="https://www.zaishree.com/wp-content/uploads/elementor/thumbs/IMG_1966-rpwnjj8b2n46pvnz6u1lot8cwx1a8ouvq1b6gfjlo8.png"
+                  alt="ZAISHREE"
+                />
+              </Link>
             </div>
 
-            {suggestions.length > 0 && (
-              <div className="absolute top-10 left-0 bg-white shadow-lg rounded-xl w-full z-50 border">
-                {suggestions.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
-                  >
-                    {item.name || item}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+            {/* =================================================
+                SEARCH
 
-          <button
-            onClick={() => setMobileSearchOpen((s) => !s)}
-            className="md:hidden p-1"
-            aria-label="Toggle search"
-          >
-            <CiSearch className="text-2xl" />
-          </button>
+                SEARCH TAKES AVAILABLE SPACE
+                ================================================= */}
 
-          <Link to="/profile" className="hidden md:block">
-            <CgProfile className="text-xl transform hover:scale-110 transition duration-300" />
-          </Link>
+            <div
+              className="
+                relative
+                flex-1
+                min-w-0
+              "
+            >
+              <div
+                className="
+                  flex
+                  items-center
+                  h-12
+                  border
+                  border-gray-300
+                  rounded-full
+                  px-5
+                  gap-3
+                  bg-white
+                "
+              >
+                <CiSearch
+                  className="
+                    text-xl
+                    text-[#5a1b1b]
+                    shrink-0
+                  "
+                />
 
-          <Link to="/cart" className="hidden md:block">
-            <CiShoppingCart className="text-xl transform hover:scale-110 transition duration-300" />
-          </Link>
+                <input
+                  className="
+                    outline-none
+                    text-sm
+                    font-medium
+                    flex-1
+                    min-w-0
+                    placeholder:text-gray-400
+                    placeholder:font-normal
+                  "
+                  type="text"
+                  value={keyword}
+                  onChange={handleSearch}
+                  placeholder="Search for gold necklace"
+                />
 
-          <Link to="/wishlist" className="hidden md:block">
-            <CiHeart className="text-xl transform hover:scale-110 transition duration-300" />
-          </Link>
-        </div>
-      </div>
-
-      {/* Mobile search bar — expands below navbar */}
-      {mobileSearchOpen && (
-        <div className="md:hidden px-3 pb-3 relative">
-          <div className="flex items-center border-2 rounded-2xl p-2">
-            <input
-              autoFocus
-              className="outline-none flex-1"
-              type="text"
-              value={keyword}
-              onChange={handleSearch}
-              placeholder="Search jewellery..."
-            />
-            <CiSearch className="text-xl shrink-0" />
-          </div>
-
-          {suggestions.length > 0 && (
-            <div className="absolute top-14 left-3 right-3 bg-white shadow-lg rounded-xl z-50 border">
-              {suggestions.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                <button
+                  type="button"
+                  className="
+                    text-[#5a1b1b]/70
+                    hover:text-[#5a1b1b]
+                    shrink-0
+                  "
+                  aria-label="Search by image"
                 >
-                  {item.name || item}
+                  <FiCamera className="text-lg" />
+                </button>
+
+                <button
+                  type="button"
+                  className="
+                    text-[#5a1b1b]/70
+                    hover:text-[#5a1b1b]
+                    shrink-0
+                  "
+                  aria-label="Search by voice"
+                >
+                  <FiMic className="text-lg" />
+                </button>
+              </div>
+
+              {/* SEARCH SUGGESTIONS */}
+
+              {suggestions.length > 0 && (
+                <div
+                  className="
+                    absolute
+                    top-14
+                    left-0
+                    w-full
+                    bg-white
+                    shadow-xl
+                    rounded-xl
+                    z-[100]
+                    border
+                    border-gray-200
+                    overflow-hidden
+                  "
+                >
+                  {suggestions.map(
+                    (item, idx) => (
+                      <Link
+                        key={idx}
+                        to={`/Products?search=${encodeURIComponent(
+                          item.name || item
+                        )}`}
+                        onClick={() =>
+                          setSuggestions([])
+                        }
+                        className="
+                          block
+                          px-4
+                          py-3
+                          text-sm
+                          hover:bg-gray-100
+                        "
+                      >
+                        {item.name || item}
+                      </Link>
+                    )
+                  )}
                 </div>
-              ))}
+              )}
+            </div>
+
+            {/* =================================================
+                RIGHT SIDE
+
+                EVERYTHING BELOW STAYS TOGETHER
+                AT THE END OF THE BOX
+
+                CITY
+                LOCATION
+                WISHLIST
+                PROFILE
+                CART
+                ================================================= */}
+
+            <div
+              className="
+                flex
+                items-center
+                justify-end
+                gap-2
+                shrink-0
+              "
+            >
+              {/* CURRENT CITY */}
+
+              {city && (
+                <button
+                  onClick={() =>
+                    setShowLocationBox(
+                      !showLocationBox
+                    )
+                  }
+                  title={`${city}${
+                    pincode
+                      ? `, ${pincode}`
+                      : ""
+                  }`}
+                  className="
+                    hidden
+                    xl:flex
+                    items-center
+                    text-sm
+                    font-medium
+                    text-[#7A2E42]
+                    whitespace-nowrap
+                    hover:text-[#5a1b1b]
+                    px-2
+                  "
+                >
+                  {city}
+
+                  {pincode
+                    ? `, ${pincode}`
+                    : ""}
+                </button>
+              )}
+
+              {/* LOCATION */}
+
+              <div
+                ref={locationRef}
+                className="
+                  relative
+                  shrink-0
+                "
+              >
+                <button
+                  onClick={() =>
+                    setShowLocationBox(
+                      !showLocationBox
+                    )
+                  }
+                  aria-label="Select location"
+                  className="
+                    flex
+                    items-center
+                    justify-center
+                    w-11
+                    h-11
+                    text-[#5a1b1b]
+                    hover:scale-105
+                    transition
+                  "
+                >
+                  <CiLocationOn className="text-2xl" />
+                </button>
+
+                {showLocationBox && (
+                  <LocationDropdown />
+                )}
+              </div>
+
+              {/* WISHLIST */}
+
+              <Link
+                to="/wishlist"
+                className="
+                  flex
+                  items-center
+                  justify-center
+                  w-11
+                  h-11
+                  shrink-0
+                  text-[#5a1b1b]
+                  hover:scale-105
+                  transition
+                "
+                aria-label="Wishlist"
+              >
+                <CiHeart className="text-2xl" />
+              </Link>
+
+              {/* PROFILE */}
+
+              <Link
+                to="/profile"
+                className="
+                  flex
+                  items-center
+                  justify-center
+                  w-11
+                  h-11
+                  shrink-0
+                  text-[#5a1b1b]
+                  hover:scale-105
+                  transition
+                "
+                aria-label="Profile"
+              >
+                <CgProfile className="text-2xl" />
+              </Link>
+
+              {/* CART */}
+
+              <Link
+                to="/cart"
+                className="
+                  relative
+                  flex
+                  items-center
+                  justify-center
+                  w-11
+                  h-11
+                  shrink-0
+                  text-[#5a1b1b]
+                  hover:scale-105
+                  transition
+                "
+                aria-label="Cart"
+              >
+                <CiShoppingCart className="text-2xl" />
+
+                {cartCount > 0 && (
+                  <span
+                    className="
+                      absolute
+                      -top-1
+                      -right-1
+                      bg-[#7A2E42]
+                      text-white
+                      text-[10px]
+                      font-semibold
+                      rounded-full
+                      w-4
+                      h-4
+                      flex
+                      items-center
+                      justify-center
+                    "
+                  >
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+            </div>
+          </div>
+
+          {/* ==================================================
+              ROW 2 — CATEGORIES
+              ================================================== */}
+
+          <div
+            className="
+              flex
+              items-center
+              justify-between
+              gap-x-6
+              px-7
+              py-4
+              min-h-[66px]
+              overflow-hidden
+              border-b
+              border-gray-200
+            "
+          >
+            {categories.map((cat) => {
+              const Icon = cat.icon;
+
+              return (
+                <Link
+                  key={cat.label}
+                  to={cat.to}
+                  className="
+                    flex
+                    items-center
+                    gap-2
+                    text-[#5a1b1b]
+                    shrink-0
+                    whitespace-nowrap
+                    hover:opacity-70
+                    transition
+                  "
+                >
+                  <Icon className="text-lg shrink-0" />
+
+                  <span className="text-sm font-medium">
+                    {cat.label}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ====================================================
+            MOBILE / TABLET HEADER
+            ==================================================== */}
+
+        <div
+          className="
+            lg:hidden
+            w-full
+          "
+        >
+          {/* MOBILE TOP ROW */}
+
+          <div
+            className="
+              flex
+              items-center
+              gap-2
+              px-4
+              sm:px-6
+              py-3
+              border-b
+              border-gray-200
+            "
+          >
+            {/* MENU */}
+
+            <button
+              onClick={() =>
+                setMobileMenuOpen(true)
+              }
+              className="
+                flex
+                items-center
+                justify-center
+                w-9
+                h-9
+                shrink-0
+                text-[#5a1b1b]
+              "
+              aria-label="Open menu"
+            >
+              <FiMenu className="text-2xl" />
+            </button>
+
+            {/* LOGO */}
+
+            <Link
+              to="/"
+              className="
+                flex
+                items-center
+                shrink-0
+              "
+            >
+              <img
+                className="
+                  h-9
+                  w-auto
+                  max-w-[130px]
+                  object-contain
+                "
+                src="https://www.zaishree.com/wp-content/uploads/elementor/thumbs/IMG_1966-rpwnjj8b2n46pvnz6u1lot8cwx1a8ouvq1b6gfjlo8.png"
+                alt="ZAISHREE"
+              />
+            </Link>
+
+            {/* SEARCH */}
+
+            <button
+              onClick={() =>
+                setMobileSearchOpen(
+                  (s) => !s
+                )
+              }
+              className="
+                ml-auto
+                flex
+                items-center
+                justify-center
+                w-9
+                h-9
+                text-[#5a1b1b]
+              "
+              aria-label="Search"
+            >
+              <CiSearch className="text-2xl" />
+            </button>
+
+            {/* CART */}
+
+            <Link
+              to="/cart"
+              className="
+                relative
+                flex
+                items-center
+                justify-center
+                w-9
+                h-9
+                text-[#5a1b1b]
+              "
+              aria-label="Cart"
+            >
+              <CiShoppingCart className="text-2xl" />
+
+              {cartCount > 0 && (
+                <span
+                  className="
+                    absolute
+                    -top-0.5
+                    -right-0.5
+                    bg-[#7A2E42]
+                    text-white
+                    text-[9px]
+                    font-semibold
+                    rounded-full
+                    w-4
+                    h-4
+                    flex
+                    items-center
+                    justify-center
+                  "
+                >
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+          </div>
+
+          {/* MOBILE SEARCH */}
+
+          {mobileSearchOpen && (
+            <div
+              className="
+                px-4
+                sm:px-6
+                pb-3
+                pt-2
+                border-b
+                border-gray-200
+                relative
+              "
+            >
+              <div
+                className="
+                  flex
+                  items-center
+                  h-10
+                  border
+                  border-gray-300
+                  rounded-full
+                  px-3
+                  gap-2
+                "
+              >
+                <CiSearch
+                  className="
+                    text-lg
+                    text-[#5a1b1b]
+                  "
+                />
+
+                <input
+                  autoFocus
+                  type="text"
+                  value={keyword}
+                  onChange={handleSearch}
+                  placeholder="Search for gold necklace"
+                  className="
+                    outline-none
+                    flex-1
+                    text-sm
+                  "
+                />
+
+                <FiCamera
+                  className="
+                    text-base
+                    text-[#5a1b1b]/70
+                  "
+                />
+
+                <FiMic
+                  className="
+                    text-base
+                    text-[#5a1b1b]/70
+                  "
+                />
+              </div>
+
+              {suggestions.length > 0 && (
+                <div
+                  className="
+                    absolute
+                    top-14
+                    left-4
+                    right-4
+                    bg-white
+                    shadow-xl
+                    rounded-xl
+                    z-[100]
+                    border
+                    overflow-hidden
+                  "
+                >
+                  {suggestions.map(
+                    (item, idx) => (
+                      <Link
+                        key={idx}
+                        to={`/Products?search=${encodeURIComponent(
+                          item.name || item
+                        )}`}
+                        onClick={() =>
+                          setSuggestions([])
+                        }
+                        className="
+                          block
+                          px-4
+                          py-3
+                          text-sm
+                          hover:bg-gray-100
+                        "
+                      >
+                        {item.name || item}
+                      </Link>
+                    )
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
-      )}
+      </header>
 
-      {/* Mobile slide-out menu */}
+      {/* ========================================================
+          MOBILE SIDE MENU
+          ======================================================== */}
+
       <div
-        className={`fixed inset-0 z-50 md:hidden transition-opacity duration-300 ${
-          mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
+        className={`
+          fixed
+          inset-0
+          z-[200]
+          lg:hidden
+          transition-opacity
+          duration-300
+          ${
+            mobileMenuOpen
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none"
+          }
+        `}
       >
-        {/* Backdrop */}
+        {/* OVERLAY */}
+
         <div
-          onClick={() => setMobileMenuOpen(false)}
-          className="absolute inset-0 bg-black/40"
+          onClick={() =>
+            setMobileMenuOpen(false)
+          }
+          className="
+            absolute
+            inset-0
+            bg-black/40
+          "
         />
 
-        {/* Drawer */}
+        {/* MENU */}
+
         <div
-          className={`absolute top-0 left-0 h-full w-72 bg-white shadow-xl p-6 flex flex-col transition-transform duration-300 ${
-            mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`
+            absolute
+            top-0
+            left-0
+            h-full
+            w-72
+            sm:w-80
+            max-w-[85vw]
+            bg-white
+            shadow-xl
+            p-6
+            flex
+            flex-col
+            overflow-y-auto
+            transition-transform
+            duration-300
+            ${
+              mobileMenuOpen
+                ? "translate-x-0"
+                : "-translate-x-full"
+            }
+          `}
         >
-          <div className="flex justify-between items-center mb-8">
+          {/* MENU HEADER */}
+
+          <div
+            className="
+              flex
+              justify-between
+              items-center
+              mb-8
+            "
+          >
             <img
-              className="h-10 w-auto"
+              className="
+                h-10
+                w-auto
+                max-w-[140px]
+              "
               src="https://www.zaishree.com/wp-content/uploads/elementor/thumbs/IMG_1966-rpwnjj8b2n46pvnz6u1lot8cwx1a8ouvq1b6gfjlo8.png"
-              alt="LOGO"
+              alt="ZAISHREE"
             />
+
             <button
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={() =>
+                setMobileMenuOpen(false)
+              }
               aria-label="Close menu"
             >
-              <FiX className="text-2xl text-[#5a1b1be0]" />
+              <FiX
+                className="
+                  text-2xl
+                  text-[#5a1b1b]
+                "
+              />
             </button>
           </div>
 
-          {/* Nav links */}
-          <div className="flex flex-col space-y-4 font-serif text-lg text-[#5a1b1be0] mb-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.label}
-                to={link.to}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
+          {/* CATEGORIES */}
+
+          <div
+            className="
+              flex
+              flex-col
+              space-y-4
+              font-medium
+              text-base
+              text-[#5a1b1b]
+              mb-8
+            "
+          >
+            {categories.map((cat) => {
+              const Icon = cat.icon;
+
+              return (
+                <Link
+                  key={cat.label}
+                  to={cat.to}
+                  onClick={() =>
+                    setMobileMenuOpen(false)
+                  }
+                  className="
+                    flex
+                    items-center
+                    gap-3
+                  "
+                >
+                  <Icon
+                    className="
+                      text-lg
+                      shrink-0
+                    "
+                  />
+
+                  <span className="truncate">
+                    {cat.label}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
 
-          <div className="border-t border-gray-200 pt-6 flex flex-col space-y-5">
+          {/* EXTRA LINKS */}
+
+          <div
+            className="
+              border-t
+              border-gray-200
+              pt-6
+              flex
+              flex-col
+              space-y-4
+            "
+          >
+            {/* PROFILE */}
+
             <Link
               to="/profile"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-3 text-sm text-gray-700"
+              onClick={() =>
+                setMobileMenuOpen(false)
+              }
+              className="
+                flex
+                items-center
+                gap-3
+                text-sm
+                font-medium
+                text-gray-700
+              "
             >
               <CgProfile className="text-xl" />
               Profile
             </Link>
-            <Link
-              to="/cart"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-3 text-sm text-gray-700"
-            >
-              <CiShoppingCart className="text-xl" />
-              Cart
-            </Link>
+
+            {/* WISHLIST */}
+
             <Link
               to="/wishlist"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-3 text-sm text-gray-700"
+              onClick={() =>
+                setMobileMenuOpen(false)
+              }
+              className="
+                flex
+                items-center
+                gap-3
+                text-sm
+                font-medium
+                text-gray-700
+              "
             >
               <CiHeart className="text-xl" />
               Wishlist
             </Link>
 
-            {/* Location — inline in drawer */}
-            <div className="relative" ref={locationRef}>
+            {/* LOCATION */}
+
+            <div className="relative">
               <button
-                onClick={() => setShowLocationBox(!showLocationBox)}
-                className="flex items-center gap-3 text-sm text-gray-700"
+                onClick={() =>
+                  setShowLocationBox(
+                    !showLocationBox
+                  )
+                }
+                className="
+                  flex
+                  items-center
+                  gap-3
+                  text-sm
+                  font-medium
+                  text-gray-700
+                "
               >
-                {detecting ? (
-                  <FiLoader className="animate-spin text-xl" />
-                ) : (
-                  <CiLocationOn className="text-xl" />
-                )}
-                {detecting ? "Detecting..." : city ? city : "Select Location"}
+                <CiLocationOn className="text-xl" />
+
+                <span>
+                  {detecting
+                    ? "Detecting…"
+                    : city
+                    ? `${city}${
+                        pincode
+                          ? `, ${pincode}`
+                          : ""
+                      }`
+                    : "Select Location"}
+                </span>
               </button>
 
               {showLocationBox && (
-                <div className="mt-3 bg-gray-50 rounded-xl p-3 border">
-                  <LocationDropdownContent />
+                <div
+                  className="
+                    mt-3
+                    bg-gray-50
+                    rounded-xl
+                    p-3
+                    border
+                  "
+                >
+                  <p
+                    className="
+                      text-sm
+                      font-semibold
+                      mb-2
+                      text-[#5a1b1b]
+                    "
+                  >
+                    Enter Pincode
+                  </p>
+
+                  <input
+                    type="text"
+                    maxLength={6}
+                    value={pincode}
+                    onChange={
+                      handlePincodeChange
+                    }
+                    placeholder="e.g. 400001"
+                    className="
+                      border
+                      rounded-lg
+                      px-3
+                      py-2
+                      w-full
+                      outline-none
+                      text-sm
+                      bg-white
+                    "
+                  />
+
+                  {locationError && (
+                    <p
+                      className="
+                        text-red-500
+                        text-xs
+                        mt-1
+                      "
+                    >
+                      {locationError}
+                    </p>
+                  )}
+
+                  {city && (
+                    <p
+                      className="
+                        text-xs
+                        mt-2
+                        text-[#5a1b1b]/70
+                      "
+                    >
+                      Delivering to:{" "}
+                      <span className="font-semibold">
+                        {city}
+                        {pincode
+                          ? `, ${pincode}`
+                          : ""}
+                      </span>
+                    </p>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={
+                      detectLocation
+                    }
+                    className="
+                      text-xs
+                      text-[#7A2E42]
+                      font-medium
+                      mt-3
+                      hover:underline
+                    "
+                  >
+                    Use current location
+                  </button>
                 </div>
               )}
             </div>

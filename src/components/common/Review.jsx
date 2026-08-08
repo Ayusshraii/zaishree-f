@@ -78,8 +78,8 @@ const Reviews = () => {
           loop={true}
           spaceBetween={10}
           breakpoints={{
-            320: {
-              slidesPerView: 2,
+            380: {
+              slidesPerView: 1,
             },
             768: {
               slidesPerView: 3,
@@ -93,7 +93,7 @@ const Reviews = () => {
             <SwiperSlide key={review.id}>
               <div className="bg-white rounded-2xl w-[250px]  p-3 h-[250px] flex flex-col gap-10">
                 <div className="">
-                  <FaQuoteLeft className=" text-yellow-500 mb-4" />
+                  <FaQuoteLeft className="max-w-4xl text-yellow-500 mb-4" />
 
                   <p className="text-gray-600 leading-7">
                     "{review.review}"

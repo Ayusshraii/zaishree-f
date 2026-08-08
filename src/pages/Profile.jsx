@@ -64,7 +64,7 @@ const Profile = () => {
           </p>
           <Link
             to="/auth"
-            className="px-6 py-2.5 bg-[#4B0F14] text-white text-sm uppercase tracking-wide hover:bg-[#3A0C10] transition-colors"
+            className="px-6 py-2.5 bg-[#4B0F14] rounded-2xl text-white text-sm uppercase tracking-wide hover:bg-[#3A0C10] transition-colors"
           >
             Sign Up
           </Link>

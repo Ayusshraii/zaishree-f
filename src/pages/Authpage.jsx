@@ -135,7 +135,7 @@ const AuthPage = () => {
               <button
                 type="submit"
                 disabled={loginLoading}
-                className="w-full py-3 bg-[#141311] text-white text-sm font-semibold uppercase tracking-wide hover:bg-[#2A2822] disabled:opacity-60 transition-colors"
+                className="w-full py-3 bg-[#4B0F14] text-white text-sm font-semibold uppercase tracking-wide rounded-sm hover:bg-[#4B0F14]  disabled:opacity-60 transition-colors"
               >
                 {loginLoading ? "Signing in..." : "Sign In"}
               </button>
@@ -317,7 +317,7 @@ const AuthPage = () => {
               <button
                 type="submit"
                 disabled={signupLoading}
-                className="w-full py-3 bg-gray-200 text-gray-900 text-sm font-semibold uppercase tracking-wide hover:bg-gray-300 disabled:opacity-60 transition-colors"
+                className="w-full py-3 bg-gray-200 text-gray-900 text-sm font-semibold rounded-sm uppercase tracking-wide hover:bg-gray-300 disabled:opacity-60 transition-colors"
               >
                 {signupLoading ? "Creating account..." : "Register"}
               </button>

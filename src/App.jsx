@@ -12,7 +12,7 @@ import { AuthProvider } from "./context/AuthContext";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import BondProducts from "./pages/Bondproducts";
-import Login from "./pages/Login";
+import Login from "./pages/login";
 
 const App = () => {
   return (

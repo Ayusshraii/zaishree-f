@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaCheck } from "react-icons/fa";
+import Navbar from "../components/common/Navbar";
 
 const plans = [
   {
@@ -62,8 +63,10 @@ const Subscription = () => {
   const [selectedPlan, setSelectedPlan] = useState(null);
 
   return (
-    <section className="bg-white py-16 px-5">
-      <div className="max-w-6xl mx-auto">
+    <section className="bg-white  ">
+      <div className="border-b-1 border-gray-300"> <Navbar /></div>
+     
+      <div className="max-w-6xl py-5 mx-auto">
         {/* Header */}
         <div className="text-center mb-14 max-w-2xl mx-auto">
           <h1 className="text-4xl sm:text-5xl font-serif text-gray-900">

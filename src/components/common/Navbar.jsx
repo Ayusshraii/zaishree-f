@@ -1,23 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 
 import { CgProfile } from "react-icons/cg";
 import { CiShoppingCart, CiHeart, CiSearch, CiLocationOn } from "react-icons/ci";
-import { FiMenu, FiX } from "react-icons/fi";
+import { FiMenu, FiX, FiCrosshair, FiLoader } from "react-icons/fi";
 
-// Temporary local mapping — replace with real data or backend lookup later
-const PINCODE_CITY_MAP = {
-  "400001": "Mumbai",
-  "110001": "Delhi",
-  "560001": "Bengaluru",
-  "600001": "Chennai",
-  "700001": "Kolkata",
-  "500001": "Hyderabad",
-  "411001": "Pune",
-  "380001": "Ahmedabad",
-  "302001": "Jaipur",
-  "226001": "Lucknow",
-};
+// Fallback used whenever we can't detect or look up the user's location
+const DEFAULT_LOCATION = { city: "Delhi", pincode: "110001" };
 
 const Navbar = () => {
   const [keyword, setKeyword] = useState("");
@@ -25,8 +14,10 @@ const Navbar = () => {
 
   const [pincode, setPincode] = useState("");
   const [city, setCity] = useState("");
+  const [isDefaultLocation, setIsDefaultLocation] = useState(false);
   const [showLocationBox, setShowLocationBox] = useState(false);
   const [locationError, setLocationError] = useState("");
+  const [detecting, setDetecting] = useState(false);
   const locationRef = useRef(null);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -51,35 +42,121 @@ const Navbar = () => {
     }
   };
 
-  const handlePincodeChange = (e) => {
+  const applyDefaultLocation = (errorMessage) => {
+    setCity(DEFAULT_LOCATION.city);
+    setPincode(DEFAULT_LOCATION.pincode);
+    setIsDefaultLocation(true);
+    setLocationError(errorMessage || "");
+    // Don't persist the default to localStorage — leave it unset so we
+    // retry auto-detection on the next visit instead of getting stuck.
+  };
+
+  // Reverse-geocode lat/lng into city + postcode using OpenStreetMap Nominatim (free, no key)
+  const reverseGeocode = async (lat, lon) => {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}&zoom=14`,
+      {
+        headers: {
+          Accept: "application/json",
+        },
+      }
+    );
+    if (!res.ok) throw new Error("Reverse geocode failed");
+    return res.json();
+  };
+
+  const detectLocation = useCallback(() => {
+    setLocationError("");
+
+    if (!("geolocation" in navigator)) {
+      applyDefaultLocation("Location not supported — showing default");
+      return;
+    }
+
+    setDetecting(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          const data = await reverseGeocode(latitude, longitude);
+
+          const address = data.address || {};
+          const cityName =
+            address.city || address.town || address.village || address.county;
+          const postcode = address.postcode || "";
+
+          if (cityName) {
+            setCity(cityName);
+            setPincode(postcode);
+            setIsDefaultLocation(false);
+            localStorage.setItem("userCity", cityName);
+            localStorage.setItem("userPincode", postcode);
+            setShowLocationBox(false);
+          } else {
+            applyDefaultLocation("Couldn't determine your city — showing default");
+          }
+        } catch (err) {
+          applyDefaultLocation("Couldn't fetch your location — showing default");
+        } finally {
+          setDetecting(false);
+        }
+      },
+      (err) => {
+        setDetecting(false);
+        const message =
+          err.code === err.PERMISSION_DENIED
+            ? "Location permission denied — showing default"
+            : "Couldn't get your location — showing default";
+        applyDefaultLocation(message);
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
+    );
+  }, []);
+
+  const handlePincodeChange = async (e) => {
     const value = e.target.value.replace(/\D/g, ""); // digits only
     setPincode(value);
     setLocationError("");
 
     if (value.length === 6) {
-      const cityName = PINCODE_CITY_MAP[value];
+      try {
+        const res = await fetch(`https://api.postalpincode.in/pincode/${value}`);
+        const data = await res.json();
 
-      if (cityName) {
-        setCity(cityName);
-        localStorage.setItem("userPincode", value);
-        localStorage.setItem("userCity", cityName);
-        setShowLocationBox(false);
-      } else {
-        setCity("");
-        setLocationError("Pincode not found");
+        if (data[0].Status === "Success") {
+          const postOffice = data[0].PostOffice[0];
+          const cityName = postOffice.District || postOffice.Name;
+          setCity(cityName);
+          setIsDefaultLocation(false);
+          localStorage.setItem("userPincode", value);
+          localStorage.setItem("userCity", cityName);
+          setShowLocationBox(false);
+        } else {
+          setCity("");
+          setLocationError("Invalid pincode");
+        }
+      } catch (err) {
+        setLocationError("Couldn't fetch location");
       }
     } else {
       setCity("");
     }
   };
 
-  // Load saved location on mount
+  // On mount: load saved location, or auto-detect (falling back to default) if none saved
   useEffect(() => {
     const savedCity = localStorage.getItem("userCity");
     const savedPincode = localStorage.getItem("userPincode");
-    if (savedCity) setCity(savedCity);
-    if (savedPincode) setPincode(savedPincode);
-  }, []);
+
+    if (savedCity) {
+      setCity(savedCity);
+      if (savedPincode) setPincode(savedPincode);
+      setIsDefaultLocation(false);
+    } else {
+      detectLocation();
+    }
+  }, [detectLocation]);
 
   // Close location dropdown when clicking outside
   useEffect(() => {
@@ -105,6 +182,49 @@ const Navbar = () => {
     { label: "Collections", to: "/Products" },
     { label: "Subscription", to: "/subscription" },
   ];
+
+  const LocationDropdownContent = () => (
+    <>
+      <button
+        onClick={detectLocation}
+        disabled={detecting}
+        className="w-full flex items-center justify-center gap-2 text-xs font-medium py-2 mb-3 border border-gray-300 rounded-lg hover:border-gray-500 transition-colors disabled:opacity-60"
+      >
+        {detecting ? (
+          <FiLoader className="animate-spin w-3.5 h-3.5" />
+        ) : (
+          <FiCrosshair className="w-3.5 h-3.5" />
+        )}
+        {detecting ? "Detecting..." : "Use my current location"}
+      </button>
+
+      <div className="flex items-center gap-2 mb-3">
+        <div className="flex-1 h-px bg-gray-200" />
+        <span className="text-[10px] uppercase text-gray-400">or</span>
+        <div className="flex-1 h-px bg-gray-200" />
+      </div>
+
+      <p className="text-sm font-semibold mb-2">Enter Pincode</p>
+      <input
+        type="text"
+        maxLength={6}
+        value={pincode}
+        onChange={handlePincodeChange}
+        placeholder="e.g. 400001"
+        className="border rounded-lg px-2 py-1 w-full outline-none text-sm bg-white"
+      />
+      {locationError && (
+        <p className="text-amber-600 text-xs mt-1">{locationError}</p>
+      )}
+      {city && (
+        <p className="text-green-600 text-xs mt-2">
+          {isDefaultLocation ? "Default location: " : "Delivering to: "}
+          <b>{city}</b>
+          {pincode && ` — ${pincode}`}
+        </p>
+      )}
+    </>
+  );
 
   return (
     <>
@@ -150,31 +270,19 @@ const Navbar = () => {
               onClick={() => setShowLocationBox(!showLocationBox)}
               className="flex items-center gap-1 text-sm border-2 p-2.5 rounded-2xl hover:scale-105 transition"
             >
-              <CiLocationOn className="text-xl" />
+              {detecting ? (
+                <FiLoader className="animate-spin text-xl" />
+              ) : (
+                <CiLocationOn className="text-xl" />
+              )}
               <span className="max-w-[100px] truncate">
-                {city ? city : "Select Location"}
+                {detecting ? "Detecting..." : city ? city : "Select Location"}
               </span>
             </button>
 
             {showLocationBox && (
               <div className="absolute top-10 left-0 bg-white shadow-lg rounded-xl p-3 w-64 z-50 border">
-                <p className="text-sm font-semibold mb-2">Enter Pincode</p>
-                <input
-                  type="text"
-                  maxLength={6}
-                  value={pincode}
-                  onChange={handlePincodeChange}
-                  placeholder="e.g. 400001"
-                  className="border rounded-lg px-2 py-1 w-full outline-none text-sm"
-                />
-                {locationError && (
-                  <p className="text-red-500 text-xs mt-1">{locationError}</p>
-                )}
-                {city && (
-                  <p className="text-green-600 text-xs mt-2">
-                    Delivering to: <b>{city}</b>
-                  </p>
-                )}
+                <LocationDropdownContent />
               </div>
             )}
           </div>
@@ -337,31 +445,17 @@ const Navbar = () => {
                 onClick={() => setShowLocationBox(!showLocationBox)}
                 className="flex items-center gap-3 text-sm text-gray-700"
               >
-                <CiLocationOn className="text-xl" />
-                {city ? city : "Select Location"}
+                {detecting ? (
+                  <FiLoader className="animate-spin text-xl" />
+                ) : (
+                  <CiLocationOn className="text-xl" />
+                )}
+                {detecting ? "Detecting..." : city ? city : "Select Location"}
               </button>
 
               {showLocationBox && (
                 <div className="mt-3 bg-gray-50 rounded-xl p-3 border">
-                  <p className="text-sm font-semibold mb-2">Enter Pincode</p>
-                  <input
-                    type="text"
-                    maxLength={6}
-                    value={pincode}
-                    onChange={handlePincodeChange}
-                    placeholder="e.g. 400001"
-                    className="border rounded-lg px-2 py-1 w-full outline-none text-sm bg-white"
-                  />
-                  {locationError && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {locationError}
-                    </p>
-                  )}
-                  {city && (
-                    <p className="text-green-600 text-xs mt-2">
-                      Delivering to: <b>{city}</b>
-                    </p>
-                  )}
+                  <LocationDropdownContent />
                 </div>
               )}
             </div>

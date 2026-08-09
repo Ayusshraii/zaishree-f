@@ -6,6 +6,7 @@ import HomeSections from '../common/HomeSecrion'
 import ShopByBond from '../common/Shopbybond'
 import ShopByCategory from '../common/categories'
 import Reviews from '../common/Review'
+import Subscription from '../../pages/Subscription'
 
 
 const Userlayout = () => {
@@ -16,7 +17,7 @@ const Userlayout = () => {
  <ShopByCategory className=''/>
   <HomeSections  className=''/>
   <ShopByBond className=''/>
-  <Reviews className=''/>
+  <Subscription className=''/>
  <Footer/>
    </>
   )

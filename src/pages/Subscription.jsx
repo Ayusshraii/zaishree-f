@@ -64,12 +64,11 @@ const Subscription = () => {
 
   return (
     <section className="bg-white  ">
-      <div className="border-b-1 border-gray-300"> <Navbar /></div>
      
       <div className="max-w-6xl py-5 mx-auto">
         {/* Header */}
         <div className="text-center mb-14 max-w-2xl mx-auto">
-          <h1 className="text-4xl sm:text-5xl font-serif text-gray-900">
+          <h1 className="text-4xl sm:text-5xl font-serif text-center text-gray-900">
             Elevate Your Elegance
           </h1>
           <p className="text-gray-500 mt-3 text-sm sm:text-base">

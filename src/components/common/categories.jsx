@@ -101,6 +101,33 @@ const ShopByCategory = () => {
       image:
         "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&q=80",
     },
+    
+    {
+      id: 105,
+      name: "Rings",
+      metal: "silver",
+      special: false,
+      image:
+        "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&q=80",
+    },
+    
+    {
+      id: 105,
+      name: "Rings",
+      metal: "silver",
+      special: false,
+      image:
+        "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&q=80",
+    },
+    
+    {
+      id: 105,
+      name: "Rings",
+      metal: "silver",
+      special: false,
+      image:
+        "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&q=80",
+    },
 
     {
       id: 106,

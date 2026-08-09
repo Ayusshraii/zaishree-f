@@ -97,7 +97,7 @@ const categories = [
     to: "/Products?category=gifting",
   },
   {
-    label: "My Subscription",
+    label: "Subscription",
     icon: GiJewelCrown,
     to: "/subscription",
   },

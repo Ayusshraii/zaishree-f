@@ -11,10 +11,12 @@ import "react-toastify/dist/ReactToastify.css";
 // Import your providers
 import { CartProvider } from "./context/Cartcontext";
 import { WishlistProvider } from "./context/WishlistContext";
+import { SubscriptionProvider } from "./context/SubscriptionContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
+    <SubscriptionProvider>
       <CartProvider>
         <WishlistProvider>
           <App />
@@ -29,6 +31,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           />
         </WishlistProvider>
       </CartProvider>
+      </SubscriptionProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

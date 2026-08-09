@@ -20,6 +20,7 @@ const sections = [
         price: 18999,
         image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80",
         rating: 4.9,
+        isPremium: true,
       },
       {
         id: 3,
@@ -70,13 +71,15 @@ const sections = [
         price: 21999,
         image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80",
         rating: 5.0,
+        isPremium: true,
       },
-       {
+      {
         id: 9,
         name: "Luxury Ring",
         price: 21999,
         image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80",
         rating: 5.0,
+        isPremium: true,
       },
     ],
   },
@@ -92,6 +95,7 @@ const sections = [
         price: 45999,
         image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80",
         rating: 5.0,
+        isPremium: true,
       },
       {
         id: 10,
@@ -106,6 +110,7 @@ const sections = [
         price: 35999,
         image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80",
         rating: 4.8,
+        isPremium: true,
       },
       {
         id: 12,
@@ -127,7 +132,7 @@ const sections = [
 
 const HomeSections = () => {
   return (
-    <div className="max-w-7xl mx-auto px-6 text-[#5a1b1be0]">
+    <div className=" mx-auto px-6 text-[#5a1b1be0]">
       {sections.map((section) => (
         <ProductSection key={section.id} section={section} />
       ))}

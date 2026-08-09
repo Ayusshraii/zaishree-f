@@ -6,17 +6,17 @@ import { FiFilter, FiX } from "react-icons/fi";
 // mock product catalog — swap for a real API call later
 const allProducts = [
   { id: 1, name: "Classic Gold Ring", category: "rings", material: "gold", price: 24999, rating: 4.8, image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80" },
-  { id: 2, name: "Diamond Necklace", category: "necklaces", material: "gold", price: 45999, rating: 4.9, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80" },
+  { id: 2, name: "Diamond Necklace", category: "necklaces", material: "gold", price: 45999, rating: 4.9, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80", isPremium: true },
   { id: 3, name: "Gold Bangle Set", category: "bracelets", material: "gold", price: 28999, rating: 4.6, image: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&q=80" },
-  { id: 4, name: "Pearl Drop Earrings", category: "earrings", material: "silver", price: 8999, rating: 4.7, image: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80" },
+  { id: 4, name: "Pearl Drop Earrings", category: "earrings", material: "silver", price: 8999, rating: 4.7, image: "https://images.unsplash.com/photo-1605100804763-263566ae5e4d?w=600&q=80" },
   { id: 5, name: "Layered Gold Chain", category: "necklaces", material: "gold", price: 32999, rating: 4.7, image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80" },
   { id: 6, name: "Silver Hoop Earrings", category: "earrings", material: "silver", price: 3999, rating: 4.9, image: "https://images.unsplash.com/photo-1589128777073-263566ae5e4d?w=600&q=80" },
   { id: 7, name: "Minimal Silver Cuff", category: "bracelets", material: "silver", price: 5999, rating: 4.5, image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80" },
-  { id: 8, name: "Diamond Solitaire Ring", category: "rings", material: "gold", price: 55999, rating: 5.0, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80" },
+  { id: 8, name: "Diamond Solitaire Ring", category: "rings", material: "gold", price: 55999, rating: 5.0, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80", isPremium: true },
   { id: 9, name: "Rose Gold Pendant", category: "necklaces", material: "gold", price: 9999, rating: 4.7, image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80" },
   { id: 10, name: "Silver Chain Necklace", category: "necklaces", material: "silver", price: 5999, rating: 4.8, image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80" },
   { id: 11, name: "Twisted Gold Band", category: "rings", material: "gold", price: 17999, rating: 4.6, image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80" },
-  { id: 12, name: "Silver Pendant", category: "necklaces", material: "silver", price: 6999, rating: 4.5, image: "https://images.unsplash.com/photo-1599459183200-59c7687a0275?w=600&q=80" },
+  { id: 12, name: "Silver Pendant", category: "necklaces", material: "silver", price: 6999, rating: 4.5, image: "https://images.unsplash.com/photo-1599459183200-59c7687a0275?w=600&q=80", isPremium: true },
 ];
 
 const categories = ["rings", "necklaces", "earrings", "bracelets"];
@@ -26,6 +26,7 @@ const Products = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedMaterials, setSelectedMaterials] = useState([]);
   const [maxPrice, setMaxPrice] = useState(60000);
+  const [premiumOnly, setPremiumOnly] = useState(false);
   const [sortBy, setSortBy] = useState("featured");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -45,6 +46,7 @@ const Products = () => {
     setSelectedCategories([]);
     setSelectedMaterials([]);
     setMaxPrice(60000);
+    setPremiumOnly(false);
   };
 
   const filteredProducts = useMemo(() => {
@@ -54,7 +56,8 @@ const Products = () => {
       const materialMatch =
         selectedMaterials.length === 0 || selectedMaterials.includes(p.material);
       const priceMatch = p.price <= maxPrice;
-      return categoryMatch && materialMatch && priceMatch;
+      const premiumMatch = !premiumOnly || p.isPremium;
+      return categoryMatch && materialMatch && priceMatch && premiumMatch;
     });
 
     if (sortBy === "price-low") result = [...result].sort((a, b) => a.price - b.price);
@@ -62,10 +65,13 @@ const Products = () => {
     if (sortBy === "rating") result = [...result].sort((a, b) => b.rating - a.rating);
 
     return result;
-  }, [selectedCategories, selectedMaterials, maxPrice, sortBy]);
+  }, [selectedCategories, selectedMaterials, maxPrice, premiumOnly, sortBy]);
 
   const activeFilterCount =
-    selectedCategories.length + selectedMaterials.length + (maxPrice < 60000 ? 1 : 0);
+    selectedCategories.length +
+    selectedMaterials.length +
+    (maxPrice < 60000 ? 1 : 0) +
+    (premiumOnly ? 1 : 0);
 
   const FilterSidebar = () => (
     <div className="space-y-8 ">
@@ -119,6 +125,22 @@ const Products = () => {
             </label>
           ))}
         </div>
+      </div>
+
+      {/* Premium */}
+      <div>
+        <h4 className="text-xs uppercase tracking-wide text-[#6B6858] font-medium mb-3">
+          Availability
+        </h4>
+        <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={premiumOnly}
+            onChange={() => setPremiumOnly((prev) => !prev)}
+            className="accent-[#141311]"
+          />
+          <span>Premium only</span>
+        </label>
       </div>
 
       {/* Price */}

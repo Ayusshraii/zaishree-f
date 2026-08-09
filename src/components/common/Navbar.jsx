@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { CgProfile } from "react-icons/cg";
@@ -11,14 +11,7 @@ import {
   CiLocationOn,
 } from "react-icons/ci";
 
-import {
-  FiMenu,
-  FiX,
-  FiCamera,
-  FiMic,
-} from "react-icons/fi";
-
-import { PiDotsThreeOutlineFill } from "react-icons/pi";
+import { FiMenu, FiX } from "react-icons/fi";
 
 import {
   GiJewelCrown,
@@ -77,16 +70,7 @@ const categories = [
     icon: GiDiamondRing,
     to: "/Products?category=diamond",
   },
-  {
-    label: "Earrings",
-    icon: GiEarrings,
-    to: "/Products?category=earrings",
-  },
-  {
-    label: "Rings",
-    icon: GiRing,
-    to: "/Products?category=rings",
-  },
+
   {
     label: "Daily Wear",
     icon: GiWatch,
@@ -113,9 +97,9 @@ const categories = [
     to: "/Products?category=gifting",
   },
   {
-    label: "More",
-    icon: PiDotsThreeOutlineFill,
-    to: "/Products",
+    label: "My Subscription",
+    icon: GiJewelCrown,
+    to: "/subscription",
   },
 ];
 
@@ -124,6 +108,8 @@ const categories = [
 // ============================================================
 
 const Navbar = ({ cartCount = 0 }) => {
+  const navigate = useNavigate();
+
   // ==========================================================
   // SEARCH
   // ==========================================================
@@ -175,6 +161,20 @@ const Navbar = ({ cartCount = 0 }) => {
     } catch (err) {
       console.error("Error fetching suggestions:", err);
       setSuggestions([]);
+    }
+  };
+
+  const submitSearch = () => {
+    if (!keyword.trim()) return;
+
+    navigate(`/Products?search=${encodeURIComponent(keyword)}`);
+    setSuggestions([]);
+    setMobileSearchOpen(false);
+  };
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === "Enter") {
+      submitSearch();
     }
   };
 
@@ -541,14 +541,6 @@ const Navbar = ({ cartCount = 0 }) => {
                   bg-white
                 "
               >
-                <CiSearch
-                  className="
-                    text-xl
-                    text-[#5a1b1b]
-                    shrink-0
-                  "
-                />
-
                 <input
                   className="
                     outline-none
@@ -562,31 +554,21 @@ const Navbar = ({ cartCount = 0 }) => {
                   type="text"
                   value={keyword}
                   onChange={handleSearch}
+                  onKeyDown={handleSearchKeyDown}
                   placeholder="Search for gold necklace"
                 />
 
                 <button
                   type="button"
+                  onClick={submitSearch}
                   className="
-                    text-[#5a1b1b]/70
-                    hover:text-[#5a1b1b]
+                    text-[#5a1b1b]
+                    hover:text-[#7A2E42]
                     shrink-0
                   "
-                  aria-label="Search by image"
+                  aria-label="Search"
                 >
-                  <FiCamera className="text-lg" />
-                </button>
-
-                <button
-                  type="button"
-                  className="
-                    text-[#5a1b1b]/70
-                    hover:text-[#5a1b1b]
-                    shrink-0
-                  "
-                  aria-label="Search by voice"
-                >
-                  <FiMic className="text-lg" />
+                  <CiSearch className="text-xl" />
                 </button>
               </div>
 
@@ -1012,18 +994,12 @@ const Navbar = ({ cartCount = 0 }) => {
                   gap-2
                 "
               >
-                <CiSearch
-                  className="
-                    text-lg
-                    text-[#5a1b1b]
-                  "
-                />
-
                 <input
                   autoFocus
                   type="text"
                   value={keyword}
                   onChange={handleSearch}
+                  onKeyDown={handleSearchKeyDown}
                   placeholder="Search for gold necklace"
                   className="
                     outline-none
@@ -1032,19 +1008,18 @@ const Navbar = ({ cartCount = 0 }) => {
                   "
                 />
 
-                <FiCamera
+                <button
+                  type="button"
+                  onClick={submitSearch}
                   className="
-                    text-base
-                    text-[#5a1b1b]/70
+                    text-[#5a1b1b]
+                    hover:text-[#7A2E42]
+                    shrink-0
                   "
-                />
-
-                <FiMic
-                  className="
-                    text-base
-                    text-[#5a1b1b]/70
-                  "
-                />
+                  aria-label="Search"
+                >
+                  <CiSearch className="text-lg" />
+                </button>
               </div>
 
               {suggestions.length > 0 && (

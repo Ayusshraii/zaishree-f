@@ -13,8 +13,14 @@ import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import BondProducts from "./pages/Bondproducts";
 import Login from "./pages/login";
-
+import Gold from "./pages/Gold";
+import Demifine
+ from "./pages/Demifine";
+ import MobileBottomNav from "./components/common/bottomNav";
+import { useState } from "react";
 const App = () => {
+
+  const[currentStore , setCurrentStore] = useState("silver")
   return (
     <AuthProvider>
 
@@ -30,8 +36,15 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/bond/:slug" element={<BondProducts />} />
             <Route  path="/login" element={<Login />} />
+            <Route path="/gold" element={<Gold/>} />
+            <Route path="/demifine" element={<Demifine/>}/>
           </Routes>
 
+          <MobileBottomNav
+          cartCount={0}
+          wishlistCount={0}
+          currentStore={currentStore}
+          onStoreChange={setCurrentStore}/>
     </AuthProvider>
   );
 };

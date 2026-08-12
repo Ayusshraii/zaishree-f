@@ -7,6 +7,7 @@ import ShopByBond from '../common/Shopbybond'
 import ShopByCategory from '../common/categories'
 import Reviews from '../common/Review'
 import Subscription from '../../pages/Subscription'
+import MobileBottomNav from '../common/bottomNav'
 
 
 const Userlayout = () => {

@@ -17,10 +17,12 @@ const allProducts = [
   { id: 10, name: "Silver Chain Necklace", category: "necklaces", material: "silver", price: 5999, rating: 4.8, image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80" },
   { id: 11, name: "Twisted Gold Band", category: "rings", material: "gold", price: 17999, rating: 4.6, image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80" },
   { id: 12, name: "Silver Pendant", category: "necklaces", material: "silver", price: 6999, rating: 4.5, image: "https://images.unsplash.com/photo-1599459183200-59c7687a0275?w=600&q=80", isPremium: true },
+  { id: 13, name: "Demi-Fine Layered Necklace", category: "necklaces", material: "demi-fine", price: 4999, rating: 4.6, image: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80" },
+  { id: 14, name: "Demi-Fine Stacking Ring", category: "rings", material: "demi-fine", price: 2999, rating: 4.4, image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80" },
 ];
 
 const categories = ["rings", "necklaces", "earrings", "bracelets"];
-const materials = ["gold", "silver"];
+const materials = ["gold", "silver", "demifine"];
 
 const Products = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -74,7 +76,7 @@ const Products = () => {
     (premiumOnly ? 1 : 0);
 
   const FilterSidebar = () => (
-    <div className="space-y-8 ">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h3 className="font-serif text-lg text-[#141311]">Filters</h3>
         {activeFilterCount > 0 && (
@@ -185,22 +187,22 @@ const Products = () => {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="text-sm border border-gray-300 rounded-full px-3 py-2"
+            className="text-sm border border-gray-300 rounded-full px-3 py-2 bg-[#9B7145]"
           >
             <option value="featured">Featured</option>
-            <option value="price-low">Price: Low to High</option>
+            <option  value="price-low">Price: Low to High</option>
             <option value="price-high">Price: High to Low</option>
             <option value="rating">Top Rated</option>
           </select>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-10">
-          {/* Desktop sidebar */}
-          <aside className="hidden lg:block">
+        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-10 items-start">
+          {/* Desktop sidebar — sticky, fixed to viewport, no internal scroll */}
+          <aside className="hidden lg:block sticky top-24 self-start">
             <FilterSidebar />
           </aside>
 
-          {/* Mobile filter drawer */}
+          {/* Mobile filter drawer (this one scrolls, since it's a full drawer, not the desktop sidebar) */}
           {mobileFiltersOpen && (
             <div className="fixed inset-0 z-50 lg:hidden">
               <div

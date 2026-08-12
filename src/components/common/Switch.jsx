@@ -1,64 +1,61 @@
-import React, { useState } from "react";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+
+const routeMap = {
+  "/": "silver",
+  "/gold": "gold",
+  "/demifine": "demifine",
+};
 
 const Switch = () => {
-  const [selected, setSelected] = useState("gold");
+  const location = useLocation();
+  const selected = routeMap[location.pathname] || "silver";
 
   return (
-    <div className="bg-[#F7F3EA]  px-6 py-14">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="font-serif text-3xl text-[#141311] text-center mb-8">
-          Shop by Material
-        </h2>
-
-        {/* Switch */}
-        <div className="flex justify-center mb-12">
-          <div className="relative inline-flex bg-[#dbd8d0] rounded-full p-1 w-64">
-            {/* Sliding Pill */}
-            <div
-              className={`absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] rounded-full bg-[#141311] transition-transform duration-300 ease-in-out ${
+    <div className="px-6 py-14">
+      <div className="flex justify-center mb-7 sm:mb-9">
+        <div className="relative flex items-center w-[300px] sm:w-[420px] h-[38px] sm:h-[40px] rounded-full border border-[#B08D2C] bg-white p-[2px] overflow-hidden">
+          <div
+            className={`
+              absolute top-[2px] bottom-[2px] left-[2px]
+              w-[calc(33.333%-2px)] rounded-full bg-[#7A2E42]
+              transition-transform duration-300 ease-in-out
+              ${
                 selected === "silver"
+                  ? "translate-x-0"
+                  : selected === "gold"
                   ? "translate-x-full"
-                  : "translate-x-0"
-              }`}
-            />
+                  : "translate-x-[200%]"
+              }
+            `}
+          />
 
-            {/* Gold Button */}
-            <button
-              onClick={() => setSelected("gold")}
-              className={`relative z-10 flex-1 py-2 text-sm font-medium tracking-wide uppercase transition-colors duration-300 ${
-                selected === "gold"
-                  ? "text-[#C9A66B]"
-                  : "text-[#6B6858]"
-              }`}
-            >
-              Gold
-            </button>
+          <Link
+            to="/"
+            className={`relative z-10 flex items-center justify-center flex-1 h-full rounded-full text-sm sm:text-[15px] font-medium transition-colors duration-300 ${
+              selected === "silver" ? "text-white" : "text-[#333333]"
+            }`}
+          >
+            Silver
+          </Link>
 
-            {/* Silver Button */}
-            <button
-              onClick={() => setSelected("silver")}
-              className={`relative z-10 flex-1 py-2 text-sm font-medium tracking-wide uppercase transition-colors duration-300 ${
-                selected === "silver"
-                  ? "text-white"
-                  : "text-[#6B6858]"
-              }`}
-            >
-              Silver
-            </button>
-          </div>
-        </div>
+          <Link
+            to="/gold"
+            className={`relative z-10 flex items-center justify-center flex-1 h-full rounded-full text-sm sm:text-[15px] font-medium transition-colors duration-300 ${
+              selected === "gold" ? "text-white" : "text-[#333333]"
+            }`}
+          >
+            Gold
+          </Link>
 
-        {/* Content */}
-        <div className="text-center">
-          {selected === "gold" ? (
-            <h3 className="text-2xl font-semibold text-yellow-700">
-              Gold Jewellery Collection
-            </h3>
-          ) : (
-            <h3 className="text-2xl font-semibold text-gray-600">
-              Silver Jewellery Collection
-            </h3>
-          )}
+          <Link
+            to="/demifine"
+            className={`relative z-10 flex items-center justify-center flex-1 h-full rounded-full text-sm sm:text-[15px] font-medium transition-colors duration-300 ${
+              selected === "demifine" ? "text-white" : "text-[#333333]"
+            }`}
+          >
+            Demifine
+          </Link>
         </div>
       </div>
     </div>

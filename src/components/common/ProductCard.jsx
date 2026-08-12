@@ -3,12 +3,16 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { FaStar, FaHeart, FaRegHeart, FaLock } from "react-icons/fa";
 import { FiShoppingBag } from "react-icons/fi";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import { useCart } from "../../context/Cartcontext";
 import { useWishlist } from "../../context/WishlistContext";
 import { useSubscription } from "../../context/SubscriptionContext";
 
 const ProductCard = ({ product }) => {
-  const { addToCart, isInCart } = useCart();
+  // NOTE: removeFromCart must exist on your CartContext.
+  // If your context uses a different name (e.g. removeItem, deleteFromCart),
+  // rename it here to match.
+  const { addToCart, removeFromCart, isInCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { hasSubscription } = useSubscription(); // boolean: does the user have an active subscription
   const navigate = useNavigate();
@@ -34,16 +38,24 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const handleAddToCart = (e) => {
+  // ============================================================
+  // CART TOGGLE (add if not in cart, remove if already in cart)
+  // ============================================================
+
+  const handleCartClick = (e) => {
     e.preventDefault();
+
     if (isLocked) {
       toast.error("Subscribe to unlock this product");
       return;
     }
+
     if (inCart) {
-      toast("Already added in cart");
+      removeFromCart(product.id);
+      toast("Removed from cart");
       return;
     }
+
     addToCart(product);
     toast.success("Added to cart");
   };
@@ -102,7 +114,7 @@ const ProductCard = ({ product }) => {
 
         <h3
           className={`text-sm font-medium mb-1 truncate ${
-            isLocked ? "text-gray-400" : "text-gray-900"
+            isLocked ? "text-gray-900" : "text-gray-900"
           }`}
         >
           {product.name}
@@ -122,14 +134,22 @@ const ProductCard = ({ product }) => {
         </div>
       </Link>
 
+      {/* ==================================================
+          CART BUTTON
+          - Locked -> routes to subscription page
+          - Not in cart -> adds to cart
+          - In cart -> removes from cart (now clickable, was
+            previously cursor-default/dead)
+          ================================================== */}
+
       <button
-        onClick={isLocked ? handleLockedClick : handleAddToCart}
+        onClick={isLocked ? handleLockedClick : handleCartClick}
         className={`w-full flex items-center justify-center gap-2 py-2 border text-xs uppercase tracking-wide transition-colors ${
           isLocked
-            ? "border-[#141311] text-[#141311] hover:bg-[#141311] hover:text-white"
+            ? "border-[#7A2E42] text-[#7A2E42] hover:bg-[#7A2E42] hover:text-white"
             : inCart
-            ? "border-gray-300 text-gray-400 cursor-default"
-            : "border-[#141311] hover:bg-[#141311] hover:text-white"
+            ? "border-gray-300 text-gray-500 hover:border-[#7A2E42] hover:text-[#7A2E42]"
+            : "border-[#7A2E42] hover:bg-[#7A2E42] hover:text-white"
         }`}
       >
         {isLocked ? (
@@ -137,10 +157,15 @@ const ProductCard = ({ product }) => {
             <FaLock className="w-3 h-3" />
             Unlock with Subscription
           </>
+        ) : inCart ? (
+          <>
+            <RiDeleteBin6Line className="w-3.5 h-3.5" />
+            Remove from cart
+          </>
         ) : (
           <>
             <FiShoppingBag className="w-3.5 h-3.5" />
-            {inCart ? "Added to cart" : "Add to cart"}
+            Add to cart
           </>
         )}
       </button>

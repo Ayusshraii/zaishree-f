@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -8,7 +8,6 @@ import {
   CiShoppingCart,
   CiHeart,
   CiSearch,
-  CiLocationOn,
 } from "react-icons/ci";
 
 import { FiMenu, FiX } from "react-icons/fi";
@@ -17,42 +16,13 @@ import {
   GiJewelCrown,
   GiGoldBar,
   GiDiamondRing,
-  GiEarrings,
-  GiRing,
   GiWatch,
   GiGems,
   GiPearlNecklace,
   GiPresent,
   GiCutDiamond,
 } from "react-icons/gi";
-
-// ============================================================
-// PINCODE → CITY
-// ============================================================
-
-const PINCODE_CITY_MAP = {
-  "400001": "Mumbai",
-  "110001": "Delhi",
-  "560001": "Bengaluru",
-  "600001": "Chennai",
-  "700001": "Kolkata",
-  "500001": "Hyderabad",
-  "411001": "Pune",
-  "380001": "Ahmedabad",
-  "302001": "Jaipur",
-  "226001": "Lucknow",
-};
-
-// ============================================================
-// DEFAULT LOCATION
-// ============================================================
-
-const DEFAULT_CITY = "Delhi";
-const DEFAULT_PINCODE = "110001";
-
-// ============================================================
-// CATEGORIES
-// ============================================================
+import LocationDetector from "./Location";
 
 const categories = [
   {
@@ -70,7 +40,6 @@ const categories = [
     icon: GiDiamondRing,
     to: "/Products?category=diamond",
   },
-
   {
     label: "Daily Wear",
     icon: GiWatch,
@@ -118,18 +87,6 @@ const Navbar = ({ cartCount = 0 }) => {
   const [suggestions, setSuggestions] = useState([]);
 
   // ==========================================================
-  // LOCATION
-  // ==========================================================
-
-  const [pincode, setPincode] = useState("");
-  const [city, setCity] = useState("");
-  const [showLocationBox, setShowLocationBox] = useState(false);
-  const [locationError, setLocationError] = useState("");
-  const [detecting, setDetecting] = useState(false);
-
-  const locationRef = useRef(null);
-
-  // ==========================================================
   // MOBILE
   // ==========================================================
 
@@ -167,7 +124,10 @@ const Navbar = ({ cartCount = 0 }) => {
   const submitSearch = () => {
     if (!keyword.trim()) return;
 
-    navigate(`/Products?search=${encodeURIComponent(keyword)}`);
+    navigate(
+      `/Products?search=${encodeURIComponent(keyword)}`
+    );
+
     setSuggestions([]);
     setMobileSearchOpen(false);
   };
@@ -177,154 +137,6 @@ const Navbar = ({ cartCount = 0 }) => {
       submitSearch();
     }
   };
-
-  // ==========================================================
-  // APPLY LOCATION
-  // ==========================================================
-
-  const applyLocation = (cityName, pin) => {
-    setCity(cityName);
-    setPincode(pin || "");
-
-    localStorage.setItem("userCity", cityName);
-
-    if (pin) {
-      localStorage.setItem("userPincode", pin);
-    }
-  };
-
-  // ==========================================================
-  // PINCODE
-  // ==========================================================
-
-  const handlePincodeChange = (e) => {
-    const value = e.target.value.replace(/\D/g, "");
-
-    setPincode(value);
-    setLocationError("");
-
-    if (value.length === 6) {
-      const cityName = PINCODE_CITY_MAP[value];
-
-      if (cityName) {
-        applyLocation(cityName, value);
-        setShowLocationBox(false);
-      } else {
-        setCity("");
-        setLocationError("Pincode not found");
-      }
-    } else {
-      setCity("");
-    }
-  };
-
-  // ==========================================================
-  // DETECT LOCATION
-  // ==========================================================
-
-  const detectLocation = () => {
-    const savedCity = localStorage.getItem("userCity");
-    const savedPincode = localStorage.getItem("userPincode");
-
-    if (savedCity) {
-      setCity(savedCity);
-
-      if (savedPincode) {
-        setPincode(savedPincode);
-      }
-
-      return;
-    }
-
-    if (!navigator.geolocation) {
-      applyLocation(DEFAULT_CITY, DEFAULT_PINCODE);
-      return;
-    }
-
-    setDetecting(true);
-
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        try {
-          const { latitude, longitude } = position.coords;
-
-          const response = await fetch(
-            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
-          );
-
-          const data = await response.json();
-
-          const detectedCity =
-            data.city ||
-            data.locality ||
-            data.principalSubdivision ||
-            DEFAULT_CITY;
-
-          const detectedPin = data.postcode || "";
-
-          applyLocation(detectedCity, detectedPin);
-        } catch (err) {
-          console.error("Reverse geocode failed:", err);
-
-          applyLocation(DEFAULT_CITY, DEFAULT_PINCODE);
-        } finally {
-          setDetecting(false);
-        }
-      },
-
-      (err) => {
-        console.error(
-          "Geolocation denied/unavailable:",
-          err
-        );
-
-        applyLocation(DEFAULT_CITY, DEFAULT_PINCODE);
-
-        setDetecting(false);
-      },
-
-      {
-        timeout: 8000,
-      }
-    );
-  };
-
-  // ==========================================================
-  // INITIAL LOCATION
-  // ==========================================================
-
-  useEffect(() => {
-    detectLocation();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // ==========================================================
-  // CLOSE LOCATION DROPDOWN
-  // ==========================================================
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        locationRef.current &&
-        !locationRef.current.contains(event.target)
-      ) {
-        setShowLocationBox(false);
-      }
-    };
-
-    document.addEventListener(
-      "mousedown",
-      handleClickOutside
-    );
-
-    return () => {
-      document.removeEventListener(
-        "mousedown",
-        handleClickOutside
-      );
-    };
-  }, []);
 
   // ==========================================================
   // BODY SCROLL
@@ -339,97 +151,6 @@ const Navbar = ({ cartCount = 0 }) => {
       document.body.style.overflow = "";
     };
   }, [mobileMenuOpen]);
-
-  // ==========================================================
-  // LOCATION DROPDOWN
-  // ==========================================================
-
-  const LocationDropdown = () => (
-    <div
-      className="
-        absolute
-        top-full
-        right-0
-        mt-2
-        bg-white
-        shadow-xl
-        rounded-xl
-        p-4
-        w-64
-        max-w-[calc(100vw-2rem)]
-        z-[100]
-        border
-        border-gray-200
-      "
-    >
-      <p
-        className="
-          text-sm
-          font-semibold
-          mb-2
-          text-[#5a1b1b]
-        "
-      >
-        {detecting
-          ? "Detecting location…"
-          : "Enter Pincode"}
-      </p>
-
-      <input
-        type="text"
-        maxLength={6}
-        value={pincode}
-        onChange={handlePincodeChange}
-        placeholder="e.g. 400001"
-        className="
-          border
-          border-gray-300
-          rounded-lg
-          px-3
-          py-2
-          w-full
-          outline-none
-          text-sm
-        "
-      />
-
-      {locationError && (
-        <p className="text-red-500 text-xs mt-1">
-          {locationError}
-        </p>
-      )}
-
-      {city && (
-        <p
-          className="
-            text-[#5a1b1b]/70
-            text-xs
-            mt-2
-          "
-        >
-          Delivering to:{" "}
-          <span className="font-semibold">
-            {city}
-            {pincode ? `, ${pincode}` : ""}
-          </span>
-        </p>
-      )}
-
-      <button
-        type="button"
-        onClick={detectLocation}
-        className="
-          text-xs
-          text-[#7A2E42]
-          font-medium
-          mt-3
-          hover:underline
-        "
-      >
-        Use current location
-      </button>
-    </div>
-  );
 
   // ==========================================================
   // JSX
@@ -451,9 +172,6 @@ const Navbar = ({ cartCount = 0 }) => {
       >
         {/* ====================================================
             DESKTOP CONTAINER
-
-            ALL DESKTOP ELEMENTS ARE INSIDE THESE
-            TWO VERTICAL LINES
             ==================================================== */}
 
         <div
@@ -462,7 +180,6 @@ const Navbar = ({ cartCount = 0 }) => {
             lg:block
             w-[calc(100%-220px)]
             mx-auto
-           
             border-gray-300
           "
         >
@@ -489,7 +206,6 @@ const Navbar = ({ cartCount = 0 }) => {
               className="
                 flex
                 items-center
-                
                 shrink-0
                 w-[180px]
               "
@@ -517,8 +233,6 @@ const Navbar = ({ cartCount = 0 }) => {
 
             {/* =================================================
                 SEARCH
-
-                SEARCH TAKES AVAILABLE SPACE
                 ================================================= */}
 
             <div
@@ -590,44 +304,48 @@ const Navbar = ({ cartCount = 0 }) => {
                     overflow-hidden
                   "
                 >
-                  {suggestions.map(
-                    (item, idx) => (
-                      <Link
-                        key={idx}
-                        to={`/Products?search=${encodeURIComponent(
-                          item.name || item
-                        )}`}
-                        onClick={() =>
-                          setSuggestions([])
-                        }
-                        className="
-                          block
-                          px-4
-                          py-3
-                          text-sm
-                          hover:bg-gray-100
-                        "
-                      >
-                        {item.name || item}
-                      </Link>
-                    )
-                  )}
+                  {suggestions.map((item, idx) => (
+                    <Link
+                      key={idx}
+                      to={`/Products?search=${encodeURIComponent(
+                        item.name || item
+                      )}`}
+                      onClick={() =>
+                        setSuggestions([])
+                      }
+                      className="
+                        block
+                        px-4
+                        py-3
+                        text-sm
+                        hover:bg-gray-100
+                      "
+                    >
+                      {item.name || item}
+                    </Link>
+                  ))}
                 </div>
               )}
             </div>
 
             {/* =================================================
                 RIGHT SIDE
-
-                EVERYTHING BELOW STAYS TOGETHER
-                AT THE END OF THE BOX
-
-                CITY
-                LOCATION
                 WISHLIST
                 PROFILE
                 CART
-                ================================================= */}
+                =======
+                ========================================== */}
+  <div
+              className="
+                flex
+                items-center
+                justify-end
+                gap-2
+                shrink-0
+                text-[#5a1b1b]
+              "
+            >
+<LocationDetector /></div>
 
             <div
               className="
@@ -638,75 +356,6 @@ const Navbar = ({ cartCount = 0 }) => {
                 shrink-0
               "
             >
-              {/* CURRENT CITY */}
-
-              {city && (
-                <button
-                  onClick={() =>
-                    setShowLocationBox(
-                      !showLocationBox
-                    )
-                  }
-                  title={`${city}${
-                    pincode
-                      ? `, ${pincode}`
-                      : ""
-                  }`}
-                  className="
-                    hidden
-                    xl:flex
-                    items-center
-                    text-sm
-                    font-medium
-                    text-[#7A2E42]
-                    whitespace-nowrap
-                    hover:text-[#5a1b1b]
-                    px-2
-                  "
-                >
-                  {city}
-
-                  {pincode
-                    ? `, ${pincode}`
-                    : ""}
-                </button>
-              )}
-
-              {/* LOCATION */}
-
-              <div
-                ref={locationRef}
-                className="
-                  relative
-                  shrink-0
-                "
-              >
-                <button
-                  onClick={() =>
-                    setShowLocationBox(
-                      !showLocationBox
-                    )
-                  }
-                  aria-label="Select location"
-                  className="
-                    flex
-                    items-center
-                    justify-center
-                    w-11
-                    h-11
-                    text-[#5a1b1b]
-                    hover:scale-105
-                    transition
-                  "
-                >
-                  <CiLocationOn className="text-2xl" />
-                </button>
-
-                {showLocationBox && (
-                  <LocationDropdown />
-                )}
-              </div>
-
               {/* WISHLIST */}
 
               <Link
@@ -909,9 +558,7 @@ const Navbar = ({ cartCount = 0 }) => {
 
             <button
               onClick={() =>
-                setMobileSearchOpen(
-                  (s) => !s
-                )
+                setMobileSearchOpen((s) => !s)
               }
               className="
                 ml-auto
@@ -1037,28 +684,26 @@ const Navbar = ({ cartCount = 0 }) => {
                     overflow-hidden
                   "
                 >
-                  {suggestions.map(
-                    (item, idx) => (
-                      <Link
-                        key={idx}
-                        to={`/Products?search=${encodeURIComponent(
-                          item.name || item
-                        )}`}
-                        onClick={() =>
-                          setSuggestions([])
-                        }
-                        className="
-                          block
-                          px-4
-                          py-3
-                          text-sm
-                          hover:bg-gray-100
-                        "
-                      >
-                        {item.name || item}
-                      </Link>
-                    )
-                  )}
+                  {suggestions.map((item, idx) => (
+                    <Link
+                      key={idx}
+                      to={`/Products?search=${encodeURIComponent(
+                        item.name || item
+                      )}`}
+                      onClick={() =>
+                        setSuggestions([])
+                      }
+                      className="
+                        block
+                        px-4
+                        py-3
+                        text-sm
+                        hover:bg-gray-100
+                      "
+                    >
+                      {item.name || item}
+                    </Link>
+                  ))}
                 </div>
               )}
             </div>
@@ -1254,129 +899,6 @@ const Navbar = ({ cartCount = 0 }) => {
               <CiHeart className="text-xl" />
               Wishlist
             </Link>
-
-            {/* LOCATION */}
-
-            <div className="relative">
-              <button
-                onClick={() =>
-                  setShowLocationBox(
-                    !showLocationBox
-                  )
-                }
-                className="
-                  flex
-                  items-center
-                  gap-3
-                  text-sm
-                  font-medium
-                  text-gray-700
-                "
-              >
-                <CiLocationOn className="text-xl" />
-
-                <span>
-                  {detecting
-                    ? "Detecting…"
-                    : city
-                    ? `${city}${
-                        pincode
-                          ? `, ${pincode}`
-                          : ""
-                      }`
-                    : "Select Location"}
-                </span>
-              </button>
-
-              {showLocationBox && (
-                <div
-                  className="
-                    mt-3
-                    bg-gray-50
-                    rounded-xl
-                    p-3
-                    border
-                  "
-                >
-                  <p
-                    className="
-                      text-sm
-                      font-semibold
-                      mb-2
-                      text-[#5a1b1b]
-                    "
-                  >
-                    Enter Pincode
-                  </p>
-
-                  <input
-                    type="text"
-                    maxLength={6}
-                    value={pincode}
-                    onChange={
-                      handlePincodeChange
-                    }
-                    placeholder="e.g. 400001"
-                    className="
-                      border
-                      rounded-lg
-                      px-3
-                      py-2
-                      w-full
-                      outline-none
-                      text-sm
-                      bg-white
-                    "
-                  />
-
-                  {locationError && (
-                    <p
-                      className="
-                        text-red-500
-                        text-xs
-                        mt-1
-                      "
-                    >
-                      {locationError}
-                    </p>
-                  )}
-
-                  {city && (
-                    <p
-                      className="
-                        text-xs
-                        mt-2
-                        text-[#5a1b1b]/70
-                      "
-                    >
-                      Delivering to:{" "}
-                      <span className="font-semibold">
-                        {city}
-                        {pincode
-                          ? `, ${pincode}`
-                          : ""}
-                      </span>
-                    </p>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={
-                      detectLocation
-                    }
-                    className="
-                      text-xs
-                      text-[#7A2E42]
-                      font-medium
-                      mt-3
-                      hover:underline
-                    "
-                  >
-                    Use current location
-                  </button>
-                </div>
-              )}
-            </div>
           </div>
         </div>
       </div>

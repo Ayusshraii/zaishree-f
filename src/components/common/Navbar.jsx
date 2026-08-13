@@ -166,7 +166,7 @@ const Navbar = ({ cartCount = 0 }) => {
         className="
           w-full
           bg-white
-          border-t-2
+        
           border-[#5a1b1b]
         "
       >
@@ -192,6 +192,7 @@ const Navbar = ({ cartCount = 0 }) => {
               flex
               items-center
               min-h-[92px]
+            
               px-6
               gap-6
               border-b
@@ -220,12 +221,12 @@ const Navbar = ({ cartCount = 0 }) => {
               >
                 <img
                   className="
-                    h-11
+                    h-22
                     w-auto
                     object-contain
                     max-w-[150px]
                   "
-                  src="https://www.zaishree.com/wp-content/uploads/elementor/thumbs/IMG_1966-rpwnjj8b2n46pvnz6u1lot8cwx1a8ouvq1b6gfjlo8.png"
+                  src="/src/assets/WhatsApp Image 2026-08-12 at 10.35.58 PM.jpeg"
                   alt="ZAISHREE"
                 />
               </Link>
@@ -246,7 +247,7 @@ const Navbar = ({ cartCount = 0 }) => {
                 className="
                   flex
                   items-center
-                  h-12
+                  h-10
                   border
                   border-gray-300
                   rounded-full
@@ -505,6 +506,7 @@ const Navbar = ({ cartCount = 0 }) => {
               flex
               items-center
               gap-2
+              pt-4
               px-4
               sm:px-6
               py-3
@@ -549,7 +551,7 @@ const Navbar = ({ cartCount = 0 }) => {
                   max-w-[130px]
                   object-contain
                 "
-                src="https://www.zaishree.com/wp-content/uploads/elementor/thumbs/IMG_1966-rpwnjj8b2n46pvnz6u1lot8cwx1a8ouvq1b6gfjlo8.png"
+                src="/src/assets/WhatsApp Image 2026-08-12 at 10.35.58 PM.jpeg"
                 alt="ZAISHREE"
               />
             </Link>
@@ -576,43 +578,7 @@ const Navbar = ({ cartCount = 0 }) => {
 
             {/* CART */}
 
-            <Link
-              to="/cart"
-              className="
-                relative
-                flex
-                items-center
-                justify-center
-                w-9
-                h-9
-                text-[#5a1b1b]
-              "
-              aria-label="Cart"
-            >
-              <CiShoppingCart className="text-2xl" />
-
-              {cartCount > 0 && (
-                <span
-                  className="
-                    absolute
-                    -top-0.5
-                    -right-0.5
-                    bg-[#7A2E42]
-                    text-white
-                    text-[9px]
-                    font-semibold
-                    rounded-full
-                    w-4
-                    h-4
-                    flex
-                    items-center
-                    justify-center
-                  "
-                >
-                  {cartCount}
-                </span>
-              )}
-            </Link>
+          
           </div>
 
           {/* MOBILE SEARCH */}
@@ -776,16 +742,19 @@ const Navbar = ({ cartCount = 0 }) => {
               flex
               justify-between
               items-center
+              pb-4
+              border-b-2
+              border-gray-300
               mb-8
             "
           >
             <img
               className="
-                h-10
+                h-8
                 w-auto
                 max-w-[140px]
               "
-              src="https://www.zaishree.com/wp-content/uploads/elementor/thumbs/IMG_1966-rpwnjj8b2n46pvnz6u1lot8cwx1a8ouvq1b6gfjlo8.png"
+              src="/src/assets/WhatsApp Image 2026-08-12 at 10.35.58 PM.jpeg"
               alt="ZAISHREE"
             />
 
@@ -850,56 +819,7 @@ const Navbar = ({ cartCount = 0 }) => {
 
           {/* EXTRA LINKS */}
 
-          <div
-            className="
-              border-t
-              border-gray-200
-              pt-6
-              flex
-              flex-col
-              space-y-4
-            "
-          >
-            {/* PROFILE */}
-
-            <Link
-              to="/profile"
-              onClick={() =>
-                setMobileMenuOpen(false)
-              }
-              className="
-                flex
-                items-center
-                gap-3
-                text-sm
-                font-medium
-                text-gray-700
-              "
-            >
-              <CgProfile className="text-xl" />
-              Profile
-            </Link>
-
-            {/* WISHLIST */}
-
-            <Link
-              to="/wishlist"
-              onClick={() =>
-                setMobileMenuOpen(false)
-              }
-              className="
-                flex
-                items-center
-                gap-3
-                text-sm
-                font-medium
-                text-gray-700
-              "
-            >
-              <CiHeart className="text-xl" />
-              Wishlist
-            </Link>
-          </div>
+         
         </div>
       </div>
     </>

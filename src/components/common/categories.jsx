@@ -67,6 +67,32 @@ const categories = [
     metal: "gold",
     image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&q=80",
   },
+  {
+    id: "gold-8",
+    name: "Bangles",
+    metal: "gold",
+    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&q=80",
+  },{
+    id: "gold-9",
+    name: "Bangles",
+    metal: "gold",
+    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&q=80",
+  },{
+    id: "gold-10",
+    name: "Bangles",
+    metal: "gold",
+    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&q=80",
+  },{
+    id: "gold-11",
+    name: "Bangles",
+    metal: "gold",
+    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&q=80",
+  },{
+    id: "gold-12",
+    name: "Bangles",
+    metal: "gold",
+    image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&q=80",
+  },
 
   // ==========================================================
   // SILVER
@@ -164,15 +190,9 @@ const categories = [
   // ============================================================
 
   return (
-    <section className="w-full py-8 sm:py-10 bg-[#F7F3EA]">
+    <section className="w-full bg-[#F7F3EA]">
       <div className="w-full px-4 sm:px-6 lg:px-8">
-         <h2 className="font-serif text-4xl text-center text-[#7A2E42]">Shop By Category</h2>
          <Switch/>
-
-        {/* ======================================================
-            CATEGORY SLIDER
-            ====================================================== */}
-
         <Swiper
           modules={[Navigation, Autoplay]}
           navigation
@@ -181,26 +201,26 @@ const categories = [
             disableOnInteraction: false,
           }}
           loop={true}
-          spaceBetween={10}
+          spaceBetween={15}
           breakpoints={{
             320: {
-              slidesPerView: 1,
-            },
-
-            400: {
-              slidesPerView: 2,
-            },
-
-            640: {
               slidesPerView: 3,
             },
 
+            400: {
+              slidesPerView: 3,
+            },
+
+            640: {
+              slidesPerView: 4,
+            },
+
             768: {
-              slidesPerView: 6,
+              slidesPerView: 7,
             },
 
             1024: {
-              slidesPerView: 8,
+              slidesPerView: 10,
             },
 
             
@@ -327,4 +347,4 @@ const categories = [
   );
 };
 
-export default ShopByCategory;
+export default ShopByCategory;  

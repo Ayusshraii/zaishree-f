@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+
   /* Changes color for all swipers */
   --swiper-navigation-color: #550404e0; 
   --swiper-navigation-size: 30px; /* Optional: changes size */

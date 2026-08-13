@@ -1,72 +1,59 @@
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
 import { Link } from "react-router-dom";
-
-import "swiper/css";
-import "swiper/css/navigation";
 
 const bonds = [
   {
     id: 1,
-    label: "For Husband",
-    slug: "for-husband",
+    label: "Mother",
+    slug: "for-mother",
     image:
-      "https://images.unsplash.com/photo-1587574293340-e0011c4e8ecf?w=400&q=80",
+      "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80",
+    className: "md:col-start-1 md:row-start-1 md:col-span-1 md:row-span-10",
   },
   {
     id: 2,
-    label: "For Wife",
+    label: "Wife",
     slug: "for-wife",
     image:
-      "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&q=80",
+      "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=600&q=80",
+    className: "md:col-start-2 md:row-start-1 md:col-span-3 md:row-span-5",
   },
   {
     id: 3,
-    label: "For Mother",
-    slug: "for-mother",
+    label: "Father",
+    slug: "for-father",
     image:
-      "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&q=80",
+      "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&q=80",
+    className: "md:col-start-5 md:row-start-1 md:col-span-1 md:row-span-10",
   },
   {
     id: 4,
-    label: "For Father",
-    slug: "for-father",
+    label: "Sister",
+    slug: "for-siblings",
     image:
-      "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&q=80",
+      "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80",
+    className: "md:col-start-2 md:row-start-6 md:col-span-2 md:row-span-5",
   },
   {
     id: 5,
-    label: "For Children",
-    slug: "for-children",
+    label: "Son",
+    slug: "for-son",
     image:
-      "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&q=80",
+      "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&q=80",
+    className: "md:col-start-4 md:row-start-6 md:col-span-1 md:row-span-2",
   },
   {
     id: 6,
-    label: "For Siblings",
-    slug: "for-siblings",
+    label: "Daughter",
+    slug: "for-daughter",
     image:
-      "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400&q=80",
-  },
-  {
-    id: 7,
-    label: "For Friends",
-    slug: "for-friends",
-    image:
-      "https://images.unsplash.com/photo-1589128777073-263566ae5e4d?w=400&q=80",
-  },
-  {
-    id: 8,
-    label: "For Yourself",
-    slug: "for-yourself",
-    image:
-      "https://images.unsplash.com/photo-1599459183200-59c7687a0275?w=400&q=80",
+      "https://images.unsplash.com/photo-1599459183200-59c7687a0275?w=600&q=80",
+    className: "md:col-start-4 md:row-start-8 md:col-span-1 md:row-span-3",
   },
 ];
 
 const ShopByBond = () => {
   return (
-    <section className="py-10 max-w-7xl mx-auto px-6 text-[#5a1b1be0]">
+    <section className="py-10 max-w-8xl mx-auto px-6 text-[#5a1b1be0]">
       <div className="mb-8 text-center">
         <h2 className="text-3xl font-serif mb-2">Shop by Bond</h2>
         <p className="text-sm text-gray-500">
@@ -74,43 +61,25 @@ const ShopByBond = () => {
         </p>
       </div>
 
-      <Swiper
-        modules={[Navigation]}
-        navigation
-        spaceBetween={20}
-        slidesPerView={2}
-        breakpoints={{
-          640: {
-            slidesPerView: 3,
-          },
-          768: {
-            slidesPerView: 4,
-          },
-          1024: {
-            slidesPerView: 6,
-          },
-        }}
-      >
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-5 md:grid-rows-10 md:h-[600px]">
         {bonds.map((bond) => (
-          <SwiperSlide key={bond.id}>
-           <Link
-    to={`/bond/${bond.slug}`}
-    className="group block"
->
-              <div className="aspect-square overflow-hidden rounded-md bg-gray-100 mb-3">
-                <img
-                  src={bond.image}
-                  alt={bond.label}
-                  className="w-full h-full object-cover group-hover:scale-105  transition-transform duration-500"
-                />
-              </div>
-              <p className="text-sm font-medium text-gray-800 text-center group-hover:text-[#5a1b1be0] transition-colors">
-                {bond.label}
-              </p>
-            </Link>
-          </SwiperSlide>
+          <Link
+            key={bond.id}
+            to={`/shop/${bond.slug}`}
+            className={`group relative overflow-hidden rounded-2xl h-64 md:h-auto ${bond.className}`}
+          >
+            <img
+              src={bond.image}
+              alt={bond.label}
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+            <span className="absolute bottom-3 left-4 text-white font-serif text-lg drop-shadow-sm">
+              {bond.label}
+            </span>
+          </Link>
         ))}
-      </Swiper>
+      </div>
     </section>
   );
 };

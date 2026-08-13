@@ -52,20 +52,30 @@ const banners = [
     link: "/products?category=precious",
     perks,
   },
+    {
+    id: 5,
+    image:
+      "https://images.pexels.com/photos/8908597/pexels-photo-8908597.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    eyebrow: "LIMITED EDIT",
+    title: "STATEMENT PIECES, REFINED.",
+    subtitle: "Precious stones set in 18K gold, made to last generations",
+    cta: "SHOP PRECIOUS",
+    link: "/products?category=precious",
+    perks,
+  },
 ];
 
 const Banner = () => {
   return (
-    <div className="relative w-full py-6 md:py-8 overflow-x-hidden">
+    <div className="relative w-full py-4 md:py-8 overflow-x-hidden">
       <Swiper
         modules={[Navigation, Autoplay]}
         navigation
-       
-        autoplay={{ delay: 4000, disableOnInteraction: false }}
+        autoplay={{ delay: 2000, disableOnInteraction: true }}
         loop={true}
-        loopAdditionalSlides={2}
+ 
         centeredSlides
-        slidesPerView={1.06}
+        slidesPerView={1.2}
         spaceBetween={16}
         className="banner-swiper"
       >
@@ -133,50 +143,7 @@ const Banner = () => {
         ))}
       </Swiper>
 
-      {/* Pagination dots below the carousel */}
-      <div className="banner-pagination flex items-center justify-center gap-2 mt-3" />
-
-      <style>{`
-        .banner-swiper {
-          overflow: visible;
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .banner-swiper::-webkit-scrollbar {
-          display: none;
-        }
-        .banner-swiper .swiper-wrapper {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-        .banner-swiper .swiper-wrapper::-webkit-scrollbar {
-          display: none;
-        }
-        .banner-swiper .swiper-button-next,
-        .banner-swiper .swiper-button-prev {
-          color: #ffffff;
-          width: 34px;
-          height: 34px;
-          background: rgba(20, 19, 17, 0.35);
-          border-radius: 9999px;
-        }
-        .banner-swiper .swiper-button-next::after,
-        .banner-swiper .swiper-button-prev::after {
-          font-size: 13px;
-        }
-        .banner-pagination .swiper-pagination-bullet {
-          width: 7px;
-          height: 7px;
-          background: #d1d5db;
-          opacity: 1;
-        }
-        .banner-pagination .swiper-pagination-bullet-active {
-          background: #7A2E42;
-          width: 20px;
-          border-radius: 9999px;
-          transition: width 0.2s ease;
-        }
-      `}</style>
+   
     </div>
   );
 };

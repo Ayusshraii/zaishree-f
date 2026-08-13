@@ -6,8 +6,9 @@ import HomeSections from '../common/HomeSecrion'
 import ShopByBond from '../common/Shopbybond'
 import ShopByCategory from '../common/categories'
 import Reviews from '../common/Review'
-import Subscription from '../../pages/Subscription'
 import MobileBottomNav from '../common/bottomNav'
+import Promise from '../common/Promise'
+import ShopByColor from '../common/ShopbyColor'
 
 
 const Userlayout = () => {
@@ -17,8 +18,11 @@ const Userlayout = () => {
  <div className=''><Banner /></div> 
  <ShopByCategory className=''/>
   <HomeSections  className=''/>
+    <Banner/>
+  <Promise/>
+  <ShopByColor/>
   <ShopByBond className=''/>
-  <Subscription className=''/>
+
  <Footer/>
    </>
   )

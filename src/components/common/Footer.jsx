@@ -89,8 +89,8 @@ export default function Footer() {
       </div>
 
       {/* Main content */}
-      <div className="max-w-5xl mx-auto px-6 py-14">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-10 lg:gap-8">
+      <div className="max-w-7xl mx-auto px-6 py-14">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-10 lg:gap-8">
           {/* Brand + newsletter */}
           <div className="sm:col-span-2 lg:col-span-1">
             <h2 className="font-serif text-2xl tracking-wide mb-3">

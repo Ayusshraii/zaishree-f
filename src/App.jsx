@@ -13,7 +13,7 @@ import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import BondProducts from "./pages/Bondproducts";
 import Login from "./pages/login";
-import Gold from "./pages/Gold";
+import Silver from "./pages/Silver";
 import Demifine
  from "./pages/Demifine";
  import MobileBottomNav from "./components/common/bottomNav";
@@ -36,7 +36,7 @@ const App = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/bond/:slug" element={<BondProducts />} />
             <Route  path="/login" element={<Login />} />
-            <Route path="/gold" element={<Gold/>} />
+            <Route path="/silver" element={<Silver/>} />
             <Route path="/demifine" element={<Demifine/>}/>
           </Routes>
 

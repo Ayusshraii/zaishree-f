@@ -15,7 +15,7 @@ const Gold = () => {
       <ShopByCategory/>
        <HomeSections  className=''/>
        <ShopByBond className=''/>
-       <Subscription className=''/>
+       
     </div>
   )
 }

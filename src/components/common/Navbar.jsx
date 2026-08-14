@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-
 import { CgProfile } from "react-icons/cg";
 
 import {
@@ -24,6 +23,20 @@ import {
 } from "react-icons/gi";
 
 import LocationDetector from "./Location";
+
+// ==========================================================
+// LOGO IMAGE
+// ==========================================================
+// IMPORTANT:
+// Because the image is inside src/assets, import it.
+// Do NOT use "/src/assets/..." in src.
+// ==========================================================
+
+import logo from "../../assets/WhatsApp Image 2026-08-12 at 10.35.58 PM.jpeg";
+
+// ==========================================================
+// CATEGORIES
+// ==========================================================
 
 const categories = [
   {
@@ -91,7 +104,7 @@ const Navbar = ({ cartCount = 0 }) => {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   // ==========================================================
-  // SEARCH
+  // SEARCH HANDLER
   // ==========================================================
 
   const handleSearch = async (e) => {
@@ -116,6 +129,10 @@ const Navbar = ({ cartCount = 0 }) => {
     }
   };
 
+  // ==========================================================
+  // SUBMIT SEARCH
+  // ==========================================================
+
   const submitSearch = () => {
     if (!keyword.trim()) return;
 
@@ -125,6 +142,10 @@ const Navbar = ({ cartCount = 0 }) => {
     setMobileSearchOpen(false);
   };
 
+  // ==========================================================
+  // SEARCH ENTER
+  // ==========================================================
+
   const handleSearchKeyDown = (e) => {
     if (e.key === "Enter") {
       submitSearch();
@@ -132,11 +153,13 @@ const Navbar = ({ cartCount = 0 }) => {
   };
 
   // ==========================================================
-  // BODY SCROLL
+  // BODY SCROLL LOCK WHEN MOBILE MENU IS OPEN
   // ==========================================================
 
   useEffect(() => {
-    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
+    document.body.style.overflow = mobileMenuOpen
+      ? "hidden"
+      : "";
 
     return () => {
       document.body.style.overflow = "";
@@ -162,7 +185,7 @@ const Navbar = ({ cartCount = 0 }) => {
         "
       >
         {/* ====================================================
-            DESKTOP CONTAINER
+            DESKTOP
             ==================================================== */}
 
         <div
@@ -175,7 +198,7 @@ const Navbar = ({ cartCount = 0 }) => {
           "
         >
           {/* ==================================================
-              ROW 1
+              DESKTOP ROW 1
               ================================================== */}
 
           <div
@@ -216,14 +239,14 @@ const Navbar = ({ cartCount = 0 }) => {
                     object-contain
                     max-w-[150px]
                   "
-                  src="/src/assets/WhatsApp Image 2026-08-12 at 10.35.58 PM.jpeg"
+                  src={logo}
                   alt="ZAISHREE"
                 />
               </Link>
             </div>
 
             {/* =================================================
-                SEARCH
+                DESKTOP SEARCH
                 ================================================= */}
 
             <div
@@ -283,7 +306,7 @@ const Navbar = ({ cartCount = 0 }) => {
               </div>
 
               {/* =================================================
-                  SEARCH SUGGESTIONS
+                  DESKTOP SEARCH SUGGESTIONS
                   ================================================= */}
 
               {suggestions.length > 0 && (
@@ -328,10 +351,7 @@ const Navbar = ({ cartCount = 0 }) => {
             </div>
 
             {/* =================================================
-                RIGHT SIDE
-                WISHLIST
-                PROFILE
-                CART
+                LOCATION
                 ================================================= */}
 
             <div
@@ -346,6 +366,10 @@ const Navbar = ({ cartCount = 0 }) => {
             >
               <LocationDetector />
             </div>
+
+            {/* =================================================
+                RIGHT SIDE
+                ================================================= */}
 
             <div
               className="
@@ -438,7 +462,6 @@ const Navbar = ({ cartCount = 0 }) => {
                       -top-1
                       -right-1
                       bg-[#B76E79]
-                      hover:bg-[#A85F6B]
                       text-[#FFFFFF]
                       text-[10px]
                       font-semibold
@@ -458,7 +481,7 @@ const Navbar = ({ cartCount = 0 }) => {
           </div>
 
           {/* ==================================================
-              ROW 2 — CATEGORIES
+              DESKTOP ROW 2 — CATEGORIES
               ================================================== */}
 
           <div
@@ -554,7 +577,7 @@ const Navbar = ({ cartCount = 0 }) => {
             </button>
 
             {/* =================================================
-                LOGO
+                MOBILE LOGO
                 ================================================= */}
 
             <Link
@@ -572,13 +595,13 @@ const Navbar = ({ cartCount = 0 }) => {
                   max-w-[130px]
                   object-contain
                 "
-                src="/src/assets/WhatsApp Image 2026-08-12 at 10.35.58 PM.jpeg"
+                src={logo}
                 alt="ZAISHREE"
               />
             </Link>
 
             {/* =================================================
-                SEARCH
+                MOBILE SEARCH BUTTON
                 ================================================= */}
 
             <button
@@ -602,10 +625,47 @@ const Navbar = ({ cartCount = 0 }) => {
             </button>
 
             {/* =================================================
-                CART
+                MOBILE CART
                 ================================================= */}
 
-        
+            <Link
+              to="/cart"
+              className="
+                relative
+                flex
+                items-center
+                justify-center
+                w-9
+                h-9
+                text-[#2E2E2E]
+                hover:text-[#B76E79]
+              "
+              aria-label="Cart"
+            >
+              <CiShoppingCart className="text-2xl" />
+
+              {cartCount > 0 && (
+                <span
+                  className="
+                    absolute
+                    -top-1
+                    -right-1
+                    bg-[#B76E79]
+                    text-white
+                    text-[9px]
+                    font-semibold
+                    rounded-full
+                    w-4
+                    h-4
+                    flex
+                    items-center
+                    justify-center
+                  "
+                >
+                  {cartCount}
+                </span>
+              )}
+            </Link>
           </div>
 
           {/* ==================================================
@@ -663,7 +723,6 @@ const Navbar = ({ cartCount = 0 }) => {
                     text-[#B76E79]
                     hover:text-[#A85F6B]
                     shrink-0
-                    transition-colors
                   "
                   aria-label="Search"
                 >
@@ -671,7 +730,9 @@ const Navbar = ({ cartCount = 0 }) => {
                 </button>
               </div>
 
-              {/* MOBILE SUGGESTIONS */}
+              {/* =================================================
+                  MOBILE SUGGESTIONS
+                  ================================================= */}
 
               {suggestions.length > 0 && (
                 <div
@@ -797,8 +858,9 @@ const Navbar = ({ cartCount = 0 }) => {
                 h-8
                 w-auto
                 max-w-[140px]
+                object-contain
               "
-              src="/src/assets/WhatsApp Image 2026-08-12 at 10.35.58 PM.jpeg"
+              src={logo}
               alt="ZAISHREE"
             />
 
@@ -860,11 +922,6 @@ const Navbar = ({ cartCount = 0 }) => {
               );
             })}
           </div>
-
-          {/* =================================================
-              EXTRA LINKS
-              ================================================= */}
-
         </div>
       </div>
     </>

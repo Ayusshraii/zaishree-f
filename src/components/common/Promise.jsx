@@ -13,41 +13,53 @@ const promises = [
   {
     icon: Sparkles,
     title: "Lifetime Polishing",
+    desc: "Complimentary care, for as long as you own it",
   },
   {
     icon: ShieldCheck,
     title: "100% BIS Hallmarked",
+    desc: "Certified purity on every single piece",
   },
   {
     icon: RefreshCcw,
     title: "Lifetime Buyback",
+    desc: "Trade in anytime, at today's value",
   },
   {
     icon: Truck,
     title: "Shipping in 24 Hours",
+    desc: "Insured dispatch, straight to your door",
   },
 ];
 
 const OurPromises = () => {
   return (
-    <section className="py-15 px-4 bg-[#FFFFFF]">
-
+    <section
+      className="relative py-10 md:py-20 px-4 overflow-hidden"
+      style={{
+        background:
+          "radial-gradient(circle at 50% 0%, #4A1620 0%, #2E0B0F 60%, #24080C 100%)",
+      }}
+    >
       {/* =========================
           HEADING
       ========================== */}
 
-      <h2
-        className="
-          text-center
-          text-2xl
-          md:text-3xl
-          font-serif
-          mb-8
-          text-[#2E2E2E]
-        "
-      >
-        Our Promises
-      </h2>
+      <div className="text-center mb-3">
+        <p className="text-[11px] uppercase tracking-[0.35em] text-[#D4AF7A] mb-3">
+          Our Commitment
+        </p>
+        <h2 className="text-2xl md:text-3xl font-serif text-[#F5EDE4]">
+          The Zaishree Promise
+        </h2>
+      </div>
+
+      {/* gold hairline with diamond mark */}
+      <div className="flex items-center justify-center gap-3 mb-10 md:mb-12">
+        <span className="h-px w-10 md:w-16 bg-[#D4AF7A]/40" />
+        <span className="w-[6px] h-[6px] rotate-45 bg-[#D4AF7A]" />
+        <span className="h-px w-10 md:w-16 bg-[#D4AF7A]/40" />
+      </div>
 
       {/* =========================
           PROMISE SLIDER
@@ -56,11 +68,11 @@ const OurPromises = () => {
       <Swiper
         modules={[Autoplay]}
         autoplay={{
-          delay: 2500,
+          delay: 2800,
           disableOnInteraction: false,
         }}
         loop={true}
-        speed={800}
+        speed={900}
         spaceBetween={16}
         slidesPerView={2}
         breakpoints={{
@@ -69,114 +81,79 @@ const OurPromises = () => {
           },
           1024: {
             slidesPerView: 4,
+            spaceBetween: 24,
           },
         }}
-        className="max-w-8xl mx-auto !py-5"
+        className="max-w-8xl mx-auto "
       >
-        {promises.map(({ icon: Icon, title }, i) => (
+        {promises.map(({ icon: Icon, title, desc }, i) => (
           <SwiperSlide key={i}>
             <div
               className="
                 group
                 relative
-                overflow-hidden
-                rounded-2xl
-
-                border
-                border-[#E8DDD3]
-
-                bg-gradient-to-br
-                from-[#FAF7F4]
-                via-[#F5E8EA]
-                to-[#FAF7F4]
-
-                px-2
-                py-16
-
                 flex
                 flex-col
                 items-center
-                justify-center
+                text-center
                 gap-4
-
-                shadow-sm
-                hover:shadow-lg
-
-                transition-all
-                duration-300
-
-                hover:-translate-y-1
+                px-4
+                py-8
               "
             >
               {/* =========================
-                  ICON
+                  HALLMARK MEDALLION
               ========================== */}
 
-              <div
-                className="
-                  w-16
-                  h-16
-                  rounded-full
-
-                  bg-[#FFFFFF]/80
-                  backdrop-blur-sm
-
-                  border
-                  border-[#E8DDD3]
-
-                  flex
-                  items-center
-                  justify-center
-
-                  group-hover:scale-110
-                  transition-transform
-                  duration-300
-                "
-              >
-                <Icon
+              <div className="relative w-20 h-20 flex items-center justify-center">
+                {/* outer ring */}
+                <div
                   className="
-                    w-7
-                    h-7
-                    text-[#B76E79]
+                    absolute inset-0 rounded-full
+                    border border-[#D4AF7A]/50
+                    transition-transform duration-500
+                    group-hover:scale-105
                   "
-                  strokeWidth={1.5}
                 />
+                {/* inner ring, slightly rotated */}
+                <div
+                  className="
+                    absolute inset-[6px] rounded-full
+                    border border-[#D4AF7A]/25
+                    transition-transform duration-700
+                    group-hover:rotate-45
+                  "
+                />
+                {/* core */}
+                <div
+                  className="
+                    relative w-12 h-12 rounded-full
+                    bg-[#3D1015]
+                    border border-[#D4AF7A]/60
+                    flex items-center justify-center
+                    transition-shadow duration-300
+                    group-hover:shadow-[0_0_16px_rgba(212,175,122,0.35)]
+                  "
+                >
+                  <Icon
+                    className="w-5 h-5 text-[#D4AF7A]"
+                    strokeWidth={1.5}
+                  />
+                </div>
               </div>
 
               {/* =========================
-                  TITLE
+                  TITLE + DESCRIPTION
               ========================== */}
 
-              <p
-                className="
-                  text-sm
-                  font-semibold
-                  tracking-wide
-                  text-[#2E2E2E]
-                  text-center
-                "
-              >
-                {title}
-              </p>
-
-              {/* =========================
-                  HOVER ACCENT
-              ========================== */}
-
-              <div
-                className="
-                  absolute
-                  bottom-0
-                  left-1/2
-                  -translate-x-1/2
-                  w-0
-                  h-[2px]
-                  bg-[#B76E79]
-                  group-hover:w-16
-                  transition-all
-                  duration-300
-                "
-              />
+              <div>
+                <p className="text-sm md:text-base font-serif tracking-wide text-[#F5EDE4] mb-1.5">
+                  {title}
+                </p>
+                <p className="text-[12px] leading-snug text-[#F5EDE4]/55 max-w-[160px] mx-auto">
+                  {desc}
+                </p>
+              </div>
             </div>
           </SwiperSlide>
         ))}

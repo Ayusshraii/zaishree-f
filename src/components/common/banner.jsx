@@ -1,17 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import {
+  FiChevronLeft,
+  FiChevronRight,
+} from "react-icons/fi";
 
 // =====================================================
-// MOCKUP DATA
+// LOCAL IMAGE IMPORTS
+// =====================================================
+
+import homebanner1 from "../../assets/WhatsApp Image 2026-08-13 at 11.19.26 PM.jpeg";
+
+import salebanner1 from "../../assets/WhatsApp Image 2026-08-13 at 11.19.27 PM.jpeg";
+
+// =====================================================
+// MOCKUP BANNER DATA
 // =====================================================
 
 const bannerData = {
+  // ===================================================
+  // HOME BANNERS
+  // ===================================================
+
   home: [
     {
       id: 1,
-      image:
-        "/src/assets/WhatsApp Image 2026-08-13 at 11.19.26 PM.jpeg",
+      image: homebanner1,
       link: "/category/gold",
     },
 
@@ -30,21 +44,23 @@ const bannerData = {
     },
   ],
 
+  // ===================================================
+  // SALE BANNERS
+  // ===================================================
+
   sale: [
     {
       id: 1,
-      image:
-        "/src/assets/WhatsApp Image 2026-08-13 at 11.19.27 PM.jpeg",
+      image: salebanner1,
       link: "/sale",
     },
 
-    {
-      id: 2,
-      image:
-        "https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?q=80&w=1600&auto=format&fit=crop",
-      link: "/offers",
-    },
+   
   ],
+
+  // ===================================================
+  // GOLD BANNERS
+  // ===================================================
 
   gold: [
     {
@@ -62,6 +78,10 @@ const bannerData = {
     },
   ],
 
+  // ===================================================
+  // SILVER BANNERS
+  // ===================================================
+
   silver: [
     {
       id: 1,
@@ -70,6 +90,10 @@ const bannerData = {
       link: "/category/silver",
     },
   ],
+
+  // ===================================================
+  // WEDDING BANNERS
+  // ===================================================
 
   wedding: [
     {
@@ -98,29 +122,35 @@ const Banner = ({
   interval = 4000,
   showArrows = true,
 
-  // Mobile = 300px
-  // Desktop = 400px
+  // Mobile: 300px
+  // Desktop: 400px
   height = "h-[300px] md:h-[400px]",
 }) => {
+  // ===================================================
+  // GET BANNERS
+  // ===================================================
+
   const banners = bannerData[type] || [];
 
-  // =====================================================
+  // ===================================================
   // NO BANNERS
-  // =====================================================
+  // ===================================================
 
   if (banners.length === 0) {
     return null;
   }
 
-  // =====================================================
-  // INFINITE LOOP
+  // ===================================================
+  // CREATE CLONED SLIDES FOR INFINITE LOOP
   //
   // Original:
+  //
   // [1, 2, 3]
   //
   // Becomes:
+  //
   // [3, 1, 2, 3, 1]
-  // =====================================================
+  // ===================================================
 
   const slides =
     banners.length > 1
@@ -131,16 +161,24 @@ const Banner = ({
         ]
       : banners;
 
-  // Start from first real slide
+  // ===================================================
+  // CURRENT SLIDE
+  // ===================================================
+
   const [currentIndex, setCurrentIndex] = useState(
     banners.length > 1 ? 1 : 0
   );
 
-  const [isTransitioning, setIsTransitioning] = useState(true);
+  // ===================================================
+  // TRANSITION STATE
+  // ===================================================
 
-  // =====================================================
-  // NEXT
-  // =====================================================
+  const [isTransitioning, setIsTransitioning] =
+    useState(true);
+
+  // ===================================================
+  // NEXT SLIDE
+  // ===================================================
 
   const nextSlide = () => {
     if (banners.length <= 1) return;
@@ -150,9 +188,9 @@ const Banner = ({
     setCurrentIndex((prev) => prev + 1);
   };
 
-  // =====================================================
-  // PREVIOUS
-  // =====================================================
+  // ===================================================
+  // PREVIOUS SLIDE
+  // ===================================================
 
   const prevSlide = () => {
     if (banners.length <= 1) return;
@@ -162,29 +200,35 @@ const Banner = ({
     setCurrentIndex((prev) => prev - 1);
   };
 
-  // =====================================================
+  // ===================================================
   // HANDLE INFINITE LOOP
-  // =====================================================
+  // ===================================================
 
   const handleTransitionEnd = () => {
     if (banners.length <= 1) return;
 
+    // -----------------------------------------------
     // Reached cloned first slide
+    // -----------------------------------------------
+
     if (currentIndex === slides.length - 1) {
       setIsTransitioning(false);
       setCurrentIndex(1);
     }
 
+    // -----------------------------------------------
     // Reached cloned last slide
+    // -----------------------------------------------
+
     if (currentIndex === 0) {
       setIsTransitioning(false);
       setCurrentIndex(banners.length);
     }
   };
 
-  // =====================================================
+  // ===================================================
   // AUTOPLAY
-  // =====================================================
+  // ===================================================
 
   useEffect(() => {
     if (!autoPlay || banners.length <= 1) {
@@ -195,18 +239,33 @@ const Banner = ({
       nextSlide();
     }, interval);
 
-    return () => clearInterval(timer);
-  }, [currentIndex, autoPlay, interval, banners.length]);
+    return () => {
+      clearInterval(timer);
+    };
+  }, [
+    currentIndex,
+    autoPlay,
+    interval,
+    banners.length,
+  ]);
 
-  // =====================================================
-  // RETURN
-  // =====================================================
+  // ===================================================
+  // COMPONENT
+  // ===================================================
 
   return (
-    <section className="relative w-full overflow-hidden bg-white py-4">
+    <section
+      className="
+        relative
+        w-full
+        overflow-hidden
+        bg-white
+        py-4
+      "
+    >
       {/* =================================================
           VIEWPORT
-      ================================================= */}
+          ================================================= */}
 
       <div
         className="
@@ -216,15 +275,16 @@ const Banner = ({
           overflow-hidden
         "
       >
-        {/* =================================================
+        {/* ===============================================
             SLIDES CONTAINER
-        ================================================= */}
+            =============================================== */}
 
         <div
           className={`
             flex
             gap-[10px]
             h-full
+
             ${
               isTransitioning
                 ? "transition-transform duration-700 ease-in-out"
@@ -244,9 +304,9 @@ const Banner = ({
           }}
           onTransitionEnd={handleTransitionEnd}
         >
-          {/* =================================================
-              EACH SLIDE
-          ================================================= */}
+          {/* =============================================
+              SLIDES
+              ============================================= */}
 
           {slides.map((banner, index) => (
             <div
@@ -256,26 +316,34 @@ const Banner = ({
                 w-[86%]
               "
             >
-              {/* =================================================
-                  CLICKABLE IMAGE
-              ================================================= */}
+              {/* =========================================
+                  CLICKABLE BANNER
+                  ========================================= */}
 
               <Link
                 to={banner.link || "#"}
-                className="block w-full h-full"
+                className="
+                  block
+                  w-full
+                  h-full
+                "
               >
-                {/* =================================================
+                {/* =======================================
                     IMAGE CARD
-                ================================================= */}
+                    ======================================= */}
 
                 <div
                   className={`
                     relative
                     w-full
                     ${height}
+
                     overflow-hidden
+
                     rounded-[22px]
+
                     bg-[#FAF7F4]
+
                     border
                     border-[#E8DDD3]
                   `}
@@ -286,9 +354,12 @@ const Banner = ({
                     className="
                       w-full
                       h-full
+
                       object-cover
+
                       transition-transform
                       duration-700
+
                       hover:scale-[1.02]
                     "
                   />
@@ -301,28 +372,34 @@ const Banner = ({
 
       {/* =================================================
           LEFT ARROW
-      ================================================= */}
+          ================================================= */}
 
       {showArrows && banners.length > 1 && (
         <button
+          type="button"
           onClick={prevSlide}
           aria-label="Previous banner"
           className="
             absolute
+
             left-3
             md:left-5
+
             top-1/2
             -translate-y-1/2
+
             z-20
 
             w-10
             h-10
+
             md:w-12
             md:h-12
 
             rounded-full
 
             bg-[#B76E79]
+
             text-white
 
             flex
@@ -343,35 +420,46 @@ const Banner = ({
           "
         >
           <FiChevronLeft
-            className="w-5 h-5 md:w-6 md:h-6"
+            className="
+              w-5
+              h-5
+              md:w-6
+              md:h-6
+            "
           />
         </button>
       )}
 
       {/* =================================================
           RIGHT ARROW
-      ================================================= */}
+          ================================================= */}
 
       {showArrows && banners.length > 1 && (
         <button
+          type="button"
           onClick={nextSlide}
           aria-label="Next banner"
           className="
             absolute
+
             right-3
             md:right-5
+
             top-1/2
             -translate-y-1/2
+
             z-20
 
             w-10
             h-10
+
             md:w-12
             md:h-12
 
             rounded-full
 
             bg-[#B76E79]
+
             text-white
 
             flex
@@ -392,7 +480,12 @@ const Banner = ({
           "
         >
           <FiChevronRight
-            className="w-5 h-5 md:w-6 md:h-6"
+            className="
+              w-5
+              h-5
+              md:w-6
+              md:h-6
+            "
           />
         </button>
       )}

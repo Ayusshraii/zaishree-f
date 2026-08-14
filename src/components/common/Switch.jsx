@@ -15,7 +15,7 @@ const Switch = () => {
   const index = OPTIONS.indexOf(selected);
 
   return (
-    <div className="px-6 py-8 hidden md:flex justify-center">
+    <div className="px-6 py-8  md:flex justify-center">
       <div
         className="
           relative

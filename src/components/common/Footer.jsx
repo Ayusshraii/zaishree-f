@@ -73,7 +73,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#FFFFFF] text-[#2E2E2E] font-sans">
+    <footer className="bg-[#FFFFFF] text-[#2E2E2E] font-sans ">
 
       {/* =========================
           TRUST STRIP

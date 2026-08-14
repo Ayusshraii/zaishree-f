@@ -8,6 +8,8 @@ import {
 
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
+import { PiDiamondsFourFill } from "react-icons/pi";
+
 
 // ============================================================
 // STORE CONFIG
@@ -239,9 +241,10 @@ export default function MobileBottomNav({
               text-xs
               text-[#2E2E2E]/55
               transition-colors
+              
             "
           >
-            <StoreIcon
+            <PiDiamondsFourFill
               size={22}
               strokeWidth={1.6}
               className="text-[#B76E79]"
@@ -249,7 +252,7 @@ export default function MobileBottomNav({
 
             {/* Always show Store */}
 
-            <span>Store</span>
+            <span>Switch</span>
           </button>
 
           {/* ==================================================

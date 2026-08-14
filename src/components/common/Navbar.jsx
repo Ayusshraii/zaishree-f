@@ -624,48 +624,7 @@ const Navbar = ({ cartCount = 0 }) => {
               <CiSearch className="text-2xl" />
             </button>
 
-            {/* =================================================
-                MOBILE CART
-                ================================================= */}
-
-            <Link
-              to="/cart"
-              className="
-                relative
-                flex
-                items-center
-                justify-center
-                w-9
-                h-9
-                text-[#2E2E2E]
-                hover:text-[#B76E79]
-              "
-              aria-label="Cart"
-            >
-              <CiShoppingCart className="text-2xl" />
-
-              {cartCount > 0 && (
-                <span
-                  className="
-                    absolute
-                    -top-1
-                    -right-1
-                    bg-[#B76E79]
-                    text-white
-                    text-[9px]
-                    font-semibold
-                    rounded-full
-                    w-4
-                    h-4
-                    flex
-                    items-center
-                    justify-center
-                  "
-                >
-                  {cartCount}
-                </span>
-              )}
-            </Link>
+            
           </div>
 
           {/* ==================================================

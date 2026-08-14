@@ -210,21 +210,7 @@ const ProductCard = ({ product }) => {
                 <FaLock className="w-4 h-4 text-[#B76E79]" />
               </div>
 
-              <span
-                className="
-                  text-[#FFFFFF]
-                  text-xs
-                  font-medium
-                  uppercase
-                  tracking-wide
-                  bg-[#2E2E2E]/60
-                  px-3
-                  py-1
-                  rounded-full
-                "
-              >
-                Subscription Required
-              </span>
+            
             </div>
           )}
         </div>

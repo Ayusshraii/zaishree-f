@@ -18,24 +18,18 @@ import salebanner1 from "../../assets/WhatsApp Image 2026-08-13 at 11.19.27 PM.j
 // =====================================================
 
 const bannerData = {
-  // ===================================================
-  // HOME BANNERS
-  // ===================================================
-
   home: [
     {
       id: 1,
       image: homebanner1,
       link: "/category/gold",
     },
-
     {
       id: 2,
       image:
         "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1600&auto=format&fit=crop",
       link: "/category/diamond",
     },
-
     {
       id: 3,
       image:
@@ -44,21 +38,19 @@ const bannerData = {
     },
   ],
 
-  // ===================================================
-  // SALE BANNERS
-  // ===================================================
-
   sale: [
     {
       id: 1,
       image: salebanner1,
       link: "/sale",
     },
+    {
+      id: 2,
+      image:
+        "https://images.unsplash.com/photo-1602173574767-37ac01994b2a?q=80&w=1600&auto=format&fit=crop",
+      link: "/category/silver",
+    },
   ],
-
-  // ===================================================
-  // GOLD BANNERS
-  // ===================================================
 
   gold: [
     {
@@ -67,7 +59,6 @@ const bannerData = {
         "https://images.unsplash.com/photo-1611652022419-a9419f74343d?q=80&w=1600&auto=format&fit=crop",
       link: "/category/gold",
     },
-
     {
       id: 2,
       image:
@@ -75,10 +66,6 @@ const bannerData = {
       link: "/category/gold/rings",
     },
   ],
-
-  // ===================================================
-  // SILVER BANNERS
-  // ===================================================
 
   silver: [
     {
@@ -89,10 +76,6 @@ const bannerData = {
     },
   ],
 
-  // ===================================================
-  // WEDDING BANNERS
-  // ===================================================
-
   wedding: [
     {
       id: 1,
@@ -100,7 +83,6 @@ const bannerData = {
         "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=1600&auto=format&fit=crop",
       link: "/category/wedding",
     },
-
     {
       id: 2,
       image:
@@ -119,80 +101,65 @@ const Banner = ({
   autoPlay = true,
   interval = 4000,
   showArrows = true,
-  height = "h-[300px] md:h-[400px]",
+  height = "h-[180px] sm:h-[240px] md:h-[320px] lg:h-[400px]",
 }) => {
-  // ===================================================
-  // GET BANNERS
-  // ===================================================
-
   const banners = bannerData[type] || [];
-
-  // ===================================================
-  // NO BANNERS
-  // ===================================================
 
   if (banners.length === 0) {
     return null;
   }
 
-  // ===================================================
-  // CLONED SLIDES
-  // ===================================================
-
   const slides =
     banners.length > 1
-      ? [
-          banners[banners.length - 1],
-          ...banners,
-          banners[0],
-        ]
+      ? [banners[banners.length - 1], ...banners, banners[0]]
       : banners;
-
-  // ===================================================
-  // CURRENT SLIDE
-  // ===================================================
 
   const [currentIndex, setCurrentIndex] = useState(
     banners.length > 1 ? 1 : 0
   );
 
-  // ===================================================
-  // TRANSITION STATE
-  // ===================================================
-
-  const [isTransitioning, setIsTransitioning] =
-    useState(true);
-
-  // ===================================================
-  // DRAG STATE
-  // ===================================================
+  const [isTransitioning, setIsTransitioning] = useState(true);
 
   const [isDragging, setIsDragging] = useState(false);
-
   const [dragStartX, setDragStartX] = useState(0);
-
   const [dragOffset, setDragOffset] = useState(0);
-
   const dragStartRef = useRef(0);
 
   // ===================================================
-  // NEXT SLIDE
+  // RESPONSIVE: track viewport width reactively
+  // (fixes the old one-time `window.innerWidth` check
+  // that never updated on resize/rotate)
+  // ===================================================
+
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth < 768 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // ===================================================
+  // NEXT / PREV
   // ===================================================
 
   const nextSlide = () => {
     if (banners.length <= 1) return;
-
     setIsTransitioning(true);
     setCurrentIndex((prev) => prev + 1);
   };
 
-  // ===================================================
-  // PREVIOUS SLIDE
-  // ===================================================
-
   const prevSlide = () => {
     if (banners.length <= 1) return;
-
     setIsTransitioning(true);
     setCurrentIndex((prev) => prev - 1);
   };
@@ -204,13 +171,11 @@ const Banner = ({
   const handleTransitionEnd = () => {
     if (banners.length <= 1) return;
 
-    // Reached cloned first slide
     if (currentIndex === slides.length - 1) {
       setIsTransitioning(false);
       setCurrentIndex(1);
     }
 
-    // Reached cloned last slide
     if (currentIndex === 0) {
       setIsTransitioning(false);
       setCurrentIndex(banners.length);
@@ -230,19 +195,12 @@ const Banner = ({
       nextSlide();
     }, interval);
 
-    return () => {
-      clearInterval(timer);
-    };
-  }, [
-    currentIndex,
-    autoPlay,
-    interval,
-    banners.length,
-    isDragging,
-  ]);
+    return () => clearInterval(timer);
+  }, [currentIndex, autoPlay, interval, banners.length, isDragging]);
 
   // ===================================================
-  // DRAG START
+  // DRAG / TOUCH HANDLERS
+  // (pointer events already cover touch, mouse & pen)
   // ===================================================
 
   const handlePointerDown = (e) => {
@@ -252,33 +210,23 @@ const Banner = ({
     setIsTransitioning(false);
 
     const startX = e.clientX;
-
     dragStartRef.current = startX;
     setDragStartX(startX);
   };
-
-  // ===================================================
-  // DRAG MOVE
-  // ===================================================
 
   const handlePointerMove = (e) => {
     if (!isDragging || banners.length <= 1) return;
 
     const currentX = e.clientX;
-
     const difference = currentX - dragStartX;
-
     setDragOffset(difference);
   };
-
-  // ===================================================
-  // DRAG END
-  // ===================================================
 
   const handlePointerUp = () => {
     if (!isDragging || banners.length <= 1) return;
 
-    const threshold = 60;
+    // Slightly lower threshold on mobile so short swipes register
+    const threshold = isMobile ? 40 : 60;
 
     setIsDragging(false);
     setIsTransitioning(true);
@@ -292,10 +240,6 @@ const Banner = ({
     setDragOffset(0);
   };
 
-  // ===================================================
-  // DRAG CANCEL
-  // ===================================================
-
   const handlePointerCancel = () => {
     setIsDragging(false);
     setIsTransitioning(true);
@@ -304,59 +248,35 @@ const Banner = ({
 
   // ===================================================
   // CALCULATE TRANSFORM
+  // Mobile slides are full-width with a 10px gap, so the
+  // per-slide offset must include that gap — same as desktop.
   // ===================================================
 
-  const desktopTransform = `
-    calc(
-      7% -
-      ${currentIndex * 86}% -
-      ${currentIndex * 10}px
-    )
-  `;
+  const desktopTransform = `calc(7% - ${currentIndex * 86}% - ${
+    currentIndex * 10
+  }px)`;
 
-  const mobileTransform = `
-    calc(
-      -${currentIndex * 100}% -
-      ${dragOffset}px
-    )
-  `;
+  const mobileTransform = `calc(-${currentIndex * 100}% - ${
+    currentIndex * 10
+  }px - ${dragOffset}px)`;
+
+  const activeTransform = isMobile ? mobileTransform : desktopTransform;
 
   // ===================================================
   // COMPONENT
   // ===================================================
 
   return (
-    <section
-      className="
-        relative
-        w-full
-        overflow-hidden
-        bg-white
-        py-4
-      "
-    >
-      {/* =================================================
-          VIEWPORT
-          ================================================= */}
-
-      <div
-        className="
-          w-full
-          h-[300px]
-          md:h-[400px]
-          overflow-hidden
-        "
-      >
-        {/* ===============================================
-            SLIDES CONTAINER
-            =============================================== */}
-
+    <section className="relative w-full overflow-hidden bg-white py-3 md:py-4">
+      {/* VIEWPORT */}
+      <div className="w-full h-[180px] sm:h-[240px] md:h-[320px] lg:h-[400px] overflow-hidden">
+        {/* SLIDES CONTAINER */}
         <div
           className={`
             flex
             gap-[10px]
             h-full
-
+            touch-pan-y
             ${
               isTransitioning
                 ? "transition-transform duration-700 ease-in-out"
@@ -364,11 +284,7 @@ const Banner = ({
             }
           `}
           style={{
-            transform:
-              typeof window !== "undefined" &&
-              window.innerWidth < 768
-                ? `translateX(${mobileTransform})`
-                : `translateX(${desktopTransform})`,
+            transform: `translateX(${activeTransform})`,
           }}
           onTransitionEnd={handleTransitionEnd}
           onPointerDown={handlePointerDown}
@@ -377,27 +293,14 @@ const Banner = ({
           onPointerCancel={handlePointerCancel}
           onPointerLeave={handlePointerUp}
         >
-          {/* =============================================
-              SLIDES
-              ============================================= */}
-
           {slides.map((banner, index) => (
             <div
               key={`${banner.id}-${index}`}
-              className="
-                flex-shrink-0
-                w-full
-                md:w-[86%]
-              "
+              className="flex-shrink-0 w-full md:w-[86%]"
             >
               <Link
                 to={banner.link || "#"}
-                className="
-                  block
-                  w-full
-                  h-full
-                  select-none
-                "
+                className="block w-full h-full select-none"
                 draggable="false"
               >
                 <div
@@ -406,7 +309,8 @@ const Banner = ({
                     w-full
                     ${height}
                     overflow-hidden
-                    rounded-[22px]
+                    rounded-[16px]
+                    sm:rounded-[22px]
                     bg-[#FAF7F4]
                     border
                     border-[#E8DDD3]
@@ -434,10 +338,7 @@ const Banner = ({
         </div>
       </div>
 
-      {/* =================================================
-          LEFT ARROW
-          ================================================= */}
-
+      {/* LEFT ARROW */}
       {showArrows && banners.length > 1 && (
         <button
           type="button"
@@ -445,13 +346,16 @@ const Banner = ({
           aria-label="Previous banner"
           className="
             absolute
-            left-3
+            left-2
+            sm:left-3
             md:left-5
             top-1/2
             -translate-y-1/2
             z-20
-            w-10
-            h-10
+            w-8
+            h-8
+            sm:w-10
+            sm:h-10
             md:w-12
             md:h-12
             rounded-full
@@ -469,21 +373,11 @@ const Banner = ({
             hover:scale-105
           "
         >
-          <FiChevronLeft
-            className="
-              w-5
-              h-5
-              md:w-6
-              md:h-6
-            "
-          />
+          <FiChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
         </button>
       )}
 
-      {/* =================================================
-          RIGHT ARROW
-          ================================================= */}
-
+      {/* RIGHT ARROW */}
       {showArrows && banners.length > 1 && (
         <button
           type="button"
@@ -491,13 +385,16 @@ const Banner = ({
           aria-label="Next banner"
           className="
             absolute
-            right-3
+            right-2
+            sm:right-3
             md:right-5
             top-1/2
             -translate-y-1/2
             z-20
-            w-10
-            h-10
+            w-8
+            h-8
+            sm:w-10
+            sm:h-10
             md:w-12
             md:h-12
             rounded-full
@@ -515,14 +412,7 @@ const Banner = ({
             hover:scale-105
           "
         >
-          <FiChevronRight
-            className="
-              w-5
-              h-5
-              md:w-6
-              md:h-6
-            "
-          />
+          <FiChevronRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
         </button>
       )}
     </section>

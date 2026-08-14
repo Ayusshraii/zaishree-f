@@ -15,14 +15,16 @@ const Switch = () => {
   const index = OPTIONS.indexOf(selected);
 
   return (
-    <div className="px-6 py-8  md:flex justify-center">
+    <div className="px-4 sm:px-6 py-6 sm:py-8 flex justify-center">
       <div
         className="
           relative
           flex
           items-center
-          w-[560px]
-          h-[46px]
+          w-full
+          max-w-[560px]
+          h-[40px]
+          sm:h-[46px]
           rounded-full
           border
           border-[#E8DDD3]
@@ -61,8 +63,14 @@ const Switch = () => {
             flex-1
             h-full
             rounded-full
-            text-[15px]
+            text-[11px]
+            xs:text-[12px]
+            sm:text-[15px]
             font-medium
+            text-center
+            leading-tight
+            px-1
+            truncate
             transition-colors
             duration-300
             ${
@@ -72,7 +80,8 @@ const Switch = () => {
             }
           `}
         >
-          Gold Jewellery
+          <span className="hidden sm:inline">Gold Jewellery</span>
+          <span className="sm:hidden">Gold</span>
         </Link>
 
         {/* Silver */}
@@ -87,8 +96,14 @@ const Switch = () => {
             flex-1
             h-full
             rounded-full
-            text-[15px]
+            text-[11px]
+            xs:text-[12px]
+            sm:text-[15px]
             font-medium
+            text-center
+            leading-tight
+            px-1
+            truncate
             transition-colors
             duration-300
             ${
@@ -98,7 +113,8 @@ const Switch = () => {
             }
           `}
         >
-          Silver Jewellery
+          <span className="hidden sm:inline">Silver Jewellery</span>
+          <span className="sm:hidden">Silver</span>
         </Link>
 
         {/* Demifine */}
@@ -113,8 +129,14 @@ const Switch = () => {
             flex-1
             h-full
             rounded-full
-            text-[15px]
+            text-[11px]
+            xs:text-[12px]
+            sm:text-[15px]
             font-medium
+            text-center
+            leading-tight
+            px-1
+            truncate
             transition-colors
             duration-300
             ${
@@ -124,7 +146,8 @@ const Switch = () => {
             }
           `}
         >
-          Demifine Jewellery
+          <span className="hidden sm:inline">Demifine Jewellery</span>
+          <span className="sm:hidden">Demifine</span>
         </Link>
       </div>
     </div>

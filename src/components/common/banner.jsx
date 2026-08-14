@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   FiChevronLeft,
@@ -54,8 +54,6 @@ const bannerData = {
       image: salebanner1,
       link: "/sale",
     },
-
-   
   ],
 
   // ===================================================
@@ -121,9 +119,6 @@ const Banner = ({
   autoPlay = true,
   interval = 4000,
   showArrows = true,
-
-  // Mobile: 300px
-  // Desktop: 400px
   height = "h-[300px] md:h-[400px]",
 }) => {
   // ===================================================
@@ -141,15 +136,7 @@ const Banner = ({
   }
 
   // ===================================================
-  // CREATE CLONED SLIDES FOR INFINITE LOOP
-  //
-  // Original:
-  //
-  // [1, 2, 3]
-  //
-  // Becomes:
-  //
-  // [3, 1, 2, 3, 1]
+  // CLONED SLIDES
   // ===================================================
 
   const slides =
@@ -177,6 +164,18 @@ const Banner = ({
     useState(true);
 
   // ===================================================
+  // DRAG STATE
+  // ===================================================
+
+  const [isDragging, setIsDragging] = useState(false);
+
+  const [dragStartX, setDragStartX] = useState(0);
+
+  const [dragOffset, setDragOffset] = useState(0);
+
+  const dragStartRef = useRef(0);
+
+  // ===================================================
   // NEXT SLIDE
   // ===================================================
 
@@ -184,7 +183,6 @@ const Banner = ({
     if (banners.length <= 1) return;
 
     setIsTransitioning(true);
-
     setCurrentIndex((prev) => prev + 1);
   };
 
@@ -196,30 +194,23 @@ const Banner = ({
     if (banners.length <= 1) return;
 
     setIsTransitioning(true);
-
     setCurrentIndex((prev) => prev - 1);
   };
 
   // ===================================================
-  // HANDLE INFINITE LOOP
+  // HANDLE LOOP
   // ===================================================
 
   const handleTransitionEnd = () => {
     if (banners.length <= 1) return;
 
-    // -----------------------------------------------
     // Reached cloned first slide
-    // -----------------------------------------------
-
     if (currentIndex === slides.length - 1) {
       setIsTransitioning(false);
       setCurrentIndex(1);
     }
 
-    // -----------------------------------------------
     // Reached cloned last slide
-    // -----------------------------------------------
-
     if (currentIndex === 0) {
       setIsTransitioning(false);
       setCurrentIndex(banners.length);
@@ -231,7 +222,7 @@ const Banner = ({
   // ===================================================
 
   useEffect(() => {
-    if (!autoPlay || banners.length <= 1) {
+    if (!autoPlay || banners.length <= 1 || isDragging) {
       return;
     }
 
@@ -247,7 +238,88 @@ const Banner = ({
     autoPlay,
     interval,
     banners.length,
+    isDragging,
   ]);
+
+  // ===================================================
+  // DRAG START
+  // ===================================================
+
+  const handlePointerDown = (e) => {
+    if (banners.length <= 1) return;
+
+    setIsDragging(true);
+    setIsTransitioning(false);
+
+    const startX = e.clientX;
+
+    dragStartRef.current = startX;
+    setDragStartX(startX);
+  };
+
+  // ===================================================
+  // DRAG MOVE
+  // ===================================================
+
+  const handlePointerMove = (e) => {
+    if (!isDragging || banners.length <= 1) return;
+
+    const currentX = e.clientX;
+
+    const difference = currentX - dragStartX;
+
+    setDragOffset(difference);
+  };
+
+  // ===================================================
+  // DRAG END
+  // ===================================================
+
+  const handlePointerUp = () => {
+    if (!isDragging || banners.length <= 1) return;
+
+    const threshold = 60;
+
+    setIsDragging(false);
+    setIsTransitioning(true);
+
+    if (dragOffset < -threshold) {
+      setCurrentIndex((prev) => prev + 1);
+    } else if (dragOffset > threshold) {
+      setCurrentIndex((prev) => prev - 1);
+    }
+
+    setDragOffset(0);
+  };
+
+  // ===================================================
+  // DRAG CANCEL
+  // ===================================================
+
+  const handlePointerCancel = () => {
+    setIsDragging(false);
+    setIsTransitioning(true);
+    setDragOffset(0);
+  };
+
+  // ===================================================
+  // CALCULATE TRANSFORM
+  // ===================================================
+
+  const desktopTransform = `
+    calc(
+      7% -
+      ${currentIndex * 86}% -
+      ${currentIndex * 10}px
+    )
+  `;
+
+  const mobileTransform = `
+    calc(
+      -${currentIndex * 100}% -
+      ${dragOffset}px
+    )
+  `;
 
   // ===================================================
   // COMPONENT
@@ -292,17 +364,18 @@ const Banner = ({
             }
           `}
           style={{
-            transform: `
-              translateX(
-                calc(
-                  7% -
-                  ${currentIndex * 86}% -
-                  ${currentIndex * 10}px
-                )
-              )
-            `,
+            transform:
+              typeof window !== "undefined" &&
+              window.innerWidth < 768
+                ? `translateX(${mobileTransform})`
+                : `translateX(${desktopTransform})`,
           }}
           onTransitionEnd={handleTransitionEnd}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerCancel}
+          onPointerLeave={handlePointerUp}
         >
           {/* =============================================
               SLIDES
@@ -313,54 +386,45 @@ const Banner = ({
               key={`${banner.id}-${index}`}
               className="
                 flex-shrink-0
-                w-[86%]
+                w-full
+                md:w-[86%]
               "
             >
-              {/* =========================================
-                  CLICKABLE BANNER
-                  ========================================= */}
-
               <Link
                 to={banner.link || "#"}
                 className="
                   block
                   w-full
                   h-full
+                  select-none
                 "
+                draggable="false"
               >
-                {/* =======================================
-                    IMAGE CARD
-                    ======================================= */}
-
                 <div
                   className={`
                     relative
                     w-full
                     ${height}
-
                     overflow-hidden
-
                     rounded-[22px]
-
                     bg-[#FAF7F4]
-
                     border
                     border-[#E8DDD3]
+                    select-none
                   `}
                 >
                   <img
                     src={banner.image}
                     alt="Jewellery collection"
+                    draggable="false"
                     className="
                       w-full
                       h-full
-
                       object-cover
-
                       transition-transform
                       duration-700
-
                       hover:scale-[1.02]
+                      pointer-events-none
                     "
                   />
                 </div>
@@ -381,41 +445,27 @@ const Banner = ({
           aria-label="Previous banner"
           className="
             absolute
-
             left-3
             md:left-5
-
             top-1/2
             -translate-y-1/2
-
             z-20
-
             w-10
             h-10
-
             md:w-12
             md:h-12
-
             rounded-full
-
             bg-[#B76E79]
-
             text-white
-
             flex
             items-center
             justify-center
-
             border
             border-[#D8A7AF]
-
             shadow-md
-
             hover:bg-[#A85F6B]
-
             transition-all
             duration-300
-
             hover:scale-105
           "
         >
@@ -441,41 +491,27 @@ const Banner = ({
           aria-label="Next banner"
           className="
             absolute
-
             right-3
             md:right-5
-
             top-1/2
             -translate-y-1/2
-
             z-20
-
             w-10
             h-10
-
             md:w-12
             md:h-12
-
             rounded-full
-
             bg-[#B76E79]
-
             text-white
-
             flex
             items-center
             justify-center
-
             border
             border-[#D8A7AF]
-
             shadow-md
-
             hover:bg-[#A85F6B]
-
             transition-all
             duration-300
-
             hover:scale-105
           "
         >

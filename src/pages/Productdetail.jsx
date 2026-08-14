@@ -25,6 +25,7 @@ import { useWishlist } from "../context/WishlistContext";
 
 import { getPricingSettings } from "../services/pricingService";
 import { getPriceBreakup } from "../services/priceBreakupService";
+import ProductCard from "../components/common/ProductCard";
 
 // ============================================================
 // COLOR PALETTE
@@ -1620,103 +1621,55 @@ const ProductDetail = () => {
         }
       />
 
-      {/* ======================================================
-          PAIRS BEAUTIFULLY WITH
-          ====================================================== */}
+  {/* ======================================================
+    PAIRS BEAUTIFULLY WITH
+    ====================================================== */}
 
-      <section className="px-4 sm:px-6 py-12 sm:py-16 bg-white">
-        <div className="max-w-7xl mx-auto">
+<section className="px-4 sm:px-6 py-12 sm:py-16 bg-white">
+  <div className="max-w-7xl mx-auto">
 
-          <h2 className="font-serif text-xl sm:text-2xl text-center text-[#2E2E2E] tracking-wide mb-7 sm:mb-10">
-            PAIRS BEAUTIFULLY WITH
-          </h2>
+    <h2 className="font-serif text-xl sm:text-2xl text-center text-[#2E2E2E] tracking-wide mb-7 sm:mb-10">
+      PAIRS BEAUTIFULLY WITH
+    </h2>
 
-          <div
-            className="
-              flex
-              overflow-x-auto
-              snap-x
-              snap-mandatory
-              gap-3
-              sm:gap-5
-              pb-2
-              -mx-4
-              px-4
-              sm:-mx-6
-              sm:px-6
-              [&::-webkit-scrollbar]:hidden
-            "
-            style={{
-              scrollbarWidth:
-                "none",
-            }}
-          >
-            {relatedProducts.map(
-              (item) => {
-                const itemPricing =
-                  getDiscountedPricing(
-                    item.price,
-                    item.discountPercent
-                  );
-
-                return (
-                  <Link
-                    key={item.id}
-                    to={`/Products/${item.id}`}
-                    className="
-                      group
-                      block
-                      shrink-0
-                      snap-start
-                      w-[112px]
-                      xs:w-[120px]
-                      sm:w-40
-                    "
-                  >
-                    {/* IMAGE */}
-
-                    <div className="aspect-square overflow-hidden bg-[#FAF7F4] rounded-md mb-2 sm:mb-3 border border-[#E8DDD3]">
-                      <img
-                        src={
-                          item.image
-                        }
-                        alt={
-                          item.name
-                        }
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
-
-                    {/* NAME */}
-
-                    <p className="text-[10px] sm:text-xs uppercase tracking-wide text-[#2E2E2E] mb-1 line-clamp-2 leading-relaxed">
-                      {item.name}
-                    </p>
-
-                    {/* PRICING */}
-
-                    <PriceDisplay
-                      originalPrice={
-                        itemPricing.originalPrice
-                      }
-                      discountedPrice={
-                        itemPricing.discountedPrice
-                      }
-                      discountPercent={
-                        itemPricing.discountPercent
-                      }
-                      savings={
-                        itemPricing.savings
-                      }
-                      compact
-                    />
-                  </Link>
-                );
-              }
-            )}
-          </div>
+    <div
+      className="
+        flex
+        overflow-x-auto
+        snap-x
+        snap-mandatory
+        gap-3
+        sm:gap-5
+        pb-2
+        -mx-4
+        px-4
+        sm:-mx-6
+        sm:px-6
+        [&::-webkit-scrollbar]:hidden
+      "
+      style={{
+        scrollbarWidth: "none",
+      }}
+    >
+      {relatedProducts.map((item) => (
+        <div
+          key={item.id}
+          className="
+            shrink-0
+            snap-start
+            w-[170px]
+            sm:w-[210px]
+            md:w-[230px]
+          "
+        >
+          <ProductCard
+            product={item}
+          />
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* ======================================================
           REVIEWS

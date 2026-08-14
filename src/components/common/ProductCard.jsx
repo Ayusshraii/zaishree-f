@@ -330,7 +330,7 @@ const ProductCard = ({ product }) => {
         {isLocked ? (
           <>
             <FaLock className="w-3 h-3" />
-            Unlock with Subscription
+            Subscription
           </>
         ) : inCart ? (
           <>

@@ -36,47 +36,139 @@ const colors = [
 
 const ShopByColor = () => {
   return (
-    <section className="py-10 sm:py-14 px-4 sm:px-6 lg:px-10 text-[#5a1b1be0]">
+    <section className="py-10 sm:py-14 px-4 sm:px-6 lg:px-10 bg-[#FFFFFF] text-[#2E2E2E]">
       <div className="max-w-7xl mx-auto">
 
-        {/* Heading */}
+        {/* =========================
+            HEADING
+        ========================== */}
+
         <div className="text-center mb-8 sm:mb-10">
-          <p className="text-xs sm:text-sm tracking-[0.25em] uppercase text-[#5a1b1be0] mb-2">
+          <p
+            className="
+              text-xs
+              sm:text-sm
+              tracking-[0.25em]
+              uppercase
+              text-[#B76E79]
+              mb-2
+              font-medium
+            "
+          >
             Find Your Shade
           </p>
 
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif text-[#5a1b1be0]">
+          <h2
+            className="
+              text-2xl
+              sm:text-3xl
+              lg:text-4xl
+              font-serif
+              text-[#2E2E2E]
+            "
+          >
             Shop By Color
           </h2>
 
-          <p className="text-sm text-gray-500 mt-3">
+          <p className="text-sm text-[#2E2E2E]/55 mt-3">
             Discover jewellery in shades that match your style.
           </p>
         </div>
 
-        {/* Color Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 sm:gap-5">
+        {/* =========================
+            COLOR GRID
+        ========================== */}
+
+        <div
+          className="
+            grid
+            grid-cols-2
+            sm:grid-cols-3
+            md:grid-cols-6
+            gap-4
+            sm:gap-5
+          "
+        >
           {colors.map((color) => (
             <Link
               key={color.name}
-              to={`/color/${color.name.toLowerCase().replace(/\s+/g, "-")}`}
+              to={`/color/${color.name
+                .toLowerCase()
+                .replace(/\s+/g, "-")}`}
               className="group"
             >
-              <div className="relative aspect-square overflow-hidden rounded-2xl bg-gray-100">
-                
+              <div
+                className="
+                  relative
+                  aspect-square
+                  overflow-hidden
+                  rounded-2xl
+                  bg-[#FAF7F4]
+                  border
+                  border-[#E8DDD3]
+                "
+              >
+
+                {/* =========================
+                    IMAGE
+                ========================== */}
+
                 <img
                   src={color.image}
                   alt={color.name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="
+                    w-full
+                    h-full
+                    object-cover
+                    transition-transform
+                    duration-500
+                    group-hover:scale-105
+                  "
                 />
 
-                {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300" />
+                {/* =========================
+                    HOVER OVERLAY
+                ========================== */}
 
-                {/* Name */}
+                <div
+                  className="
+                    absolute
+                    inset-0
+                    bg-[#2E2E2E]/0
+                    group-hover:bg-[#2E2E2E]/15
+                    transition-all
+                    duration-300
+                  "
+                />
+
+                {/* =========================
+                    COLOR NAME
+                ========================== */}
+
                 <div className="absolute bottom-3 left-3 right-3">
-                  <div className="text-[#5a1b1be0] backdrop-blur-sm rounded-xl px-3 py-2 text-center">
-                    <h3 className="text-sm sm:text-base font-medium text-white">
+                  <div
+                    className="
+                      backdrop-blur-md
+                      bg-[#2E2E2E]/45
+                      border
+                      border-[#FFFFFF]/20
+                      rounded-xl
+                      px-3
+                      py-2
+                      text-center
+                      transition-all
+                      duration-300
+                      group-hover:bg-[#B76E79]/80
+                    "
+                  >
+                    <h3
+                      className="
+                        text-sm
+                        sm:text-base
+                        font-medium
+                        text-[#FFFFFF]
+                      "
+                    >
                       {color.name}
                     </h3>
                   </div>

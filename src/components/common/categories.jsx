@@ -190,9 +190,9 @@ const categories = [
   // ============================================================
 
   return (
-    <section className="w-full bg-[#F7F3EA]">
+    <section className="w-full bg-[#FAF7F4] py-5">
       <div className="w-full px-4 sm:px-6 lg:px-8">
-         <Switch/>
+         <Switch />
         <Swiper
           modules={[Navigation, Autoplay]}
           navigation
@@ -243,29 +243,6 @@ const categories = [
 
                 <div className="relative">
 
-                  {/* SPECIAL BADGE */}
-
-                  {category.special && (
-                    <div
-                      className="
-                        absolute
-                        z-20
-                        top-0
-                        left-1/2
-                        -translate-x-1/2
-                        px-4
-                        py-1
-                        rounded-b-xl
-                        bg-[#9B7145]
-                        text-white
-                        text-xs
-                        font-medium
-                        shadow-sm
-                      "
-                    >
-                      Special
-                    </div>
-                  )}
 
                   {/* IMAGE BOX */}
 

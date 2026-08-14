@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
 import Footer from "../components/common/Footer";
+
 import {
   FiUser,
   FiPackage,
@@ -10,9 +11,13 @@ import {
   FiMapPin,
   FiAward,
 } from "react-icons/fi";
+
 import { useAuth } from "../context/AuthContext";
 
-// mock order history — swap for a real API call (e.g. getOrdersByUser) later
+// ============================================================
+// MOCK ORDER HISTORY
+// ============================================================
+
 const mockOrders = [
   {
     id: "AR-09923",
@@ -28,271 +33,725 @@ const mockOrders = [
   },
 ];
 
+// ============================================================
+// STATUS STYLES
+// ============================================================
+
 const statusStyles = {
-  Delivered: "bg-gray-100 text-gray-700",
-  Shipped: "bg-blue-100 text-blue-700",
-  Processing: "bg-amber-100 text-amber-700",
-  Cancelled: "bg-red-100 text-red-700",
+  Delivered: "bg-[#FAF7F4] text-[#2E2E2E]",
+  Shipped: "bg-blue-50 text-blue-700",
+  Processing: "bg-amber-50 text-amber-700",
+  Cancelled: "bg-red-50 text-red-700",
 };
 
+// ============================================================
+// NAV ITEMS
+// ============================================================
+
 const navItems = [
-  { key: "overview", label: "Profile Overview", icon: FiUser },
-  { key: "orders", label: "Order History", icon: FiPackage },
-  { key: "wishlist", label: "Wishlist", icon: FiHeart, to: "/wishlist" },
-  { key: "addresses", label: "Saved Addresses", icon: FiMapPin },
-  { key: "membership", label: "Membership Status", icon: FiAward },
+  {
+    key: "overview",
+    label: "Profile Overview",
+    icon: FiUser,
+  },
+  {
+    key: "orders",
+    label: "Order History",
+    icon: FiPackage,
+  },
+  {
+    key: "wishlist",
+    label: "Wishlist",
+    icon: FiHeart,
+    to: "/wishlist",
+  },
+  {
+    key: "addresses",
+    label: "Saved Addresses",
+    icon: FiMapPin,
+  },
+  {
+    key: "membership",
+    label: "Membership Status",
+    icon: FiAward,
+  },
 ];
+
+// ============================================================
+// PROFILE
+// ============================================================
 
 const Profile = () => {
   const { user, isAuthenticated, logout } = useAuth();
-  const [activeTab, setActiveTab] = useState("overview");
+
+  const [activeTab, setActiveTab] =
+    useState("overview");
+
+  // ==========================================================
+  // NOT AUTHENTICATED
+  // ==========================================================
 
   if (!isAuthenticated) {
     return (
       <>
-        <div className="border-1 border-gray-300">
+        {/* NAVBAR */}
+
+        <div className="border-b border-[#E8DDD3] bg-white">
           <Navbar />
         </div>
-        <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
-          <FiUser className="w-14 h-14 text-gray-300 mb-4" />
-          <h2 className="text-lg font-medium text-gray-800 mb-1">
+
+        {/* LOGIN MESSAGE */}
+
+        <div className="min-h-[70vh] bg-white flex flex-col items-center justify-center py-24 px-6 text-center">
+          <div className="w-16 h-16 rounded-full bg-[#FAF7F4] flex items-center justify-center mb-5">
+            <FiUser className="w-7 h-7 text-[#B76E79]" />
+          </div>
+
+          <h2 className="font-serif text-2xl text-[#2E2E2E] mb-2">
             You're not signed in
           </h2>
-          <p className="text-sm text-gray-500 mb-6 max-w-xs">
-            Log in or create an account to view your profile, track orders,
-            and access Zaishree Club membership benefits.
+
+          <p className="text-sm text-gray-500 mb-7 max-w-sm leading-relaxed">
+            Log in or create an account to view your
+            profile, track orders, and access Zaishree
+            Club membership benefits.
           </p>
+
           <div className="flex gap-3">
             <Link
               to="/login"
-              className="px-6 py-2.5 border border-[#4B0F14] rounded-2xl text-[#4B0F14] text-sm uppercase tracking-wide hover:bg-[#4B0F14] hover:text-white transition-colors"
+              className="
+                px-6
+                py-2.5
+                border
+                border-[#B76E79]
+                rounded-full
+                text-[#B76E79]
+                text-sm
+                uppercase
+                tracking-wide
+                hover:bg-[#B76E79]
+                hover:text-white
+                transition-colors
+              "
             >
               Log In
             </Link>
+
             <Link
               to="/signup"
-              className="px-6 py-2.5 bg-[#4B0F14] rounded-2xl text-white text-sm uppercase tracking-wide hover:bg-[#3A0C10] transition-colors"
+              className="
+                px-6
+                py-2.5
+                bg-[#B76E79]
+                rounded-full
+                text-white
+                text-sm
+                uppercase
+                tracking-wide
+                hover:bg-[#A85F6B]
+                transition-colors
+              "
             >
               Sign Up
             </Link>
           </div>
         </div>
+
         <Footer />
       </>
     );
   }
 
-  const firstName = user.name?.split(" ")[0] || user.name;
+  // ==========================================================
+  // USER NAME
+  // ==========================================================
+
+  const firstName =
+    user.name?.split(" ")[0] || user.name;
+
+  // ==========================================================
+  // RETURN
+  // ==========================================================
 
   return (
     <>
-      <div className="border-1 border-gray-300">
+      {/* ======================================================
+          NAVBAR
+          ====================================================== */}
+
+      <div className="border-b border-[#E8DDD3] bg-white">
         <Navbar />
       </div>
 
-      <div className="bg-[#FBF6F0] min-h-screen">
-        <div className="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-[220px_1fr] gap-10">
-          {/* Sidebar */}
+      {/* ======================================================
+          MAIN PROFILE
+          ====================================================== */}
+
+      <div className="bg-white min-h-screen">
+        <div
+          className="
+            max-w-6xl
+            mx-auto
+            px-4
+            sm:px-6
+            py-8
+            sm:py-12
+            grid
+            grid-cols-1
+            md:grid-cols-[220px_1fr]
+            gap-8
+            lg:gap-10
+          "
+        >
+          {/* ==================================================
+              SIDEBAR
+              ================================================== */}
+
           <aside className="space-y-1">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = activeTab === item.key;
+
+              const isActive =
+                activeTab === item.key;
 
               const content = (
                 <span
-                  className={`flex items-center gap-2 py-2 text-sm border-b-2 transition-colors ${
-                    isActive
-                      ? "text-[#7A2E42] border-[#7A2E42] font-medium"
-                      : "text-gray-700 border-transparent hover:text-gray-900"
-                  }`}
+                  className={`
+                    flex
+                    items-center
+                    gap-3
+                    py-3
+                    px-3
+                    text-sm
+                    rounded-md
+                    transition-colors
+                    ${
+                      isActive
+                        ? "bg-[#FAF7F4] text-[#B76E79] font-medium"
+                        : "text-[#2E2E2E] hover:bg-[#FAF7F4] hover:text-[#B76E79]"
+                    }
+                  `}
                 >
-                  {item.label}
+                  <Icon className="w-4 h-4 shrink-0" />
+
+                  <span>{item.label}</span>
                 </span>
               );
 
               return item.to ? (
-                <Link key={item.key} to={item.to} className="block w-fit">
+                <Link
+                  key={item.key}
+                  to={item.to}
+                  className="block w-full"
+                >
                   {content}
                 </Link>
               ) : (
                 <button
                   key={item.key}
-                  onClick={() => setActiveTab(item.key)}
-                  className="block w-fit text-left"
+                  onClick={() =>
+                    setActiveTab(item.key)
+                  }
+                  className="block w-full text-left"
                 >
                   {content}
                 </button>
               );
             })}
 
+            {/* LOGOUT */}
+
             <button
               onClick={logout}
-              className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-500 transition-colors pt-4 mt-4 border-t border-gray-200 w-full"
+              className="
+                flex
+                items-center
+                gap-3
+                text-sm
+                text-gray-500
+                hover:text-red-500
+                transition-colors
+                pt-4
+                mt-4
+                border-t
+                border-[#E8DDD3]
+                w-full
+                px-3
+              "
             >
               <FiLogOut className="w-4 h-4" />
-              Log out
+
+              <span>Log out</span>
             </button>
           </aside>
 
-          {/* Main content */}
-          <main>
-            <h1 className="font-serif text-3xl text-gray-900 mb-1">
-              Welcome back, {firstName}
-            </h1>
-            <p className="text-sm text-gray-500 mb-8">
-              Manage your luxury experience and access exclusive benefits.
-            </p>
+          {/* ==================================================
+              MAIN CONTENT
+              ================================================== */}
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-              {/* AURUM Club card */}
-              <div className="bg-white border border-gray-200 rounded-md p-6 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#F7E8EC] rounded-bl-full" />
+          <main className="min-w-0">
+            {/* HEADER */}
+
+            <div className="mb-8">
+              <h1 className="font-serif text-3xl sm:text-4xl text-[#2E2E2E] mb-2">
+                Welcome back, {firstName}
+              </h1>
+
+              <p className="text-sm text-gray-500">
+                Manage your luxury experience and
+                access exclusive benefits.
+              </p>
+            </div>
+
+            {/* =================================================
+                TOP CARDS
+                ================================================= */}
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
+              {/* =================================================
+                  ZAISHREE CLUB
+                  ================================================= */}
+
+              <div
+                className="
+                  bg-[#FAF7F4]
+                  border
+                  border-[#E8DDD3]
+                  rounded-2xl
+                  p-5
+                  sm:p-6
+                  relative
+                  overflow-hidden
+                "
+              >
+                {/* DECORATIVE CIRCLE */}
+
+                <div
+                  className="
+                    absolute
+                    top-0
+                    right-0
+                    w-32
+                    h-32
+                    bg-[#D8A7AF]/30
+                    rounded-bl-full
+                  "
+                />
+
                 <div className="relative">
+                  {/* CARD HEADER */}
+
                   <div className="flex justify-between items-start mb-6">
-                    <h3 className="text-sm font-semibold text-gray-900">
-                      Zaishree Club
-                    </h3>
-                    <div className="w-8 h-8 rounded-full bg-[#7A2E42] flex items-center justify-center">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1">
+                        Membership
+                      </p>
+
+                      <h3 className="text-sm font-semibold text-[#2E2E2E]">
+                        Zaishree Club
+                      </h3>
+                    </div>
+
+                    <div
+                      className="
+                        w-9
+                        h-9
+                        rounded-full
+                        bg-[#B76E79]
+                        flex
+                        items-center
+                        justify-center
+                      "
+                    >
                       <FiAward className="w-4 h-4 text-white" />
                     </div>
                   </div>
 
-                  <p className="text-[10px] uppercase tracking-widest text-gray-400 mb-1">
+                  {/* TIER */}
+
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-1">
                     Current Tier
                   </p>
-                  <p className="font-serif text-2xl text-[#7A2E42] mb-4">
+
+                  <p className="font-serif text-2xl text-[#B76E79] mb-5">
                     Gold Member
                   </p>
 
-                  <div className="space-y-2 mb-6">
+                  {/* BENEFITS */}
+
+                  <div className="space-y-2.5 mb-6">
                     {[
                       "Complimentary overnight shipping",
                       "Annual concierge consultation",
                       "Early access to Heritage collections",
                     ].map((benefit) => (
-                      <div key={benefit} className="flex items-start gap-2">
-                        <span className="text-green-600 text-xs mt-0.5">✓</span>
-                        <p className="text-xs text-gray-600">{benefit}</p>
+                      <div
+                        key={benefit}
+                        className="flex items-start gap-2"
+                      >
+                        <span className="text-[#B76E79] text-xs mt-0.5">
+                          ✓
+                        </span>
+
+                        <p className="text-xs text-gray-600">
+                          {benefit}
+                        </p>
                       </div>
                     ))}
                   </div>
 
+                  {/* BENEFITS BUTTON */}
+
                   <button
-                    onClick={() => setActiveTab("membership")}
-                    className="w-full py-2.5 border border-gray-300 rounded-md text-xs font-medium uppercase tracking-wide hover:border-gray-500 transition-colors"
+                    onClick={() =>
+                      setActiveTab(
+                        "membership"
+                      )
+                    }
+                    className="
+                      w-full
+                      py-2.5
+                      border
+                      border-[#B76E79]
+                      rounded-full
+                      text-[#B76E79]
+                      text-xs
+                      font-medium
+                      uppercase
+                      tracking-wide
+                      hover:bg-[#B76E79]
+                      hover:text-white
+                      transition-colors
+                    "
                   >
                     View All Benefits
                   </button>
                 </div>
               </div>
 
-              {/* Personal Details card */}
-              <div className="bg-white border border-gray-200 rounded-md p-6">
-                <div className="flex justify-between items-center mb-5">
-                  <h3 className="text-sm font-semibold text-gray-900">
+              {/* =================================================
+                  PERSONAL DETAILS
+                  ================================================= */}
+
+              <div
+                className="
+                  bg-white
+                  border
+                  border-[#E8DDD3]
+                  rounded-2xl
+                  p-5
+                  sm:p-6
+                "
+              >
+                {/* HEADER */}
+
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="text-sm font-semibold text-[#2E2E2E]">
                     Personal Details
                   </h3>
-                  <button className="text-xs text-[#7A2E42] hover:underline">
+
+                  <button className="text-xs text-[#B76E79] hover:text-[#A85F6B] hover:underline">
                     Edit
                   </button>
                 </div>
 
-                <div className="space-y-4">
+                {/* DETAILS */}
+
+                <div className="space-y-5">
+                  {/* NAME */}
+
                   <div>
-                    <p className="text-[10px] uppercase tracking-widest text-gray-400 mb-0.5">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-1">
                       Full Name
                     </p>
-                    <p className="text-sm text-gray-900 capitalize">
+
+                    <p className="text-sm text-[#2E2E2E] capitalize">
                       {user.name}
                     </p>
                   </div>
+
+                  {/* EMAIL */}
+
                   <div>
-                    <p className="text-[10px] uppercase tracking-widest text-gray-400 mb-0.5">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-1">
                       Email Address
                     </p>
-                    <p className="text-sm text-gray-900">{user.email}</p>
+
+                    <p className="text-sm text-[#2E2E2E] break-all">
+                      {user.email}
+                    </p>
                   </div>
+
+                  {/* PHONE */}
+
                   <div>
-                    <p className="text-[10px] uppercase tracking-widest text-gray-400 mb-0.5">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-1">
                       Phone Number
                     </p>
-                    <p className="text-sm text-gray-900">
+
+                    <p className="text-sm text-[#2E2E2E]">
                       {user.phone || "Not added"}
                     </p>
                   </div>
+
+                  {/* PASSWORD */}
+
                   <div>
-                    <p className="text-[10px] uppercase tracking-widest text-gray-400 mb-0.5">
+                    <p className="text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-1">
                       Password
                     </p>
-                    <p className="text-sm text-gray-900">••••••••</p>
+
+                    <p className="text-sm text-[#2E2E2E] tracking-widest">
+                      ••••••••
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Recent Orders */}
-            <div className="bg-white border border-gray-200 rounded-md p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-sm font-semibold text-gray-900">
-                  Recent Orders
-                </h3>
+            {/* =================================================
+                RECENT ORDERS
+                ================================================= */}
+
+            <div
+              className="
+                bg-white
+                border
+                border-[#E8DDD3]
+                rounded-2xl
+                p-5
+                sm:p-6
+              "
+            >
+              {/* HEADER */}
+
+              <div className="flex justify-between items-center mb-5">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.18em] text-gray-400 mb-1">
+                    Your purchases
+                  </p>
+
+                  <h3 className="text-sm font-semibold text-[#2E2E2E]">
+                    Recent Orders
+                  </h3>
+                </div>
+
                 <button
-                  onClick={() => setActiveTab("orders")}
-                  className="text-xs text-[#7A2E42] hover:underline"
+                  onClick={() =>
+                    setActiveTab("orders")
+                  }
+                  className="
+                    text-xs
+                    text-[#B76E79]
+                    hover:text-[#A85F6B]
+                    hover:underline
+                  "
                 >
                   View All
                 </button>
               </div>
+
+              {/* EMPTY */}
 
               {mockOrders.length === 0 ? (
                 <div className="text-center py-10 text-sm text-gray-500">
                   You haven't placed any orders yet.
                 </div>
               ) : (
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="text-left text-[10px] uppercase tracking-widest text-gray-400 border-b border-gray-100">
-                      <th className="font-medium py-2 pr-4">Order Number</th>
-                      <th className="font-medium py-2 pr-4">Date</th>
-                      <th className="font-medium py-2 pr-4">Status</th>
-                      <th className="font-medium py-2 text-right">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {mockOrders.map((order) => (
-                      <tr
-                        key={order.id}
-                        className="border-b border-gray-50 last:border-0"
-                      >
-                        <td className="py-3 pr-4 text-gray-900 font-medium">
-                          #{order.id}
-                        </td>
-                        <td className="py-3 pr-4 text-gray-600">
-                          {new Date(order.date).toLocaleDateString("en-IN", {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          })}
-                        </td>
-                        <td className="py-3 pr-4">
-                          <span
-                            className={`text-xs px-2.5 py-1 rounded-full font-medium ${statusStyles[order.status]}`}
-                          >
-                            {order.status}
-                          </span>
-                        </td>
-                        <td className="py-3 text-right text-gray-900 font-semibold">
-                          ₹{order.total.toLocaleString("en-IN")}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <>
+                  {/* DESKTOP TABLE */}
+
+                  <div className="hidden sm:block overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr
+                          className="
+                            text-left
+                            text-[10px]
+                            uppercase
+                            tracking-[0.15em]
+                            text-gray-400
+                            border-b
+                            border-[#E8DDD3]
+                          "
+                        >
+                          <th className="font-medium py-3 pr-4">
+                            Order Number
+                          </th>
+
+                          <th className="font-medium py-3 pr-4">
+                            Date
+                          </th>
+
+                          <th className="font-medium py-3 pr-4">
+                            Status
+                          </th>
+
+                          <th className="font-medium py-3 text-right">
+                            Total
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        {mockOrders.map(
+                          (order) => (
+                            <tr
+                              key={order.id}
+                              className="
+                                border-b
+                                border-[#E8DDD3]/60
+                                last:border-0
+                              "
+                            >
+                              <td className="py-4 pr-4 text-[#2E2E2E] font-medium">
+                                #{order.id}
+                              </td>
+
+                              <td className="py-4 pr-4 text-gray-600">
+                                {new Date(
+                                  order.date
+                                ).toLocaleDateString(
+                                  "en-IN",
+                                  {
+                                    year: "numeric",
+                                    month:
+                                      "short",
+                                    day: "numeric",
+                                  }
+                                )}
+                              </td>
+
+                              <td className="py-4 pr-4">
+                                <span
+                                  className={`
+                                    text-xs
+                                    px-2.5
+                                    py-1
+                                    rounded-full
+                                    font-medium
+                                    ${
+                                      statusStyles[
+                                        order
+                                          .status
+                                      ]
+                                    }
+                                  `}
+                                >
+                                  {
+                                    order.status
+                                  }
+                                </span>
+                              </td>
+
+                              <td className="py-4 text-right text-[#2E2E2E] font-semibold">
+                                ₹
+                                {order.total.toLocaleString(
+                                  "en-IN"
+                                )}
+                              </td>
+                            </tr>
+                          )
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* MOBILE ORDERS */}
+
+                  <div className="sm:hidden space-y-3">
+                    {mockOrders.map(
+                      (order) => (
+                        <div
+                          key={order.id}
+                          className="
+                            border
+                            border-[#E8DDD3]
+                            rounded-xl
+                            p-4
+                          "
+                        >
+                          <div className="flex justify-between items-start gap-3 mb-3">
+                            <div>
+                              <p className="text-[10px] uppercase tracking-widest text-gray-400 mb-1">
+                                Order
+                              </p>
+
+                              <p className="text-sm font-semibold text-[#2E2E2E]">
+                                #{order.id}
+                              </p>
+                            </div>
+
+                            <span
+                              className={`
+                                text-[10px]
+                                px-2.5
+                                py-1
+                                rounded-full
+                                font-medium
+                                whitespace-nowrap
+                                ${
+                                  statusStyles[
+                                    order.status
+                                  ]
+                                }
+                              `}
+                            >
+                              {
+                                order.status
+                              }
+                            </span>
+                          </div>
+
+                          <div className="flex justify-between items-end">
+                            <div>
+                              <p className="text-[10px] uppercase tracking-widest text-gray-400 mb-1">
+                                Date
+                              </p>
+
+                              <p className="text-xs text-gray-600">
+                                {new Date(
+                                  order.date
+                                ).toLocaleDateString(
+                                  "en-IN",
+                                  {
+                                    year: "numeric",
+                                    month:
+                                      "short",
+                                    day: "numeric",
+                                  }
+                                )}
+                              </p>
+                            </div>
+
+                            <div className="text-right">
+                              <p className="text-[10px] uppercase tracking-widest text-gray-400 mb-1">
+                                Total
+                              </p>
+
+                              <p className="text-sm font-semibold text-[#2E2E2E]">
+                                ₹
+                                {order.total.toLocaleString(
+                                  "en-IN"
+                                )}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    )}
+                  </div>
+                </>
               )}
             </div>
           </main>
         </div>
       </div>
+
+      {/* ======================================================
+          FOOTER
+          ====================================================== */}
 
       <Footer />
     </>

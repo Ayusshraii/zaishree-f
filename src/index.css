@@ -3,30 +3,7 @@
 :root {
 
   /* Changes color for all swipers */
-  --swiper-navigation-color: #550404e0; 
+  --swiper-navigation-color: #B76E79; 
   --swiper-navigation-size: 30px; /* Optional: changes size */
   
 }   
-.reviewSwiper .swiper-button-next,
-.reviewSwiper .swiper-button-prev {
-  width: 42px;
-  height: 42px;
-  background: white;
-  border-radius: 50%;
-  color: #000;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.reviewSwiper .swiper-button-prev {
-  left: 10px;
-}
-
-.reviewSwiper .swiper-button-next {
-  right: 10px;
-}
-
-.reviewSwiper .swiper-button-prev::after,
-.reviewSwiper .swiper-button-next::after {
-  font-size: 16px;
-  font-weight: bold;
-}

@@ -1,34 +1,44 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { FaStar, FaHeart, FaRegHeart, FaLock } from "react-icons/fa";
+import {
+  FaStar,
+  FaHeart,
+  FaRegHeart,
+  FaLock,
+} from "react-icons/fa";
 import { FiShoppingBag } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
+
 import { useCart } from "../../context/Cartcontext";
 import { useWishlist } from "../../context/WishlistContext";
 import { useSubscription } from "../../context/SubscriptionContext";
 
 const ProductCard = ({ product }) => {
-  // NOTE: removeFromCart must exist on your CartContext.
-  // If your context uses a different name (e.g. removeItem, deleteFromCart),
-  // rename it here to match.
   const { addToCart, removeFromCart, isInCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
-  const { hasSubscription } = useSubscription(); // boolean: does the user have an active subscription
+  const { hasSubscription } = useSubscription();
+
   const navigate = useNavigate();
 
   const inWishlist = isInWishlist(product.id);
   const inCart = isInCart(product.id);
 
-  // Product is locked if it's marked premium and user has no subscription
+  // Premium products are locked without an active subscription
   const isLocked = product.isPremium && !hasSubscription;
+
+  // ============================================================
+  // WISHLIST
+  // ============================================================
 
   const handleWishlistClick = (e) => {
     e.preventDefault();
+
     if (isLocked) {
       toast.error("Subscribe to unlock this product");
       return;
     }
+
     if (inWishlist) {
       toggleWishlist(product);
       toast("Removed from wishlist");
@@ -39,7 +49,7 @@ const ProductCard = ({ product }) => {
   };
 
   // ============================================================
-  // CART TOGGLE (add if not in cart, remove if already in cart)
+  // CART
   // ============================================================
 
   const handleCartClick = (e) => {
@@ -60,74 +70,205 @@ const ProductCard = ({ product }) => {
     toast.success("Added to cart");
   };
 
+  // ============================================================
+  // LOCKED PRODUCT
+  // ============================================================
+
   const handleLockedClick = (e) => {
     e.preventDefault();
-    navigate("/subscription"); // route to your subscription/plans page
+    navigate("/subscription");
   };
 
   return (
-    <div className="group relative text-[#5a1b1be0]">
-      {/* Wishlist button (disabled/hidden purpose when locked) */}
+    <div className="group relative text-[#2E2E2E]">
+
+      {/* ==================================================
+          WISHLIST BUTTON
+          ================================================== */}
+
       <button
         onClick={handleWishlistClick}
-        aria-label={inWishlist ? "Remove from wishlist" : "Add to wishlist"}
-        className="absolute top-2 right-2 z-20 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center shadow-sm hover:bg-white transition-colors"
+        aria-label={
+          inWishlist
+            ? "Remove from wishlist"
+            : "Add to wishlist"
+        }
+        className="
+          absolute
+          top-2
+          right-2
+          z-20
+          w-8
+          h-8
+          rounded-full
+          bg-[#FFFFFF]/95
+          flex
+          items-center
+          justify-center
+          shadow-sm
+          hover:bg-[#FAF7F4]
+          transition-colors
+        "
       >
         {inWishlist ? (
-          <FaHeart className="w-4 h-4 text-red-500" />
+          <FaHeart className="w-4 h-4 text-[#B76E79]" />
         ) : (
-          <FaRegHeart className="w-4 h-4 text-gray-600" />
+          <FaRegHeart className="w-4 h-4 text-[#2E2E2E]/65" />
         )}
       </button>
 
-      {/* Premium badge */}
+      {/* ==================================================
+          PREMIUM BADGE
+          ================================================== */}
+
       {product.isPremium && (
-        <span className="absolute top-2 left-2 z-20 bg-[#141311] text-white text-[10px] uppercase tracking-wide px-2 py-1 rounded-full">
+        <span
+          className="
+            absolute
+            top-2
+            left-2
+            z-20
+            bg-[#B76E79]
+            text-[#FFFFFF]
+            text-[10px]
+            uppercase
+            tracking-wide
+            px-2
+            py-1
+            rounded-full
+          "
+        >
           Premium
         </span>
       )}
+
+      {/* ==================================================
+          PRODUCT
+          ================================================== */}
 
       <Link
         to={isLocked ? "#" : `/product/${product.id}`}
         onClick={isLocked ? handleLockedClick : undefined}
       >
-        <div className="relative aspect-square overflow-hidden bg-gray-100 rounded-md mb-3">
+        {/* PRODUCT IMAGE */}
+
+        <div
+          className="
+            relative
+            aspect-square
+            overflow-hidden
+            bg-[#FAF7F4]
+            rounded-2xl
+            mb-3
+          "
+        >
           <img
             src={product.image}
             alt={product.name}
-            className={`w-full h-full object-cover transition-transform duration-500 ${
-              isLocked ? "blur-md scale-105" : "group-hover:scale-105"
-            }`}
+            className={`
+              w-full
+              h-full
+              object-cover
+              transition-transform
+              duration-500
+              ${
+                isLocked
+                  ? "blur-md scale-105"
+                  : "group-hover:scale-105"
+              }
+            `}
           />
 
+          {/* ==================================================
+              LOCK OVERLAY
+              ================================================== */}
+
           {isLocked && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/30">
-              <div className="w-10 h-10 rounded-full bg-white/90 flex items-center justify-center">
-                <FaLock className="w-4 h-4 text-[#141311]" />
+            <div
+              className="
+                absolute
+                inset-0
+                flex
+                flex-col
+                items-center
+                justify-center
+                gap-2
+                bg-[#2E2E2E]/35
+              "
+            >
+              <div
+                className="
+                  w-10
+                  h-10
+                  rounded-full
+                  bg-[#FFFFFF]/95
+                  flex
+                  items-center
+                  justify-center
+                "
+              >
+                <FaLock className="w-4 h-4 text-[#B76E79]" />
               </div>
-              <span className="text-white text-xs font-medium uppercase tracking-wide bg-black/50 px-3 py-1 rounded-full">
+
+              <span
+                className="
+                  text-[#FFFFFF]
+                  text-xs
+                  font-medium
+                  uppercase
+                  tracking-wide
+                  bg-[#2E2E2E]/60
+                  px-3
+                  py-1
+                  rounded-full
+                "
+              >
                 Subscription Required
               </span>
             </div>
           )}
         </div>
 
+        {/* ==================================================
+            PRODUCT NAME
+            ================================================== */}
+
         <h3
-          className={`text-sm font-medium mb-1 truncate ${
-            isLocked ? "text-gray-900" : "text-gray-900"
-          }`}
+          className="
+            text-sm
+            font-medium
+            text-[#2E2E2E]
+            mb-1
+            truncate
+          "
         >
           {product.name}
         </h3>
 
+        {/* ==================================================
+            PRICE + RATING
+            ================================================== */}
+
         <div className="flex items-center justify-between mb-3">
-          <p className={`text-sm ${isLocked ? "text-gray-400" : "text-gray-700"}`}>
-            {isLocked ? "Locked" : `₹${product.price.toLocaleString("en-IN")}`}
+
+          <p
+            className={`
+              text-sm
+              ${
+                isLocked
+                  ? "text-[#2E2E2E]/40"
+                  : "text-[#2E2E2E]/80"
+              }
+            `}
+          >
+            {isLocked
+              ? "Locked"
+              : `₹${product.price.toLocaleString("en-IN")}`}
           </p>
 
           {product.rating && !isLocked && (
-            <div className="flex items-center gap-1 text-xs text-gray-500">
-              <FaStar className="w-3 h-3 text-amber-400" />
+            <div className="flex items-center gap-1 text-xs text-[#2E2E2E]/60">
+              <FaStar className="w-3 h-3 text-[#D8A7AF]" />
               <span>{product.rating}</span>
             </div>
           )}
@@ -136,22 +277,56 @@ const ProductCard = ({ product }) => {
 
       {/* ==================================================
           CART BUTTON
-          - Locked -> routes to subscription page
-          - Not in cart -> adds to cart
-          - In cart -> removes from cart (now clickable, was
-            previously cursor-default/dead)
           ================================================== */}
 
       <button
-        onClick={isLocked ? handleLockedClick : handleCartClick}
-        className={`w-full flex items-center justify-center gap-2 py-2 border text-xs uppercase tracking-wide transition-colors ${
+        onClick={
           isLocked
-            ? "border-[#7A2E42] text-[#7A2E42] hover:bg-[#7A2E42] hover:text-white"
-            : inCart
-            ? "border-gray-300 text-gray-500 hover:border-[#7A2E42] hover:text-[#7A2E42]"
-            : "border-[#7A2E42] hover:bg-[#7A2E42] hover:text-white"
-        }`}
+            ? handleLockedClick
+            : handleCartClick
+        }
+        className={`
+          w-full
+          flex
+          items-center
+          justify-center
+          gap-2
+          py-2
+          rounded-xl
+          border
+          text-xs
+          uppercase
+          tracking-wide
+          transition-all
+          duration-200
+
+          ${
+            isLocked
+              ? `
+                border-[#B76E79]
+                text-[#B76E79]
+                hover:bg-[#B76E79]
+                hover:text-[#FFFFFF]
+              `
+              : inCart
+              ? `
+                border-[#E8DDD3]
+                text-[#2E2E2E]/60
+                hover:border-[#B76E79]
+                hover:text-[#B76E79]
+                hover:bg-[#FAF7F4]
+              `
+              : `
+                border-[#B76E79]
+                text-[#B76E79]
+                hover:bg-[#B76E79]
+                hover:text-[#FFFFFF]
+              `
+          }
+        `}
       >
+        {/* LOCKED */}
+
         {isLocked ? (
           <>
             <FaLock className="w-3 h-3" />

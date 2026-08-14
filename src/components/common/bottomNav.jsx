@@ -15,7 +15,6 @@ import { useState } from "react";
 
 // ============================================================
 // STORE CONFIG
-// SAME AS YOUR DESKTOP SWITCH
 // ============================================================
 
 const stores = [
@@ -49,15 +48,12 @@ export default function MobileBottomNav({
   currentStore,
   onStoreChange,
 }) {
-  const [open, setOpen] =
-    useState(false);
+  const [open, setOpen] = useState(false);
 
-  const location =
-    useLocation();
+  const location = useLocation();
 
   // ==========================================================
   // DETERMINE CURRENT STORE
-  // SAME LOGIC AS DESKTOP SWITCH
   // ==========================================================
 
   const routeMap = {
@@ -73,8 +69,7 @@ export default function MobileBottomNav({
 
   const current =
     stores.find(
-      (store) =>
-        store.id === selected
+      (store) => store.id === selected
     ) || stores[0];
 
   // ==========================================================
@@ -85,26 +80,20 @@ export default function MobileBottomNav({
     location.pathname === "/";
 
   const isWishlist =
-    location.pathname ===
-    "/wishlist";
+    location.pathname === "/wishlist";
 
   const isCart =
-    location.pathname ===
-    "/cart";
+    location.pathname === "/cart";
 
   const isProfile =
-    location.pathname ===
-    "/profile";
+    location.pathname === "/profile";
 
   // ==========================================================
   // STORE SELECT
   // ==========================================================
 
-  const handleStoreSelect = (
-    storeId
-  ) => {
+  const handleStoreSelect = (storeId) => {
     onStoreChange?.(storeId);
-
     setOpen(false);
   };
 
@@ -121,9 +110,9 @@ export default function MobileBottomNav({
           left-0
           right-0
           z-50
-          bg-[#F7F3EA]
+          bg-[#FFFFFF]
           border-t
-          border-[#EFE6D8]
+          border-[#E8DDD3]
           md:hidden
           pb-[env(safe-area-inset-bottom)]
         "
@@ -149,10 +138,11 @@ export default function MobileBottomNav({
               justify-center
               gap-1
               text-xs
+              transition-colors
               ${
                 isHome
-                  ? "text-[#7A2E42]"
-                  : "text-[#6B6858]"
+                  ? "text-[#B76E79]"
+                  : "text-[#2E2E2E]/55"
               }
             `}
           >
@@ -186,13 +176,12 @@ export default function MobileBottomNav({
                 strokeWidth={1.6}
                 className={
                   isWishlist
-                    ? "text-[#7A2E42]"
-                    : "text-[#6B6858]"
+                    ? "text-[#B76E79]"
+                    : "text-[#2E2E2E]/55"
                 }
               />
 
-              {wishlistCount >
-                0 && (
+              {wishlistCount > 0 && (
                 <span
                   className="
                     absolute
@@ -205,14 +194,13 @@ export default function MobileBottomNav({
                     items-center
                     justify-center
                     rounded-full
-                    bg-[#7A2E42]
-                    text-white
+                    bg-[#B76E79]
+                    text-[#FFFFFF]
                     text-[10px]
                     font-medium
                   "
                 >
-                  {wishlistCount >
-                  9
+                  {wishlistCount > 9
                     ? "9+"
                     : wishlistCount}
                 </span>
@@ -222,8 +210,8 @@ export default function MobileBottomNav({
             <span
               className={
                 isWishlist
-                  ? "text-[#7A2E42]"
-                  : "text-[#6B6858]"
+                  ? "text-[#B76E79]"
+                  : "text-[#2E2E2E]/55"
               }
             >
               Wishlist
@@ -232,14 +220,11 @@ export default function MobileBottomNav({
 
           {/* ==================================================
               STORE SWITCHER
-              CENTER BUTTON
               ================================================== */}
 
           <button
             type="button"
-            onClick={() =>
-              setOpen(true)
-            }
+            onClick={() => setOpen(true)}
             className="
               flex
               flex-col
@@ -247,18 +232,17 @@ export default function MobileBottomNav({
               justify-center
               gap-1
               text-xs
-              text-[#6B6858]
+              text-[#2E2E2E]/55
+              transition-colors
             "
           >
             <StoreIcon
               size={22}
               strokeWidth={1.6}
-              className="text-[#7A2E42]"
+              className="text-[#B76E79]"
             />
 
-            <span>
-              {current.shortLabel}
-            </span>
+            <span>{current.shortLabel}</span>
           </button>
 
           {/* ==================================================
@@ -283,8 +267,8 @@ export default function MobileBottomNav({
                 strokeWidth={1.6}
                 className={
                   isCart
-                    ? "text-[#7A2E42]"
-                    : "text-[#6B6858]"
+                    ? "text-[#B76E79]"
+                    : "text-[#2E2E2E]/55"
                 }
               />
 
@@ -301,8 +285,8 @@ export default function MobileBottomNav({
                     items-center
                     justify-center
                     rounded-full
-                    bg-[#7A2E42]
-                    text-white
+                    bg-[#B76E79]
+                    text-[#FFFFFF]
                     text-[10px]
                     font-medium
                   "
@@ -317,8 +301,8 @@ export default function MobileBottomNav({
             <span
               className={
                 isCart
-                  ? "text-[#7A2E42]"
-                  : "text-[#6B6858]"
+                  ? "text-[#B76E79]"
+                  : "text-[#2E2E2E]/55"
               }
             >
               Cart
@@ -338,10 +322,11 @@ export default function MobileBottomNav({
               justify-center
               gap-1
               text-xs
+              transition-colors
               ${
                 isProfile
-                  ? "text-[#7A2E42]"
-                  : "text-[#6B6858]"
+                  ? "text-[#B76E79]"
+                  : "text-[#2E2E2E]/55"
               }
             `}
           >
@@ -350,9 +335,7 @@ export default function MobileBottomNav({
               strokeWidth={1.6}
             />
 
-            <span>
-              Profile
-            </span>
+            <span>Profile</span>
           </Link>
         </div>
       </nav>
@@ -370,20 +353,22 @@ export default function MobileBottomNav({
             md:hidden
           "
         >
-          {/* BACKDROP */}
+          {/* ==================================================
+              BACKDROP
+              ================================================== */}
 
           <div
             className="
               absolute
               inset-0
-              bg-black/40
+              bg-[#2E2E2E]/40
             "
-            onClick={() =>
-              setOpen(false)
-            }
+            onClick={() => setOpen(false)}
           />
 
-          {/* SHEET */}
+          {/* ==================================================
+              SHEET
+              ================================================== */}
 
           <div
             className="
@@ -391,8 +376,10 @@ export default function MobileBottomNav({
               bottom-0
               left-0
               right-0
-              bg-white
+              bg-[#FFFFFF]
               rounded-t-2xl
+              border-t
+              border-[#E8DDD3]
               p-4
               pb-[calc(env(safe-area-inset-bottom)+16px)]
             "
@@ -404,17 +391,21 @@ export default function MobileBottomNav({
                 w-10
                 h-1
                 rounded-full
-                bg-gray-300
+                bg-[#E8DDD3]
                 mx-auto
                 mb-4
               "
             />
 
+            {/* ==================================================
+                TITLE
+                ================================================== */}
+
             <h3
               className="
                 font-serif
                 text-lg
-                text-[#141311]
+                text-[#2E2E2E]
                 mb-4
                 text-center
               "
@@ -423,42 +414,47 @@ export default function MobileBottomNav({
             </h3>
 
             {/* ==================================================
-                SAME ORDER AS DESKTOP SWITCH
-                GOLD → SILVER → DEMIFINE
+                STORE OPTIONS
                 ================================================== */}
 
             <div className="space-y-2">
-              {stores.map(
-                (store) => (
-                  <Link
-                    key={store.id}
-                    to={store.path}
-                    onClick={() =>
-                      handleStoreSelect(
-                        store.id
-                      )
+              {stores.map((store) => (
+                <Link
+                  key={store.id}
+                  to={store.path}
+                  onClick={() =>
+                    handleStoreSelect(store.id)
+                  }
+                  className={`
+                    block
+                    w-full
+                    text-center
+                    py-3
+                    rounded-full
+                    text-sm
+                    font-medium
+                    transition-all
+
+                    ${
+                      store.id === selected
+                        ? `
+                          bg-[#B76E79]
+                          text-[#FFFFFF]
+                        `
+                        : `
+                          bg-[#FAF7F4]
+                          text-[#2E2E2E]
+                          border
+                          border-[#E8DDD3]
+                          hover:bg-[#F5E8EA]
+                          hover:text-[#B76E79]
+                        `
                     }
-                    className={`
-                      block
-                      w-full
-                      text-center
-                      py-3
-                      rounded-full
-                      text-sm
-                      font-medium
-                      transition-all
-                      ${
-                        store.id ===
-                        selected
-                          ? "bg-[#7A2E42] text-white"
-                          : "bg-[#F7F3EA] text-[#333333]"
-                      }
-                    `}
-                  >
-                    {store.label}
-                  </Link>
-                )
-              )}
+                  `}
+                >
+                  {store.label}
+                </Link>
+              ))}
             </div>
           </div>
         </div>

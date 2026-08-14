@@ -22,6 +22,7 @@ import {
   GiPresent,
   GiCutDiamond,
 } from "react-icons/gi";
+
 import LocationDetector from "./Location";
 
 const categories = [
@@ -72,10 +73,6 @@ const categories = [
   },
 ];
 
-// ============================================================
-// NAVBAR
-// ============================================================
-
 const Navbar = ({ cartCount = 0 }) => {
   const navigate = useNavigate();
 
@@ -109,9 +106,7 @@ const Navbar = ({ cartCount = 0 }) => {
 
     try {
       const { data } = await axios.get(
-        `/api/products/suggestions?keyword=${encodeURIComponent(
-          value
-        )}`
+        `/api/products/suggestions?keyword=${encodeURIComponent(value)}`
       );
 
       setSuggestions(Array.isArray(data) ? data : []);
@@ -124,9 +119,7 @@ const Navbar = ({ cartCount = 0 }) => {
   const submitSearch = () => {
     if (!keyword.trim()) return;
 
-    navigate(
-      `/Products?search=${encodeURIComponent(keyword)}`
-    );
+    navigate(`/Products?search=${encodeURIComponent(keyword)}`);
 
     setSuggestions([]);
     setMobileSearchOpen(false);
@@ -143,9 +136,7 @@ const Navbar = ({ cartCount = 0 }) => {
   // ==========================================================
 
   useEffect(() => {
-    document.body.style.overflow = mobileMenuOpen
-      ? "hidden"
-      : "";
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
 
     return () => {
       document.body.style.overflow = "";
@@ -165,9 +156,9 @@ const Navbar = ({ cartCount = 0 }) => {
       <header
         className="
           w-full
-          bg-white
-        
-          border-[#5a1b1b]
+          bg-[#FFFFFF]
+          border-b
+          border-[#E8DDD3]
         "
       >
         {/* ====================================================
@@ -180,7 +171,7 @@ const Navbar = ({ cartCount = 0 }) => {
             lg:block
             w-[calc(100%-220px)]
             mx-auto
-            border-gray-300
+            border-[#E8DDD3]
           "
         >
           {/* ==================================================
@@ -192,11 +183,10 @@ const Navbar = ({ cartCount = 0 }) => {
               flex
               items-center
               min-h-[92px]
-            
               px-6
               gap-6
               border-b
-              border-gray-200
+              border-[#E8DDD3]
             "
           >
             {/* =================================================
@@ -249,11 +239,13 @@ const Navbar = ({ cartCount = 0 }) => {
                   items-center
                   h-10
                   border
-                  border-gray-300
+                  border-[#E8DDD3]
                   rounded-full
                   px-5
                   gap-3
-                  bg-white
+                  bg-[#FFFFFF]
+                  focus-within:border-[#B76E79]
+                  transition-colors
                 "
               >
                 <input
@@ -263,8 +255,10 @@ const Navbar = ({ cartCount = 0 }) => {
                     font-medium
                     flex-1
                     min-w-0
-                    placeholder:text-gray-400
+                    text-[#2E2E2E]
+                    placeholder:text-[#2E2E2E]/40
                     placeholder:font-normal
+                    bg-transparent
                   "
                   type="text"
                   value={keyword}
@@ -277,9 +271,10 @@ const Navbar = ({ cartCount = 0 }) => {
                   type="button"
                   onClick={submitSearch}
                   className="
-                    text-[#5a1b1b]
-                    hover:text-[#7A2E42]
+                    text-[#B76E79]
+                    hover:text-[#A85F6B]
                     shrink-0
+                    transition-colors
                   "
                   aria-label="Search"
                 >
@@ -287,7 +282,9 @@ const Navbar = ({ cartCount = 0 }) => {
                 </button>
               </div>
 
-              {/* SEARCH SUGGESTIONS */}
+              {/* =================================================
+                  SEARCH SUGGESTIONS
+                  ================================================= */}
 
               {suggestions.length > 0 && (
                 <div
@@ -296,12 +293,12 @@ const Navbar = ({ cartCount = 0 }) => {
                     top-14
                     left-0
                     w-full
-                    bg-white
+                    bg-[#FFFFFF]
                     shadow-xl
                     rounded-xl
                     z-[100]
                     border
-                    border-gray-200
+                    border-[#E8DDD3]
                     overflow-hidden
                   "
                 >
@@ -311,15 +308,16 @@ const Navbar = ({ cartCount = 0 }) => {
                       to={`/Products?search=${encodeURIComponent(
                         item.name || item
                       )}`}
-                      onClick={() =>
-                        setSuggestions([])
-                      }
+                      onClick={() => setSuggestions([])}
                       className="
                         block
                         px-4
                         py-3
                         text-sm
-                        hover:bg-gray-100
+                        text-[#2E2E2E]
+                        hover:bg-[#FAF7F4]
+                        hover:text-[#B76E79]
+                        transition-colors
                       "
                     >
                       {item.name || item}
@@ -334,19 +332,20 @@ const Navbar = ({ cartCount = 0 }) => {
                 WISHLIST
                 PROFILE
                 CART
-                =======
-                ========================================== */}
-  <div
+                ================================================= */}
+
+            <div
               className="
                 flex
                 items-center
                 justify-end
                 gap-2
                 shrink-0
-                text-[#5a1b1b]
+                text-[#2E2E2E]
               "
             >
-<LocationDetector /></div>
+              <LocationDetector />
+            </div>
 
             <div
               className="
@@ -357,7 +356,9 @@ const Navbar = ({ cartCount = 0 }) => {
                 shrink-0
               "
             >
-              {/* WISHLIST */}
+              {/* =================================================
+                  WISHLIST
+                  ================================================= */}
 
               <Link
                 to="/wishlist"
@@ -368,16 +369,21 @@ const Navbar = ({ cartCount = 0 }) => {
                   w-11
                   h-11
                   shrink-0
-                  text-[#5a1b1b]
+                  text-[#2E2E2E]
+                  hover:text-[#B76E79]
+                  hover:bg-[#FAF7F4]
+                  rounded-full
                   hover:scale-105
-                  transition
+                  transition-all
                 "
                 aria-label="Wishlist"
               >
                 <CiHeart className="text-2xl" />
               </Link>
 
-              {/* PROFILE */}
+              {/* =================================================
+                  PROFILE
+                  ================================================= */}
 
               <Link
                 to="/profile"
@@ -388,16 +394,21 @@ const Navbar = ({ cartCount = 0 }) => {
                   w-11
                   h-11
                   shrink-0
-                  text-[#5a1b1b]
+                  text-[#2E2E2E]
+                  hover:text-[#B76E79]
+                  hover:bg-[#FAF7F4]
+                  rounded-full
                   hover:scale-105
-                  transition
+                  transition-all
                 "
                 aria-label="Profile"
               >
                 <CgProfile className="text-2xl" />
               </Link>
 
-              {/* CART */}
+              {/* =================================================
+                  CART
+                  ================================================= */}
 
               <Link
                 to="/cart"
@@ -409,9 +420,12 @@ const Navbar = ({ cartCount = 0 }) => {
                   w-11
                   h-11
                   shrink-0
-                  text-[#5a1b1b]
+                  text-[#2E2E2E]
+                  hover:text-[#B76E79]
+                  hover:bg-[#FAF7F4]
+                  rounded-full
                   hover:scale-105
-                  transition
+                  transition-all
                 "
                 aria-label="Cart"
               >
@@ -423,8 +437,9 @@ const Navbar = ({ cartCount = 0 }) => {
                       absolute
                       -top-1
                       -right-1
-                      bg-[#7A2E42]
-                      text-white
+                      bg-[#B76E79]
+                      hover:bg-[#A85F6B]
+                      text-[#FFFFFF]
                       text-[10px]
                       font-semibold
                       rounded-full
@@ -457,7 +472,7 @@ const Navbar = ({ cartCount = 0 }) => {
               min-h-[66px]
               overflow-hidden
               border-b
-              border-gray-200
+              border-[#E8DDD3]
             "
           >
             {categories.map((cat) => {
@@ -471,11 +486,11 @@ const Navbar = ({ cartCount = 0 }) => {
                     flex
                     items-center
                     gap-2
-                    text-[#5a1b1b]
+                    text-[#2E2E2E]
                     shrink-0
                     whitespace-nowrap
-                    hover:opacity-70
-                    transition
+                    hover:text-[#B76E79]
+                    transition-colors
                   "
                 >
                   <Icon className="text-lg shrink-0" />
@@ -499,7 +514,9 @@ const Navbar = ({ cartCount = 0 }) => {
             w-full
           "
         >
-          {/* MOBILE TOP ROW */}
+          {/* ==================================================
+              MOBILE TOP ROW
+              ================================================== */}
 
           <div
             className="
@@ -511,15 +528,15 @@ const Navbar = ({ cartCount = 0 }) => {
               sm:px-6
               py-3
               border-b
-              border-gray-200
+              border-[#E8DDD3]
             "
           >
-            {/* MENU */}
+            {/* =================================================
+                MENU
+                ================================================= */}
 
             <button
-              onClick={() =>
-                setMobileMenuOpen(true)
-              }
+              onClick={() => setMobileMenuOpen(true)}
               className="
                 flex
                 items-center
@@ -527,14 +544,18 @@ const Navbar = ({ cartCount = 0 }) => {
                 w-9
                 h-9
                 shrink-0
-                text-[#5a1b1b]
+                text-[#2E2E2E]
+                hover:text-[#B76E79]
+                transition-colors
               "
               aria-label="Open menu"
             >
               <FiMenu className="text-2xl" />
             </button>
 
-            {/* LOGO */}
+            {/* =================================================
+                LOGO
+                ================================================= */}
 
             <Link
               to="/"
@@ -556,7 +577,9 @@ const Navbar = ({ cartCount = 0 }) => {
               />
             </Link>
 
-            {/* SEARCH */}
+            {/* =================================================
+                SEARCH
+                ================================================= */}
 
             <button
               onClick={() =>
@@ -569,19 +592,25 @@ const Navbar = ({ cartCount = 0 }) => {
                 justify-center
                 w-9
                 h-9
-                text-[#5a1b1b]
+                text-[#2E2E2E]
+                hover:text-[#B76E79]
+                transition-colors
               "
               aria-label="Search"
             >
               <CiSearch className="text-2xl" />
             </button>
 
-            {/* CART */}
+            {/* =================================================
+                CART
+                ================================================= */}
 
-          
+        
           </div>
 
-          {/* MOBILE SEARCH */}
+          {/* ==================================================
+              MOBILE SEARCH
+              ================================================== */}
 
           {mobileSearchOpen && (
             <div
@@ -591,8 +620,9 @@ const Navbar = ({ cartCount = 0 }) => {
                 pb-3
                 pt-2
                 border-b
-                border-gray-200
+                border-[#E8DDD3]
                 relative
+                bg-[#FFFFFF]
               "
             >
               <div
@@ -601,10 +631,12 @@ const Navbar = ({ cartCount = 0 }) => {
                   items-center
                   h-10
                   border
-                  border-gray-300
+                  border-[#E8DDD3]
                   rounded-full
                   px-3
                   gap-2
+                  focus-within:border-[#B76E79]
+                  transition-colors
                 "
               >
                 <input
@@ -618,6 +650,9 @@ const Navbar = ({ cartCount = 0 }) => {
                     outline-none
                     flex-1
                     text-sm
+                    text-[#2E2E2E]
+                    placeholder:text-[#2E2E2E]/40
+                    bg-transparent
                   "
                 />
 
@@ -625,15 +660,18 @@ const Navbar = ({ cartCount = 0 }) => {
                   type="button"
                   onClick={submitSearch}
                   className="
-                    text-[#5a1b1b]
-                    hover:text-[#7A2E42]
+                    text-[#B76E79]
+                    hover:text-[#A85F6B]
                     shrink-0
+                    transition-colors
                   "
                   aria-label="Search"
                 >
                   <CiSearch className="text-lg" />
                 </button>
               </div>
+
+              {/* MOBILE SUGGESTIONS */}
 
               {suggestions.length > 0 && (
                 <div
@@ -642,11 +680,12 @@ const Navbar = ({ cartCount = 0 }) => {
                     top-14
                     left-4
                     right-4
-                    bg-white
+                    bg-[#FFFFFF]
                     shadow-xl
                     rounded-xl
                     z-[100]
                     border
+                    border-[#E8DDD3]
                     overflow-hidden
                   "
                 >
@@ -656,15 +695,16 @@ const Navbar = ({ cartCount = 0 }) => {
                       to={`/Products?search=${encodeURIComponent(
                         item.name || item
                       )}`}
-                      onClick={() =>
-                        setSuggestions([])
-                      }
+                      onClick={() => setSuggestions([])}
                       className="
                         block
                         px-4
                         py-3
                         text-sm
-                        hover:bg-gray-100
+                        text-[#2E2E2E]
+                        hover:bg-[#FAF7F4]
+                        hover:text-[#B76E79]
+                        transition-colors
                       "
                     >
                       {item.name || item}
@@ -696,20 +736,22 @@ const Navbar = ({ cartCount = 0 }) => {
           }
         `}
       >
-        {/* OVERLAY */}
+        {/* =================================================
+            OVERLAY
+            ================================================= */}
 
         <div
-          onClick={() =>
-            setMobileMenuOpen(false)
-          }
+          onClick={() => setMobileMenuOpen(false)}
           className="
             absolute
             inset-0
-            bg-black/40
+            bg-[#2E2E2E]/40
           "
         />
 
-        {/* MENU */}
+        {/* =================================================
+            MENU
+            ================================================= */}
 
         <div
           className={`
@@ -720,7 +762,7 @@ const Navbar = ({ cartCount = 0 }) => {
             w-72
             sm:w-80
             max-w-[85vw]
-            bg-white
+            bg-[#FFFFFF]
             shadow-xl
             p-6
             flex
@@ -735,7 +777,9 @@ const Navbar = ({ cartCount = 0 }) => {
             }
           `}
         >
-          {/* MENU HEADER */}
+          {/* =================================================
+              MENU HEADER
+              ================================================= */}
 
           <div
             className="
@@ -744,7 +788,7 @@ const Navbar = ({ cartCount = 0 }) => {
               items-center
               pb-4
               border-b-2
-              border-gray-300
+              border-[#E8DDD3]
               mb-8
             "
           >
@@ -759,21 +803,21 @@ const Navbar = ({ cartCount = 0 }) => {
             />
 
             <button
-              onClick={() =>
-                setMobileMenuOpen(false)
-              }
+              onClick={() => setMobileMenuOpen(false)}
               aria-label="Close menu"
+              className="
+                text-[#2E2E2E]
+                hover:text-[#B76E79]
+                transition-colors
+              "
             >
-              <FiX
-                className="
-                  text-2xl
-                  text-[#5a1b1b]
-                "
-              />
+              <FiX className="text-2xl" />
             </button>
           </div>
 
-          {/* CATEGORIES */}
+          {/* =================================================
+              CATEGORIES
+              ================================================= */}
 
           <div
             className="
@@ -782,7 +826,7 @@ const Navbar = ({ cartCount = 0 }) => {
               space-y-4
               font-medium
               text-base
-              text-[#5a1b1b]
+              text-[#2E2E2E]
               mb-8
             "
           >
@@ -793,13 +837,13 @@ const Navbar = ({ cartCount = 0 }) => {
                 <Link
                   key={cat.label}
                   to={cat.to}
-                  onClick={() =>
-                    setMobileMenuOpen(false)
-                  }
+                  onClick={() => setMobileMenuOpen(false)}
                   className="
                     flex
                     items-center
                     gap-3
+                    hover:text-[#B76E79]
+                    transition-colors
                   "
                 >
                   <Icon
@@ -817,9 +861,10 @@ const Navbar = ({ cartCount = 0 }) => {
             })}
           </div>
 
-          {/* EXTRA LINKS */}
+          {/* =================================================
+              EXTRA LINKS
+              ================================================= */}
 
-         
         </div>
       </div>
     </>

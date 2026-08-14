@@ -27,6 +27,20 @@ import { getPricingSettings } from "../services/pricingService";
 import { getPriceBreakup } from "../services/priceBreakupService";
 
 // ============================================================
+// COLOR PALETTE
+// ============================================================
+
+const COLORS = {
+  white: "#FFFFFF",
+  ivory: "#FAF7F4",
+  primary: "#B76E79",
+  hover: "#A85F6B",
+  highlight: "#D8A7AF",
+  text: "#2E2E2E",
+  border: "#E8DDD3",
+};
+
+// ============================================================
 // PRODUCT DATA
 // ============================================================
 
@@ -57,10 +71,6 @@ const product = {
   weightInGrams: 5.2,
 
   makingChargePercent: 12,
-
-  // ==========================================================
-  // DISCOUNT
-  // ==========================================================
 
   discountPercent: 10,
 
@@ -95,7 +105,6 @@ const relatedProducts = [
     image:
       "https://images.unsplash.com/photo-1589128777073-263566ae5e4d?w=400&q=80",
   },
-
   {
     id: 202,
     name: "Solstice Pendant",
@@ -104,7 +113,6 @@ const relatedProducts = [
     image:
       "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&q=80",
   },
-
   {
     id: 203,
     name: "Aurelian Cuff",
@@ -113,7 +121,6 @@ const relatedProducts = [
     image:
       "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&q=80",
   },
-
   {
     id: 204,
     name: "Trinity Stacking Set",
@@ -122,7 +129,6 @@ const relatedProducts = [
     image:
       "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&q=80",
   },
-
   {
     id: 205,
     name: "Lumière Choker",
@@ -131,7 +137,6 @@ const relatedProducts = [
     image:
       "https://images.unsplash.com/photo-1611591437131-cf796061dcf4?w=400&q=80",
   },
-
   {
     id: 206,
     name: "Meridian Studs",
@@ -140,7 +145,6 @@ const relatedProducts = [
     image:
       "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=400&q=80",
   },
-
   {
     id: 207,
     name: "Celeste Bangle",
@@ -149,7 +153,6 @@ const relatedProducts = [
     image:
       "https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=400&q=80",
   },
-
   {
     id: 208,
     name: "Ombre Layered Necklace",
@@ -182,7 +185,6 @@ const initialReviews = [
     helpful: 4,
     notHelpful: 0,
   },
-
   {
     id: 2,
     name: "Rahul Verma",
@@ -197,7 +199,6 @@ const initialReviews = [
     helpful: 2,
     notHelpful: 0,
   },
-
   {
     id: 3,
     name: "Priya Singh",
@@ -214,7 +215,6 @@ const initialReviews = [
     helpful: 6,
     notHelpful: 1,
   },
-
   {
     id: 4,
     name: "Karan Mehta",
@@ -229,7 +229,6 @@ const initialReviews = [
     helpful: 3,
     notHelpful: 0,
   },
-
   {
     id: 5,
     name: "Neha Kapoor",
@@ -244,7 +243,6 @@ const initialReviews = [
     helpful: 1,
     notHelpful: 0,
   },
-
   {
     id: 6,
     name: "Arpit R.",
@@ -273,7 +271,7 @@ const Stars = ({ rating, size = "text-sm" }) => {
           key={star}
           className={
             star <= rating
-              ? "text-[#9C7A4A]"
+              ? "text-[#B76E79]"
               : "text-gray-300"
           }
         >
@@ -338,9 +336,7 @@ const WriteReviewModal = ({
     setPhotos((prev) => {
       const next = [...prev];
 
-      URL.revokeObjectURL(
-        next[index].previewUrl
-      );
+      URL.revokeObjectURL(next[index].previewUrl);
 
       next.splice(index, 1);
 
@@ -367,9 +363,7 @@ const WriteReviewModal = ({
       rating,
       title: title.trim(),
       comment: comment.trim(),
-      images: photos.map(
-        (p) => p.previewUrl
-      ),
+      images: photos.map((p) => p.previewUrl),
     });
 
     toast.success("Thanks for your review!");
@@ -389,55 +383,49 @@ const WriteReviewModal = ({
         <button
           onClick={handleClose}
           aria-label="Close"
-          className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-100"
+          className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-[#2E2E2E] hover:bg-[#FAF7F4] transition-colors"
         >
           <FiX className="w-4 h-4" />
         </button>
 
-        <h2 className="font-serif text-xl text-[#241F1C] mb-1">
+        <h2 className="font-serif text-xl text-[#2E2E2E] mb-1">
           Write a Review
         </h2>
 
         <p className="text-sm text-gray-500 mb-6">
-          Share your experience with{" "}
-          {product.name}
+          Share your experience with {product.name}
         </p>
 
         <form onSubmit={handleFormSubmit}>
+          {/* RATING */}
+
           <div className="mb-5">
             <label className="text-xs uppercase tracking-wide text-gray-500 mb-2 block">
               Your rating
             </label>
 
             <div className="flex items-center gap-1">
-              {[1, 2, 3, 4, 5].map(
-                (star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() =>
-                      setRating(star)
-                    }
-                    onMouseEnter={() =>
-                      setHoverRating(star)
-                    }
-                    onMouseLeave={() =>
-                      setHoverRating(0)
-                    }
-                    aria-label={`${star} star`}
-                    className="p-0.5"
-                  >
-                    {(hoverRating ||
-                      rating) >= star ? (
-                      <FaStar className="w-7 h-7 text-[#9C7A4A]" />
-                    ) : (
-                      <FiStar className="w-7 h-7 text-gray-300" />
-                    )}
-                  </button>
-                )
-              )}
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  type="button"
+                  onClick={() => setRating(star)}
+                  onMouseEnter={() => setHoverRating(star)}
+                  onMouseLeave={() => setHoverRating(0)}
+                  aria-label={`${star} star`}
+                  className="p-0.5"
+                >
+                  {(hoverRating || rating) >= star ? (
+                    <FaStar className="w-7 h-7 text-[#B76E79]" />
+                  ) : (
+                    <FiStar className="w-7 h-7 text-gray-300" />
+                  )}
+                </button>
+              ))}
             </div>
           </div>
+
+          {/* TITLE */}
 
           <div className="mb-5">
             <label className="text-xs uppercase tracking-wide text-gray-500 mb-2 block">
@@ -447,13 +435,13 @@ const WriteReviewModal = ({
             <input
               type="text"
               value={title}
-              onChange={(e) =>
-                setTitle(e.target.value)
-              }
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="Sum it up in a few words"
-              className="w-full border border-gray-300 rounded-md px-3.5 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-[#4B0F14]"
+              className="w-full border border-[#E8DDD3] rounded-md px-3.5 py-2.5 text-sm text-[#2E2E2E] placeholder:text-gray-400 focus:outline-none focus:border-[#B76E79]"
             />
           </div>
+
+          {/* COMMENT */}
 
           <div className="mb-5">
             <label className="text-xs uppercase tracking-wide text-gray-500 mb-2 block">
@@ -462,14 +450,14 @@ const WriteReviewModal = ({
 
             <textarea
               value={comment}
-              onChange={(e) =>
-                setComment(e.target.value)
-              }
+              onChange={(e) => setComment(e.target.value)}
               rows={4}
               placeholder="Tell us what you liked (or didn't)..."
-              className="w-full border border-gray-300 rounded-md px-3.5 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-[#4B0F14] resize-none"
+              className="w-full border border-[#E8DDD3] rounded-md px-3.5 py-2.5 text-sm text-[#2E2E2E] placeholder:text-gray-400 focus:outline-none focus:border-[#B76E79] resize-none"
             />
           </div>
+
+          {/* PHOTOS */}
 
           <div className="mb-6">
             <label className="text-xs uppercase tracking-wide text-gray-500 mb-2 block">
@@ -477,47 +465,39 @@ const WriteReviewModal = ({
             </label>
 
             <div className="flex flex-wrap gap-3">
-              {photos.map(
-                (photo, i) => (
-                  <div
-                    key={i}
-                    className="relative w-16 h-16 rounded-md overflow-hidden group"
-                  >
-                    <img
-                      src={photo.previewUrl}
-                      alt={`upload-${i}`}
-                      className="w-full h-full object-cover"
-                    />
+              {photos.map((photo, i) => (
+                <div
+                  key={i}
+                  className="relative w-16 h-16 rounded-md overflow-hidden group"
+                >
+                  <img
+                    src={photo.previewUrl}
+                    alt={`upload-${i}`}
+                    className="w-full h-full object-cover"
+                  />
 
-                    <button
-                      type="button"
-                      onClick={() =>
-                        removePhoto(i)
-                      }
-                      aria-label="Remove photo"
-                      className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-black/60 text-white flex items-center justify-center text-[10px]"
-                    >
-                      <FiX className="w-2.5 h-2.5" />
-                    </button>
-                  </div>
-                )
-              )}
+                  <button
+                    type="button"
+                    onClick={() => removePhoto(i)}
+                    aria-label="Remove photo"
+                    className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-black/60 text-white flex items-center justify-center text-[10px]"
+                  >
+                    <FiX className="w-2.5 h-2.5" />
+                  </button>
+                </div>
+              ))}
 
               {photos.length < 4 && (
-                <label className="w-16 h-16 rounded-md border border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 cursor-pointer">
+                <label className="w-16 h-16 rounded-md border border-dashed border-[#E8DDD3] flex flex-col items-center justify-center text-gray-400 cursor-pointer hover:border-[#B76E79] hover:text-[#B76E79] transition-colors">
                   <FiCamera className="w-4 h-4 mb-0.5" />
 
-                  <span className="text-[10px]">
-                    Add
-                  </span>
+                  <span className="text-[10px]">Add</span>
 
                   <input
                     type="file"
                     accept="image/*"
                     multiple
-                    onChange={
-                      handlePhotoChange
-                    }
+                    onChange={handlePhotoChange}
                     className="hidden"
                   />
                 </label>
@@ -528,7 +508,7 @@ const WriteReviewModal = ({
           <button
             type="submit"
             disabled={submitting}
-            className="w-full py-3 bg-[#4B0F14] text-white text-sm uppercase tracking-wide rounded-md hover:bg-[#3A0C10] disabled:opacity-50"
+            className="w-full py-3 bg-[#B76E79] text-white text-sm uppercase tracking-wide rounded-md hover:bg-[#A85F6B] disabled:opacity-50 transition-colors"
           >
             Submit Review
           </button>
@@ -558,12 +538,10 @@ const getDiscountedPricing = (
   }
 
   const originalPrice = Math.round(
-    discountedPrice /
-      (1 - discountPercent / 100)
+    discountedPrice / (1 - discountPercent / 100)
   );
 
-  const savings =
-    originalPrice - discountedPrice;
+  const savings = originalPrice - discountedPrice;
 
   return {
     originalPrice,
@@ -574,7 +552,7 @@ const getDiscountedPricing = (
 };
 
 // ============================================================
-// PRICE DISPLAY COMPONENT
+// PRICE DISPLAY
 // ============================================================
 
 const PriceDisplay = ({
@@ -599,14 +577,11 @@ const PriceDisplay = ({
                 : "text-sm sm:text-base"
             }`}
           >
-            ₹
-            {originalPrice.toLocaleString(
-              "en-IN"
-            )}
+            ₹{originalPrice.toLocaleString("en-IN")}
           </span>
 
           <span
-            className={`rounded-full bg-[#F3E7E0] font-medium text-[#7A2E42] ${
+            className={`rounded-full bg-[#D8A7AF]/30 font-medium text-[#A85F6B] ${
               compact
                 ? "px-1.5 py-0.5 text-[8px]"
                 : "px-2 py-0.5 text-[10px] sm:text-xs"
@@ -619,24 +594,18 @@ const PriceDisplay = ({
 
       <div className="flex items-center gap-2 flex-wrap">
         <span
-          className={`font-semibold text-[#7A2E42] ${
+          className={`font-semibold text-[#B76E79] ${
             compact
               ? "text-xs"
               : "text-2xl sm:text-3xl"
           }`}
         >
-          ₹
-          {discountedPrice.toLocaleString(
-            "en-IN"
-          )}
+          ₹{discountedPrice.toLocaleString("en-IN")}
         </span>
 
         {!compact && hasDiscount && (
           <span className="text-xs sm:text-sm text-gray-500">
-            Save ₹
-            {savings.toLocaleString(
-              "en-IN"
-            )}
+            Save ₹{savings.toLocaleString("en-IN")}
           </span>
         )}
       </div>
@@ -666,6 +635,10 @@ const ProductDetail = () => {
       behavior: "instant",
     });
   }, []);
+
+  // ==========================================================
+  // STATES
+  // ==========================================================
 
   const [selectedImage, setSelectedImage] =
     useState(product.images[3]);
@@ -716,7 +689,7 @@ const ProductDetail = () => {
     useState({});
 
   // ==========================================================
-  // REVIEWS
+  // REVIEW CALCULATIONS
   // ==========================================================
 
   const averageRating =
@@ -734,6 +707,10 @@ const ProductDetail = () => {
           0,
           REVIEWS_PREVIEW_COUNT
         );
+
+  // ==========================================================
+  // REVIEW SUBMIT
+  // ==========================================================
 
   const handleReviewSubmit = ({
     rating,
@@ -761,6 +738,10 @@ const ProductDetail = () => {
     ]);
   };
 
+  // ==========================================================
+  // REVIEW VOTE
+  // ==========================================================
+
   const handleVote = (
     reviewId,
     type
@@ -772,10 +753,12 @@ const ProductDetail = () => {
         r.id === reviewId
           ? {
               ...r,
+
               helpful:
                 type === "helpful"
                   ? r.helpful + 1
                   : r.helpful,
+
               notHelpful:
                 type === "notHelpful"
                   ? r.notHelpful + 1
@@ -795,8 +778,10 @@ const ProductDetail = () => {
   // CART / WISHLIST
   // ==========================================================
 
-  const { addToCart, isInCart } =
-    useCart();
+  const {
+    addToCart,
+    isInCart,
+  } = useCart();
 
   const {
     toggleWishlist,
@@ -887,10 +872,11 @@ const ProductDetail = () => {
   // DISCOUNTED PRODUCT PRICING
   // ==========================================================
 
-  const productPricing = getDiscountedPricing(
-    calculatedPrice,
-    product.discountPercent
-  );
+  const productPricing =
+    getDiscountedPricing(
+      calculatedPrice,
+      product.discountPercent
+    );
 
   const originalPrice =
     productPricing.originalPrice;
@@ -938,13 +924,11 @@ const ProductDetail = () => {
       name: product.name,
       image: product.images[3],
 
-      // NEW PRICING DATA
       originalPrice,
       discountedPrice,
       discountPercent,
       savings,
 
-      // Backward-compatible price
       price: discountedPrice,
     };
 
@@ -1041,8 +1025,6 @@ const ProductDetail = () => {
 
       size: selectedSize,
 
-      // IMPORTANT:
-      // discounted price is the actual selling price
       price: discountedPrice,
 
       discountedPrice,
@@ -1146,7 +1128,7 @@ const ProductDetail = () => {
           NAVBAR
           ====================================================== */}
 
-      <div className="border border-gray-300">
+      <div className="border-b border-[#E8DDD3] bg-white">
         <Navbar />
       </div>
 
@@ -1154,8 +1136,8 @@ const ProductDetail = () => {
           MAIN PRODUCT SECTION
           ====================================================== */}
 
-      <div className="bg-[#FBF4EC] px-4 sm:px-6 py-6 sm:py-10">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <div className="bg-[#FAF7F4] px-4 sm:px-6 py-6 sm:py-10">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-start">
 
           {/* ==================================================
               IMAGE GALLERY
@@ -1182,12 +1164,13 @@ const ProductDetail = () => {
                         rounded-md
                         overflow-hidden
                         border
-                        transition-colors
+                        bg-white
+                        transition-all
                         ${
                           selectedImage ===
                           img
-                            ? "border-[#4B0F14]"
-                            : "border-gray-200"
+                            ? "border-[#B76E79] ring-1 ring-[#B76E79]"
+                            : "border-[#E8DDD3] hover:border-[#D8A7AF]"
                         }
                       `}
                     >
@@ -1218,9 +1201,9 @@ const ProductDetail = () => {
                   className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white flex items-center justify-center shadow-sm hover:scale-105 transition-transform"
                 >
                   {inWishlist ? (
-                    <FaHeart className="w-4 h-4 text-red-500" />
+                    <FaHeart className="w-4 h-4 text-[#B76E79]" />
                   ) : (
-                    <FiHeart className="w-4 h-4 text-gray-700" />
+                    <FiHeart className="w-4 h-4 text-[#2E2E2E]" />
                   )}
                 </button>
 
@@ -1236,9 +1219,7 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {/* ==================================================
-                MOBILE THUMBNAILS
-                ================================================== */}
+            {/* MOBILE THUMBNAILS */}
 
             <div
               className="
@@ -1278,12 +1259,13 @@ const ProductDetail = () => {
                       rounded-md
                       overflow-hidden
                       border
+                      bg-white
                       transition-colors
                       ${
                         selectedImage ===
                         img
-                          ? "border-[#4B0F14]"
-                          : "border-gray-200"
+                          ? "border-[#B76E79] ring-1 ring-[#B76E79]"
+                          : "border-[#E8DDD3]"
                       }
                     `}
                   >
@@ -1315,19 +1297,17 @@ const ProductDetail = () => {
 
             {/* NAME */}
 
-            <h1 className="font-serif text-3xl sm:text-4xl text-[#241F1C] mb-3">
+            <h1 className="font-serif text-3xl sm:text-4xl text-[#2E2E2E] mb-3">
               {product.name}
             </h1>
 
-            {/* ==================================================
-                PRICE
-                ================================================== */}
+            {/* PRICE */}
 
             {pricingLoading ? (
               <div className="mb-5">
-                <div className="h-4 w-28 bg-gray-200 rounded animate-pulse mb-2" />
+                <div className="h-4 w-28 bg-[#E8DDD3] rounded animate-pulse mb-2" />
 
-                <div className="h-7 w-36 bg-gray-200 rounded animate-pulse" />
+                <div className="h-7 w-36 bg-[#E8DDD3] rounded animate-pulse" />
               </div>
             ) : (
               <PriceDisplay
@@ -1346,7 +1326,7 @@ const ProductDetail = () => {
 
             {/* SHORT DESCRIPTION */}
 
-            <p className="text-sm sm:text-base text-[#4B0F14] font-medium leading-relaxed mb-2">
+            <p className="text-sm sm:text-base text-[#B76E79] font-medium leading-relaxed mb-2">
               {
                 product.shortDescription
               }
@@ -1358,7 +1338,7 @@ const ProductDetail = () => {
               Description
             </h3>
 
-            <p className="text-sm text-gray-600 leading-relaxed mb-6">
+            <p className="text-sm text-[#2E2E2E]/70 leading-relaxed mb-6">
               {product.description}
             </p>
 
@@ -1373,7 +1353,7 @@ const ProductDetail = () => {
 
                   <button
                     type="button"
-                    className="text-xs underline text-gray-700"
+                    className="text-xs underline text-[#2E2E2E] hover:text-[#B76E79]"
                   >
                     Size guide
                   </button>
@@ -1396,12 +1376,12 @@ const ProductDetail = () => {
                           border
                           rounded-md
                           text-sm
-                          transition-colors
+                          transition-all
                           ${
                             selectedSize ===
                             size
-                              ? "border-[#4B0F14] bg-[#4B0F14] text-white"
-                              : "border-gray-300 text-gray-700 hover:border-gray-500"
+                              ? "border-[#B76E79] bg-[#B76E79] text-white"
+                              : "border-[#E8DDD3] text-[#2E2E2E] bg-white hover:border-[#B76E79] hover:text-[#B76E79]"
                           }
                         `}
                       >
@@ -1419,7 +1399,7 @@ const ProductDetail = () => {
               Quantity
             </h3>
 
-            <div className="inline-flex items-center border border-gray-300 rounded-full mb-6">
+            <div className="inline-flex items-center border border-[#E8DDD3] bg-white rounded-full mb-6">
               <button
                 type="button"
                 onClick={() =>
@@ -1434,12 +1414,12 @@ const ProductDetail = () => {
                 disabled={
                   quantity <= 1
                 }
-                className="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-black disabled:opacity-30"
+                className="w-9 h-9 flex items-center justify-center text-[#2E2E2E] hover:text-[#B76E79] disabled:opacity-30"
               >
                 −
               </button>
 
-              <span className="w-10 text-center text-sm font-medium">
+              <span className="w-10 text-center text-sm font-medium text-[#2E2E2E]">
                 {quantity}
               </span>
 
@@ -1450,15 +1430,13 @@ const ProductDetail = () => {
                     (q) => q + 1
                   )
                 }
-                className="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-black"
+                className="w-9 h-9 flex items-center justify-center text-[#2E2E2E] hover:text-[#B76E79]"
               >
                 +
               </button>
             </div>
 
-            {/* ==================================================
-                ADD TO CART + BUY NOW
-                ================================================== */}
+            {/* ADD TO CART + BUY NOW */}
 
             <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-8">
               <button
@@ -1471,7 +1449,7 @@ const ProductDetail = () => {
                   (requiresSize &&
                     !selectedSize)
                 }
-                className="py-3 sm:py-3.5 border border-[#4B0F14] text-[#4B0F14] bg-white text-xs sm:text-sm uppercase tracking-wide rounded-md hover:bg-[#4B0F14] hover:text-white disabled:opacity-50 transition-colors"
+                className="py-3 sm:py-3.5 border border-[#B76E79] text-[#B76E79] bg-white text-xs sm:text-sm uppercase tracking-wide rounded-md hover:bg-[#B76E79] hover:text-white disabled:opacity-50 transition-colors"
               >
                 {pricingLoading
                   ? "Loading..."
@@ -1495,7 +1473,7 @@ const ProductDetail = () => {
                   (requiresSize &&
                     !selectedSize)
                 }
-                className="py-3 sm:py-3.5 bg-[#4B0F14] text-white text-xs sm:text-sm uppercase tracking-wide rounded-md hover:bg-[#3A0C10] disabled:opacity-50 transition-colors"
+                className="py-3 sm:py-3.5 bg-[#B76E79] text-white text-xs sm:text-sm uppercase tracking-wide rounded-md hover:bg-[#A85F6B] disabled:opacity-50 transition-colors"
               >
                 {pricingLoading
                   ? "Loading..."
@@ -1508,7 +1486,7 @@ const ProductDetail = () => {
 
             {/* PRICE BREAKUP */}
 
-            <div className="border-t border-gray-300 pt-6">
+            <div className="border-t border-[#E8DDD3] pt-6">
               <PriceBreakupCard
                 priceBreakup={
                   priceBreakup
@@ -1526,21 +1504,19 @@ const ProductDetail = () => {
 
             <div className="space-y-2 text-sm text-gray-600 mt-6">
               <div className="flex items-center gap-2">
-                <FiTruck className="w-4 h-4 shrink-0" />
+                <FiTruck className="w-4 h-4 shrink-0 text-[#B76E79]" />
 
                 <span>
-                  Complimentary
-                  insured shipping
-                  on all orders.
+                  Complimentary insured
+                  shipping on all orders.
                 </span>
               </div>
 
               <div className="flex items-center gap-2">
-                <FiRotateCcw className="w-4 h-4 shrink-0" />
+                <FiRotateCcw className="w-4 h-4 shrink-0 text-[#B76E79]" />
 
                 <span>
-                  30-day extended
-                  returns &
+                  30-day extended returns &
                   exchanges.
                 </span>
               </div>
@@ -1557,10 +1533,10 @@ const ProductDetail = () => {
         (item) =>
           item.id !== product.id
       ).length > 0 && (
-        <section className="px-4 sm:px-6 py-10 sm:py-14 bg-[#FBF4EC]">
+        <section className="px-4 sm:px-6 py-10 sm:py-14 bg-[#FAF7F4] border-t border-[#E8DDD3]">
           <div className="max-w-6xl mx-auto">
 
-            <h2 className="font-serif text-2xl text-center text-[#241F1C] mb-8 sm:mb-10 tracking-wide">
+            <h2 className="font-serif text-2xl text-center text-[#2E2E2E] mb-8 sm:mb-10 tracking-wide">
               RECENTLY VIEWED
             </h2>
 
@@ -1572,7 +1548,6 @@ const ProductDetail = () => {
                     product.id
                 )
                 .map((item) => {
-
                   const itemPricing =
                     getDiscountedPricing(
                       item.discountedPrice ??
@@ -1588,7 +1563,7 @@ const ProductDetail = () => {
                       to={`/Products/${item.id}`}
                       className="group block"
                     >
-                      <div className="aspect-square overflow-hidden bg-white rounded-md mb-3">
+                      <div className="aspect-square overflow-hidden bg-white rounded-md mb-3 border border-[#E8DDD3]">
                         <img
                           src={
                             item.image
@@ -1600,7 +1575,7 @@ const ProductDetail = () => {
                         />
                       </div>
 
-                      <p className="text-xs uppercase tracking-wide text-gray-700 mb-1">
+                      <p className="text-xs uppercase tracking-wide text-[#2E2E2E] mb-1">
                         {item.name}
                       </p>
 
@@ -1649,10 +1624,10 @@ const ProductDetail = () => {
           PAIRS BEAUTIFULLY WITH
           ====================================================== */}
 
-      <section className="px-4 sm:px-6 py-12 sm:py-16">
+      <section className="px-4 sm:px-6 py-12 sm:py-16 bg-white">
         <div className="max-w-7xl mx-auto">
 
-          <h2 className="font-serif text-xl sm:text-2xl text-center text-[#241F1C] tracking-wide mb-7 sm:mb-10">
+          <h2 className="font-serif text-xl sm:text-2xl text-center text-[#2E2E2E] tracking-wide mb-7 sm:mb-10">
             PAIRS BEAUTIFULLY WITH
           </h2>
 
@@ -1678,7 +1653,6 @@ const ProductDetail = () => {
           >
             {relatedProducts.map(
               (item) => {
-
                 const itemPricing =
                   getDiscountedPricing(
                     item.price,
@@ -1701,7 +1675,7 @@ const ProductDetail = () => {
                   >
                     {/* IMAGE */}
 
-                    <div className="aspect-square overflow-hidden bg-gray-100 rounded-md mb-2 sm:mb-3">
+                    <div className="aspect-square overflow-hidden bg-[#FAF7F4] rounded-md mb-2 sm:mb-3 border border-[#E8DDD3]">
                       <img
                         src={
                           item.image
@@ -1715,7 +1689,7 @@ const ProductDetail = () => {
 
                     {/* NAME */}
 
-                    <p className="text-[10px] sm:text-xs uppercase tracking-wide text-gray-700 mb-1 line-clamp-2 leading-relaxed">
+                    <p className="text-[10px] sm:text-xs uppercase tracking-wide text-[#2E2E2E] mb-1 line-clamp-2 leading-relaxed">
                       {item.name}
                     </p>
 
@@ -1748,13 +1722,13 @@ const ProductDetail = () => {
           REVIEWS
           ====================================================== */}
 
-      <section className="bg-white px-4 sm:px-6 py-12 sm:py-16">
+      <section className="bg-[#FAF7F4] border-t border-[#E8DDD3] px-4 sm:px-6 py-12 sm:py-16">
         <div className="max-w-3xl mx-auto">
 
           {/* HEADER */}
 
           <div className="text-center mb-8">
-            <h2 className="font-serif text-3xl text-[#241F1C] mb-1">
+            <h2 className="font-serif text-3xl text-[#2E2E2E] mb-1">
               Customer Reviews
             </h2>
 
@@ -1762,6 +1736,26 @@ const ProductDetail = () => {
               See what our clients
               have to say
             </p>
+
+            {/* AVERAGE RATING */}
+
+            {reviews.length > 0 && (
+              <div className="flex items-center justify-center gap-2 mt-3">
+                <Stars
+                  rating={Math.round(
+                    averageRating
+                  )}
+                  size="text-base"
+                />
+
+                <span className="text-sm text-gray-500">
+                  {averageRating.toFixed(
+                    1
+                  )}{" "}
+                  / 5
+                </span>
+              </div>
+            )}
           </div>
 
           {/* WRITE REVIEW */}
@@ -1773,7 +1767,7 @@ const ProductDetail = () => {
                   true
                 )
               }
-              className="group inline-flex items-center gap-3 bg-[#9C7A6B] text-white text-sm font-semibold tracking-wide pl-7 pr-2 py-2 rounded-full hover:bg-[#8a6a5c]"
+              className="group inline-flex items-center gap-3 bg-[#B76E79] text-white text-sm font-semibold tracking-wide pl-7 pr-2 py-2 rounded-full hover:bg-[#A85F6B] transition-colors"
             >
               Write A Review
 
@@ -1785,7 +1779,7 @@ const ProductDetail = () => {
 
           {/* REVIEW LIST */}
 
-          <div className="divide-y divide-gray-200 border-t border-gray-200">
+          <div className="divide-y divide-[#E8DDD3] border-t border-[#E8DDD3]">
             {displayedReviews.map(
               (review) => {
                 const myVote =
@@ -1799,7 +1793,7 @@ const ProductDetail = () => {
                     className="py-6 sm:py-7"
                   >
                     <div className="flex items-start justify-between gap-4 mb-1">
-                      <p className="text-xs font-bold tracking-wide text-[#241F1C] uppercase">
+                      <p className="text-xs font-bold tracking-wide text-[#2E2E2E] uppercase">
                         {review.name}
                       </p>
 
@@ -1816,7 +1810,7 @@ const ProductDetail = () => {
                     />
 
                     {review.title && (
-                      <p className="text-sm font-bold text-[#241F1C] mb-1.5">
+                      <p className="text-sm font-bold text-[#2E2E2E] mb-1.5">
                         {review.title}
                       </p>
                     )}
@@ -1825,9 +1819,10 @@ const ProductDetail = () => {
                       {review.comment}
                     </p>
 
+                    {/* REVIEW IMAGES */}
+
                     {review.images
-                      .length >
-                      0 && (
+                      .length > 0 && (
                       <div className="flex gap-2 mt-3 overflow-x-auto">
                         {review.images.map(
                           (
@@ -1836,7 +1831,7 @@ const ProductDetail = () => {
                           ) => (
                             <div
                               key={i}
-                              className="w-14 h-14 rounded-md overflow-hidden bg-gray-100 shrink-0"
+                              className="w-14 h-14 rounded-md overflow-hidden bg-white border border-[#E8DDD3] shrink-0"
                             >
                               <img
                                 src={
@@ -1854,6 +1849,8 @@ const ProductDetail = () => {
                       </div>
                     )}
 
+                    {/* HELPFUL */}
+
                     <div className="flex items-center gap-4 mt-4">
                       <span className="text-xs text-gray-500">
                         Was this review
@@ -1870,11 +1867,11 @@ const ProductDetail = () => {
                         disabled={
                           !!myVote
                         }
-                        className={`flex items-center gap-1 text-xs ${
+                        className={`flex items-center gap-1 text-xs transition-colors ${
                           myVote ===
                           "helpful"
-                            ? "text-[#4B0F14]"
-                            : "text-gray-500 hover:text-[#4B0F14]"
+                            ? "text-[#B76E79]"
+                            : "text-gray-500 hover:text-[#B76E79]"
                         }`}
                       >
                         <FiThumbsUp className="w-3.5 h-3.5" />
@@ -1894,11 +1891,11 @@ const ProductDetail = () => {
                         disabled={
                           !!myVote
                         }
-                        className={`flex items-center gap-1 text-xs ${
+                        className={`flex items-center gap-1 text-xs transition-colors ${
                           myVote ===
                           "notHelpful"
-                            ? "text-[#4B0F14]"
-                            : "text-gray-500 hover:text-[#4B0F14]"
+                            ? "text-[#B76E79]"
+                            : "text-gray-500 hover:text-[#B76E79]"
                         }`}
                       >
                         <FiThumbsDown className="w-3.5 h-3.5" />
@@ -1925,7 +1922,7 @@ const ProductDetail = () => {
                     (v) => !v
                   )
                 }
-                className="border border-[#4B0F14] text-[#4B0F14] px-6 py-2.5 text-sm font-medium rounded-full hover:bg-[#4B0F14] hover:text-white"
+                className="border border-[#B76E79] text-[#B76E79] px-6 py-2.5 text-sm font-medium rounded-full hover:bg-[#B76E79] hover:text-white transition-colors"
               >
                 {showAllReviews
                   ? "Show Less"

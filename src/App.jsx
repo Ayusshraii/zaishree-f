@@ -18,11 +18,14 @@ import Demifine
  from "./pages/Demifine";
  import MobileBottomNav from "./components/common/bottomNav";
 import { useState } from "react";
+import Checkout from "./pages/Checkout";
+import ScrollToTop from "./components/common/ScrollToTop";
 const App = () => {
 
   const[currentStore , setCurrentStore] = useState("silver")
   return (
     <AuthProvider>
+        <ScrollToTop />
 
           <Routes>
             <Route path="/" element={<Userlayout />} />
@@ -38,6 +41,8 @@ const App = () => {
             <Route  path="/login" element={<Login />} />
             <Route path="/silver" element={<Silver/>} />
             <Route path="/demifine" element={<Demifine/>}/>
+            <Route path="/checkout" element={<Checkout/>}/>
+
           </Routes>
 
           <MobileBottomNav

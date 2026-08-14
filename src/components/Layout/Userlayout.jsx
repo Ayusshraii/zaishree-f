@@ -18,7 +18,12 @@ const Userlayout = () => {
  <div className=''><Banner /></div> 
  <ShopByCategory className=''/>
   <HomeSections  className=''/>
-    <Banner/>
+  <Banner
+  type="sale"
+  height="h-[280px] md:h-[400px]"
+  autoPlay={true}
+  interval={3500}
+/>
   <Promise/>
   <ShopByColor/>
   <ShopByBond className=''/>

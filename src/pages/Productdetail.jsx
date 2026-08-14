@@ -14,6 +14,7 @@ import {
   FiCamera,
   FiStar,
   FiChevronRight,
+  FiChevronLeft,
   FiThumbsUp,
   FiThumbsDown,
 } from "react-icons/fi";
@@ -689,6 +690,50 @@ const ProductDetail = () => {
   const [votedReviews, setVotedReviews] =
     useState({});
 
+  // RELATED PRODUCTS (mobile 2x2 + view all)
+
+  const RELATED_PREVIEW_COUNT = 4;
+
+  const [showAllRelated, setShowAllRelated] =
+    useState(false);
+
+  const displayedRelated = showAllRelated
+    ? relatedProducts
+    : relatedProducts.slice(
+        0,
+        RELATED_PREVIEW_COUNT
+      );
+
+  // ==========================================================
+  // IMAGE GALLERY NAVIGATION
+  // ==========================================================
+
+  const currentImageIndex =
+    product.images.indexOf(selectedImage);
+
+  const handlePrevImage = () => {
+    const prevIndex =
+      currentImageIndex <= 0
+        ? product.images.length - 1
+        : currentImageIndex - 1;
+
+    setSelectedImage(
+      product.images[prevIndex]
+    );
+  };
+
+  const handleNextImage = () => {
+    const nextIndex =
+      currentImageIndex >=
+      product.images.length - 1
+        ? 0
+        : currentImageIndex + 1;
+
+    setSelectedImage(
+      product.images[nextIndex]
+    );
+  };
+
   // ==========================================================
   // REVIEW CALCULATIONS
   // ==========================================================
@@ -1189,7 +1234,7 @@ const ProductDetail = () => {
 
               {/* MAIN IMAGE */}
 
-              <div className="relative flex-1">
+              <div className="relative flex-1 group">
                 <button
                   onClick={
                     handleWishlistToggle
@@ -1207,6 +1252,30 @@ const ProductDetail = () => {
                     <FiHeart className="w-4 h-4 text-[#2E2E2E]" />
                   )}
                 </button>
+
+                {/* PREV / NEXT ARROWS */}
+
+                {product.images.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={handlePrevImage}
+                      aria-label="Previous image"
+                      className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 flex items-center justify-center shadow-sm hover:bg-white hover:scale-105 transition-all"
+                    >
+                      <FiChevronLeft className="w-5 h-5 text-[#2E2E2E]" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleNextImage}
+                      aria-label="Next image"
+                      className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 flex items-center justify-center shadow-sm hover:bg-white hover:scale-105 transition-all"
+                    >
+                      <FiChevronRight className="w-5 h-5 text-[#2E2E2E]" />
+                    </button>
+                  </>
+                )}
 
                 <div className="aspect-[4/5] w-full overflow-hidden rounded-md bg-white">
                   <img
@@ -1621,55 +1690,83 @@ const ProductDetail = () => {
         }
       />
 
-  {/* ======================================================
-    PAIRS BEAUTIFULLY WITH
-    ====================================================== */}
+      {/* ======================================================
+          PAIRS BEAUTIFULLY WITH
+          ====================================================== */}
 
-<section className="px-4 sm:px-6 py-12 sm:py-16 bg-white">
-  <div className="max-w-7xl mx-auto">
+      <section className="px-4 sm:px-6 py-12 sm:py-16 bg-white">
+        <div className="max-w-8xl mx-auto">
 
-    <h2 className="font-serif text-xl sm:text-2xl text-center text-[#2E2E2E] tracking-wide mb-7 sm:mb-10">
-      PAIRS BEAUTIFULLY WITH
-    </h2>
+          <h2 className="font-serif text-xl sm:text-2xl text-center text-[#2E2E2E] tracking-wide mb-7 sm:mb-10">
+            PAIRS BEAUTIFULLY WITH
+          </h2>
 
-    <div
-      className="
-        flex
-        overflow-x-auto
-        snap-x
-        snap-mandatory
-        gap-3
-        sm:gap-5
-        pb-2
-        -mx-4
-        px-4
-        sm:-mx-6
-        sm:px-6
-        [&::-webkit-scrollbar]:hidden
-      "
-      style={{
-        scrollbarWidth: "none",
-      }}
-    >
-      {relatedProducts.map((item) => (
-        <div
-          key={item.id}
-          className="
-            shrink-0
-            snap-start
-            w-[170px]
-            sm:w-[210px]
-            md:w-[230px]
-          "
-        >
-          <ProductCard
-            product={item}
-          />
+          {/* MOBILE: 2x2 GRID + VIEW ALL */}
+
+          <div className="sm:hidden">
+            <div className="grid grid-cols-2 gap-3">
+              {displayedRelated.map((item) => (
+                <div key={item.id}>
+                  <ProductCard product={item} />
+                </div>
+              ))}
+            </div>
+
+            {relatedProducts.length >
+              RELATED_PREVIEW_COUNT && (
+              <div className="flex justify-center mt-6">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowAllRelated(
+                      (v) => !v
+                    )
+                  }
+                  className="border border-[#B76E79] text-[#B76E79] px-6 py-2.5 text-sm font-medium rounded-full hover:bg-[#B76E79] hover:text-white transition-colors"
+                >
+                  {showAllRelated
+                    ? "Show Less"
+                    : `View All ${relatedProducts.length} Products`}
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* DESKTOP / TABLET: HORIZONTAL SCROLL */}
+
+          <div
+            className="
+              hidden
+              sm:flex
+              overflow-x-auto
+              snap-x
+              snap-mandatory
+              gap-5
+              pb-2
+              -mx-6
+              px-6
+              [&::-webkit-scrollbar]:hidden
+            "
+            style={{
+              scrollbarWidth: "none",
+            }}
+          >
+            {relatedProducts.map((item) => (
+              <div
+                key={item.id}
+                className="
+                  shrink-0
+                  snap-start
+                  w-[210px]
+                  md:w-[230px]
+                "
+              >
+                <ProductCard product={item} />
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* ======================================================
           REVIEWS

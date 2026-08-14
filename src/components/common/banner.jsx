@@ -127,8 +127,6 @@ const Banner = ({
 
   // ===================================================
   // RESPONSIVE: track viewport width reactively
-  // (fixes the old one-time `window.innerWidth` check
-  // that never updated on resize/rotate)
   // ===================================================
 
   const [isMobile, setIsMobile] = useState(
@@ -200,7 +198,6 @@ const Banner = ({
 
   // ===================================================
   // DRAG / TOUCH HANDLERS
-  // (pointer events already cover touch, mouse & pen)
   // ===================================================
 
   const handlePointerDown = (e) => {
@@ -248,8 +245,6 @@ const Banner = ({
 
   // ===================================================
   // CALCULATE TRANSFORM
-  // Mobile slides are full-width with a 10px gap, so the
-  // per-slide offset must include that gap — same as desktop.
   // ===================================================
 
   const desktopTransform = `calc(7% - ${currentIndex * 86}% - ${
@@ -277,6 +272,7 @@ const Banner = ({
             gap-[10px]
             h-full
             touch-pan-y
+            ${banners.length > 1 ? "cursor-grab active:cursor-grabbing" : ""}
             ${
               isTransitioning
                 ? "transition-transform duration-700 ease-in-out"
@@ -338,6 +334,12 @@ const Banner = ({
         </div>
       </div>
 
+      {/* =================================================
+          ARROWS
+          Hidden on mobile/tablet — swipe/drag is the
+          interaction there. Only shown from md (desktop) up.
+          ================================================= */}
+
       {/* LEFT ARROW */}
       {showArrows && banners.length > 1 && (
         <button
@@ -345,23 +347,18 @@ const Banner = ({
           onClick={prevSlide}
           aria-label="Previous banner"
           className="
+            hidden
+            md:flex
             absolute
-            left-2
-            sm:left-3
             md:left-5
             top-1/2
             -translate-y-1/2
             z-20
-            w-8
-            h-8
-            sm:w-10
-            sm:h-10
             md:w-12
             md:h-12
             rounded-full
             bg-[#B76E79]
             text-white
-            flex
             items-center
             justify-center
             border
@@ -373,7 +370,7 @@ const Banner = ({
             hover:scale-105
           "
         >
-          <FiChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+          <FiChevronLeft className="w-6 h-6" />
         </button>
       )}
 
@@ -384,23 +381,18 @@ const Banner = ({
           onClick={nextSlide}
           aria-label="Next banner"
           className="
+            hidden
+            md:flex
             absolute
-            right-2
-            sm:right-3
             md:right-5
             top-1/2
             -translate-y-1/2
             z-20
-            w-8
-            h-8
-            sm:w-10
-            sm:h-10
             md:w-12
             md:h-12
             rounded-full
             bg-[#B76E79]
             text-white
-            flex
             items-center
             justify-center
             border
@@ -412,7 +404,7 @@ const Banner = ({
             hover:scale-105
           "
         >
-          <FiChevronRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+          <FiChevronRight className="w-6 h-6" />
         </button>
       )}
     </section>

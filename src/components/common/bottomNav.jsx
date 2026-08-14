@@ -6,11 +6,7 @@ import {
   User2,
 } from "lucide-react";
 
-import {
-  Link,
-  useLocation,
-} from "react-router-dom";
-
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 
 // ============================================================
@@ -68,16 +64,13 @@ export default function MobileBottomNav({
     "silver";
 
   const current =
-    stores.find(
-      (store) => store.id === selected
-    ) || stores[0];
+    stores.find((store) => store.id === selected) || stores[0];
 
   // ==========================================================
   // ACTIVE ROUTES
   // ==========================================================
 
-  const isHome =
-    location.pathname === "/";
+  const isHome = location.pathname === "/";
 
   const isWishlist =
     location.pathname === "/wishlist";
@@ -110,7 +103,7 @@ export default function MobileBottomNav({
           left-0
           right-0
           z-50
-          bg-[#FFFFFF]
+          bg-white
           border-t
           border-[#E8DDD3]
           md:hidden
@@ -122,7 +115,8 @@ export default function MobileBottomNav({
             grid
             grid-cols-5
             items-center
-            py-2
+            h-[64px]
+            px-1
           "
         >
           {/* ==================================================
@@ -137,6 +131,7 @@ export default function MobileBottomNav({
               items-center
               justify-center
               gap-1
+              h-full
               text-xs
               transition-colors
               ${
@@ -160,15 +155,22 @@ export default function MobileBottomNav({
 
           <Link
             to="/wishlist"
-            className="
+            className={`
               relative
               flex
               flex-col
               items-center
               justify-center
               gap-1
+              h-full
               text-xs
-            "
+              transition-colors
+              ${
+                isWishlist
+                  ? "text-[#B76E79]"
+                  : "text-[#2E2E2E]/55"
+              }
+            `}
           >
             <div className="relative">
               <Heart
@@ -180,6 +182,8 @@ export default function MobileBottomNav({
                     : "text-[#2E2E2E]/55"
                 }
               />
+
+              {/* Wishlist Count */}
 
               {wishlistCount > 0 && (
                 <span
@@ -195,7 +199,7 @@ export default function MobileBottomNav({
                     justify-center
                     rounded-full
                     bg-[#B76E79]
-                    text-[#FFFFFF]
+                    text-white
                     text-[10px]
                     font-medium
                   "
@@ -231,6 +235,7 @@ export default function MobileBottomNav({
               items-center
               justify-center
               gap-1
+              h-full
               text-xs
               text-[#2E2E2E]/55
               transition-colors
@@ -242,7 +247,9 @@ export default function MobileBottomNav({
               className="text-[#B76E79]"
             />
 
-            <span>{current.shortLabel}</span>
+            {/* Always show Store */}
+
+            <span>Store</span>
           </button>
 
           {/* ==================================================
@@ -251,15 +258,22 @@ export default function MobileBottomNav({
 
           <Link
             to="/cart"
-            className="
+            className={`
               relative
               flex
               flex-col
               items-center
               justify-center
               gap-1
+              h-full
               text-xs
-            "
+              transition-colors
+              ${
+                isCart
+                  ? "text-[#B76E79]"
+                  : "text-[#2E2E2E]/55"
+              }
+            `}
           >
             <div className="relative">
               <ShoppingBag
@@ -271,6 +285,8 @@ export default function MobileBottomNav({
                     : "text-[#2E2E2E]/55"
                 }
               />
+
+              {/* Cart Count */}
 
               {cartCount > 0 && (
                 <span
@@ -286,7 +302,7 @@ export default function MobileBottomNav({
                     justify-center
                     rounded-full
                     bg-[#B76E79]
-                    text-[#FFFFFF]
+                    text-white
                     text-[10px]
                     font-medium
                   "
@@ -321,6 +337,7 @@ export default function MobileBottomNav({
               items-center
               justify-center
               gap-1
+              h-full
               text-xs
               transition-colors
               ${
@@ -376,7 +393,7 @@ export default function MobileBottomNav({
               bottom-0
               left-0
               right-0
-              bg-[#FFFFFF]
+              bg-white
               rounded-t-2xl
               border-t
               border-[#E8DDD3]
@@ -384,7 +401,9 @@ export default function MobileBottomNav({
               pb-[calc(env(safe-area-inset-bottom)+16px)]
             "
           >
-            {/* DRAG HANDLE */}
+            {/* ==================================================
+                DRAG HANDLE
+                ================================================== */}
 
             <div
               className="
@@ -439,7 +458,7 @@ export default function MobileBottomNav({
                       store.id === selected
                         ? `
                           bg-[#B76E79]
-                          text-[#FFFFFF]
+                          text-white
                         `
                         : `
                           bg-[#FAF7F4]

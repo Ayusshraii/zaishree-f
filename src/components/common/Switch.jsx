@@ -15,7 +15,7 @@ const Switch = () => {
   const index = OPTIONS.indexOf(selected);
 
   return (
-    <div className="px-4 sm:px-6 py-6 sm:py-8 flex justify-center">
+    <div className="py-5 sm:py-8 flex justify-center">
       <div
         className="
           relative
@@ -28,8 +28,8 @@ const Switch = () => {
           rounded-full
           border
           border-[#E8DDD3]
-          bg-[#FFFFFF]
-          p-[2px]
+          bg-[#FAF7F4]
+          py-[12px]
           overflow-hidden
         "
       >
@@ -37,7 +37,7 @@ const Switch = () => {
         <div
           className="
             absolute
-            top-[2px]
+            top-[5px]
             bottom-[2px]
             rounded-full
             bg-[#B76E79]
@@ -47,7 +47,8 @@ const Switch = () => {
           "
           style={{
             width: "calc((100% - 4px) / 3)",
-            left: `calc(2px + ${index} * ((100% - 4px) / 3))`,
+            height: "calc(100% - 10px)",
+            left: `calc(4px + ${index} * ((100% - 4px) / 3))`,
           }}
         />
 
@@ -80,8 +81,7 @@ const Switch = () => {
             }
           `}
         >
-          <span className="hidden sm:inline">Gold Jewellery</span>
-          <span className="sm:hidden">Gold</span>
+          Gold Jewellery
         </Link>
 
         {/* Silver */}
@@ -113,8 +113,7 @@ const Switch = () => {
             }
           `}
         >
-          <span className="hidden sm:inline">Silver Jewellery</span>
-          <span className="sm:hidden">Silver</span>
+          Silver Jewellery
         </Link>
 
         {/* Demifine */}
@@ -146,8 +145,7 @@ const Switch = () => {
             }
           `}
         >
-          <span className="hidden sm:inline">Demifine Jewellery</span>
-          <span className="sm:hidden">Demifine</span>
+          Demifine Jewellery
         </Link>
       </div>
     </div>

@@ -50,20 +50,19 @@ const ProductSection = ({ section }) => {
         </>
       ) : (
         <>
-          <h2 className="text-3xl font-serif underline underline-offset-4 mb-6">
-            {section.title}
-          </h2>
+          <div className="flex justify-between items-center gap-3 mb-6">
+            <h2 className="text-3xl font-serif underline underline-offset-4">
+              {section.title}
+            </h2>
+            <button className="text-sm font-medium hover:underline shrink-0 whitespace-nowrap">
+              View All →
+            </button>
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
             {gridProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
-          </div>
-
-          <div className="flex justify-center mt-6">
-            <button className="text-sm font-medium hover:underline">
-              View All
-            </button>
           </div>
         </>
       )}

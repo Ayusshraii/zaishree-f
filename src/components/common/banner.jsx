@@ -262,9 +262,9 @@ const Banner = ({
   // ===================================================
 
   return (
-    <section className="relative w-full overflow-hidden bg-white py-3 md:py-4">
+    <section className="relative w-full overflow-hidden bg-white py-3 md:py-4 display: flex items-center justify-center">
       {/* VIEWPORT */}
-      <div className="w-full h-[180px] sm:h-[240px] md:h-[320px] lg:h-[400px] overflow-hidden">
+      <div className=" w-[92%] sm:w-full h-[180px] sm:h-[240px] md:h-[320px] lg:h-[400px] overflow-hidden ">
         {/* SLIDES CONTAINER */}
         <div
           className={`

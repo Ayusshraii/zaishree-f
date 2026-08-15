@@ -136,10 +136,9 @@ export default function MobileBottomNav({
               h-full
               text-xs
               transition-colors
-              ${
-                isHome
-                  ? "text-[#B76E79]"
-                  : "text-[#2E2E2E]/55"
+              ${isHome
+                ? "text-[#B76E79]"
+                : "text-[#2E2E2E]/55"
               }
             `}
           >
@@ -167,10 +166,9 @@ export default function MobileBottomNav({
               h-full
               text-xs
               transition-colors
-              ${
-                isWishlist
-                  ? "text-[#B76E79]"
-                  : "text-[#2E2E2E]/55"
+              ${isWishlist
+                ? "text-[#B76E79]"
+                : "text-[#2E2E2E]/55"
               }
             `}
           >
@@ -252,7 +250,7 @@ export default function MobileBottomNav({
 
             {/* Always show Store */}
 
-            <span>Switch</span>
+            <span>Switch Store</span>
           </button>
 
           {/* ==================================================
@@ -271,10 +269,9 @@ export default function MobileBottomNav({
               h-full
               text-xs
               transition-colors
-              ${
-                isCart
-                  ? "text-[#B76E79]"
-                  : "text-[#2E2E2E]/55"
+              ${isCart
+                ? "text-[#B76E79]"
+                : "text-[#2E2E2E]/55"
               }
             `}
           >
@@ -343,10 +340,9 @@ export default function MobileBottomNav({
               h-full
               text-xs
               transition-colors
-              ${
-                isProfile
-                  ? "text-[#B76E79]"
-                  : "text-[#2E2E2E]/55"
+              ${isProfile
+                ? "text-[#B76E79]"
+                : "text-[#2E2E2E]/55"
               }
             `}
           >
@@ -457,13 +453,12 @@ export default function MobileBottomNav({
                     font-medium
                     transition-all
 
-                    ${
-                      store.id === selected
-                        ? `
+                    ${store.id === selected
+                      ? `
                           bg-[#B76E79]
                           text-white
                         `
-                        : `
+                      : `
                           bg-[#FAF7F4]
                           text-[#2E2E2E]
                           border

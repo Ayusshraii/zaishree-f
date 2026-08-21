@@ -1,0 +1,200 @@
+import React from "react";
+import { Link } from "react-router-dom";
+
+const SECTIONS = [
+  {
+    title: "1. Eligibility and use",
+    body: [
+      "You must provide true, accurate, and complete information during registration and are responsible for all activities under your account.",
+      "You must be competent to contract under applicable laws to use our Services.",
+    ],
+  },
+  {
+    title: "2. Accuracy of information",
+    body: [
+      "Neither we nor third parties guarantee the accuracy or completeness of information on the Platform.",
+      "We are not liable for any such inaccuracies or errors to the fullest extent permitted by law.",
+    ],
+  },
+  {
+    title: "3. Use at your own risk",
+    body: [
+      "Your use of any content or materials is entirely at your own risk.",
+      "You are responsible to ensure the Services meet your requirements.",
+    ],
+  },
+  {
+    title: "4. Intellectual property",
+    body: [
+      "All content on this Platform is either owned by or licensed to Zaishree.",
+      "You may not copy, reproduce, or exploit any part of the Platform without written permission.",
+    ],
+  },
+  {
+    title: "5. Prohibited use",
+    body: [
+      "You agree not to use the Platform for any unlawful or prohibited activities, or in violation of these Terms, or Indian/local laws.",
+    ],
+  },
+  {
+    title: "6. Third-party links",
+    body: [
+      "The Platform may contain links to third-party websites for convenience.",
+      "We do not control or endorse those sites and are not responsible for their content or policies.",
+    ],
+  },
+  {
+    title: "7. Legal agreement",
+    body: [
+      "By initiating a transaction on the Platform, you enter into a legally binding contract with the Platform Owner.",
+    ],
+  },
+  {
+    title: "8. Payments",
+    body: [
+      "You agree to pay all charges associated with your purchases, including applicable taxes and delivery charges.",
+    ],
+  },
+  {
+    title: "9. Indemnification",
+    body: [
+      "You agree to indemnify and hold harmless Zaishree, Shop Sangam, and their officers, employees, and agents against any third-party claims, legal fees, or penalties arising from your breach of these Terms, Privacy Policy, or any law.",
+    ],
+  },
+  {
+    title: "10. Force majeure",
+    body: [
+      "We are not liable for any failure to perform due to causes beyond our control, including natural disasters, war or acts of God, government restrictions, or internet or technical failures.",
+    ],
+  },
+  {
+    title: "11. Governing law",
+    body: [
+      "These Terms shall be governed by and interpreted in accordance with the laws of India.",
+    ],
+  },
+  {
+    title: "12. Jurisdiction",
+    body: [
+      "All disputes shall be subject to the exclusive jurisdiction of courts in East Delhi, Delhi, India.",
+    ],
+  },
+  {
+    title: "13. Modifications",
+    body: [
+      "We may change or update these Terms at any time. It is your responsibility to review them periodically.",
+    ],
+  },
+  {
+    title: "14. Contact us",
+    body: [
+      "For questions or concerns about these Terms, contact us at support@zaishree.com.",
+    ],
+  },
+];
+
+export default function TermsAndConditions() {
+  return (
+    <div className="min-h-screen bg-[#FFFFFF] text-[#2E2E2E] font-sans">
+      {/* Hero */}
+      <section className="bg-[#FAF7F4] border-b border-[#E8DDD3]">
+        <div className="max-w-3xl mx-auto px-6 pt-16 pb-12 md:pt-20 md:pb-14">
+          <p className="text-xs tracking-[0.2em] uppercase text-[#B76E79] font-medium mb-3">
+            Legal
+          </p>
+          <h1 className="font-serif text-3xl md:text-5xl text-[#2E2E2E] mb-4">
+            Terms & Conditions
+          </h1>
+          <p className="text-sm text-[#2E2E2E]/65 max-w-xl leading-relaxed">
+            Welcome to Zaishree.com. By accessing or using our website, you
+            agree to comply with and be bound by the following Terms and
+            Conditions.
+          </p>
+        </div>
+      </section>
+
+      {/* Intro / general information */}
+      <section className="max-w-3xl mx-auto px-6 pt-14">
+        <h2 className="font-serif text-xl text-[#2E2E2E] mb-3">
+          General information
+        </h2>
+        <div className="space-y-3 mb-4">
+          <p className="text-sm text-[#2E2E2E]/70 leading-relaxed">
+            Zaishree is an online store offering affordable demi-fine
+            jewelry, including 18k gold-plated stainless steel and 92.5
+            sterling silver products designed for everyday wear.
+          </p>
+          <p className="text-sm text-[#2E2E2E]/70 leading-relaxed">
+            This document is an electronic record in terms of the
+            Information Technology Act, 2000 and rules thereunder, and the
+            amended provisions pertaining to electronic records in various
+            statutes. This record is generated by a computer system and
+            does not require any physical or digital signatures.
+          </p>
+          <p className="text-sm text-[#2E2E2E]/70 leading-relaxed">
+            This document is published in accordance with Rule 3(1) of the
+            Information Technology (Intermediaries Guidelines) Rules, 2011,
+            which requires publishing the rules, regulations, privacy
+            policy, and Terms of Use for access or usage of the domain name{" "}
+            <a
+              href="https://www.zaishree.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#B76E79] underline underline-offset-2 hover:text-[#A85F6B]"
+            >
+              www.zaishree.com
+            </a>{" "}
+            (hereinafter referred to as the "Website"), including the
+            related mobile site and mobile application ("Platform").
+          </p>
+          <p className="text-sm text-[#2E2E2E]/70 leading-relaxed">
+            The Platform is owned and operated by Shop Sangam, the parent
+            company of the brand Zaishree, having its registered office at{" "}
+           
+            (hereinafter referred to as the "Platform Owner", "we", "us", or
+            "our").
+          </p>
+          <p className="text-sm text-[#2E2E2E]/70 leading-relaxed">
+            By accessing, browsing, or otherwise using the Platform, YOU
+            AGREE TO BE LEGALLY BOUND by the following Terms and Conditions
+            ("Terms of Use"), which govern your use of our website,
+            products, and services (collectively, the "Services").
+          </p>
+        </div>
+      </section>
+
+      {/* Numbered clauses */}
+      <section className="max-w-3xl mx-auto px-6 py-14">
+        <div className="space-y-10">
+          {SECTIONS.map((s) => (
+            <div key={s.title}>
+              <h2 className="font-serif text-xl text-[#2E2E2E] mb-3">{s.title}</h2>
+              <div className="space-y-3">
+                {s.body.map((p, i) => (
+                  <p key={i} className="text-sm text-[#2E2E2E]/70 leading-relaxed">
+                    {p}
+                  </p>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Closing */}
+      <section className="bg-[#FAF7F4] border-t border-[#E8DDD3]">
+        <div className="max-w-3xl mx-auto px-6 py-12 text-center">
+          <p className="text-sm text-[#2E2E2E]/65 mb-3">
+            Looking for shipping, returns, or warranty details?
+          </p>
+          <Link
+            to="/policy"
+            className="text-sm tracking-wide uppercase text-[#B76E79] border-b border-[#B76E79] pb-0.5 hover:text-[#A85F6B] hover:border-[#A85F6B] transition-colors"
+          >
+            View our policies
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+}

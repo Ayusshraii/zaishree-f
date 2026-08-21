@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   FiInstagram,
   FiFacebook,
@@ -13,20 +14,19 @@ import {
 import { GiGems } from "react-icons/gi";
 
 const helpLinks = [
-  "Track your order",
-  "Shipping & delivery",
-  "Returns & exchanges",
-  "Ring size guide",
-  "Care instructions",
-  "FAQs",
+  { label: "Track your order", to: "/track-order" },
+  { label: "Shipping & delivery", to: "/policy#shipping" },
+  { label: "Returns & exchanges", to: "/policy#returns" },
+  { label: "Ring size guide", to: "/size-guide" },
+  { label: "Care instructions", to: "/policy#warranty" },
 ];
 
 const companyLinks = [
-  "Our story",
-  "Craftsmanship",
-  "Sustainability",
-  "Careers",
-  "Press",
+  { label: "Our story", to: "/about" },
+  { label: "Craftsmanship", to: "/about#craftsmanship" },
+  { label: "Sustainability", to: "/about#sustainability" },
+  { label: "Careers", to: "/careers" },
+  { label: "Press", to: "/press" },
 ];
 
 const trustBadges = [
@@ -45,13 +45,13 @@ function FooterColumn({ title, links }) {
 
       <ul className="space-y-2.5">
         {links.map((link) => (
-          <li key={link}>
-            <a
-              href="#"
+          <li key={link.label}>
+            <Link
+              to={link.to}
               className="text-sm text-[#2E2E2E]/75 hover:text-[#B76E79] transition-colors duration-200"
             >
-              {link}
-            </a>
+              {link.label}
+            </Link>
           </li>
         ))}
       </ul>
@@ -204,9 +204,12 @@ export default function Footer() {
               <li className="flex items-center gap-2.5 text-sm text-[#2E2E2E]/75">
                 <FiMail className="w-4 h-4 text-[#B76E79] shrink-0" />
 
-                <span>
-                  hello@gamil.com
-                </span>
+                <Link
+                  to="/contact"
+                  className="hover:text-[#B76E79] transition-colors duration-200"
+                >
+                  hello@zaishree.com
+                </Link>
               </li>
 
               <li className="flex items-center gap-2.5 text-sm text-[#2E2E2E]/75">
@@ -218,6 +221,47 @@ export default function Footer() {
               </li>
 
             </ul>
+             
+            <div className="flex flex-col">
+            <Link
+              to="/contact"
+              className="
+                inline-flex
+                items-center
+                gap-1.5
+                text-xs
+                tracking-[0.15em]
+                uppercase
+                text-[#B76E79]
+                pb-0.5
+                hover:text-[#A85F6B]
+                hover:border-[#A85F6B]
+                transition-colors
+                mb-3
+              "
+            >
+              Contact us
+            </Link>
+                        <Link
+              to="/policy"
+              className="
+                inline-flex
+                items-center
+                gap-1.5
+                text-xs
+                tracking-[0.15em]
+                uppercase
+                text-[#B76E79]
+                pb-0.5
+                hover:text-[#A85F6B]
+                hover:border-[#A85F6B]
+                transition-colors
+                mb-3
+              "
+            >
+              Our Policy
+            </Link>
+            </div>
 
             {/* SOCIAL ICONS */}
             <div className="flex gap-3">
@@ -302,29 +346,14 @@ export default function Footer() {
 
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
 
-            <a
-              href="#"
-              className="
-                text-xs
-                text-[#2E2E2E]/55
-                hover:text-[#B76E79]
-                transition-colors
-              "
-            >
-              Privacy policy
-            </a>
+           
 
-            <a
-              href="#"
-              className="
-                text-xs
-                text-[#2E2E2E]/55
-                hover:text-[#B76E79]
-                transition-colors
-              "
+            <Link
+              to="/TermsAndConditions"
+              className="text-xs text-[#2E2E2E]/55 hover:text-[#B76E79] transition-colors"
             >
-              Terms of service
-            </a>
+              Terms and Condition
+            </Link>
 
             <a
               href="#"

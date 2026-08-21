@@ -14,12 +14,15 @@ import Profile from "./pages/Profile";
 import BondProducts from "./pages/Bondproducts";
 import Login from "./pages/login";
 import Silver from "./pages/Silver";
-import Demifine
- from "./pages/Demifine";
+import Demifine from "./pages/Demifine";
  import MobileBottomNav from "./components/common/bottomNav";
 import { useState } from "react";
 import Checkout from "./pages/Checkout";
 import ScrollToTop from "./components/common/ScrollToTop";
+import About from "./pages/about";
+import Contact from "./pages/contact";
+import TermsAndConditions from "./pages/tnc"
+import PrivacyPolicy from "./pages/privacy";
 const App = () => {
 
   const[currentStore , setCurrentStore] = useState("silver")
@@ -42,6 +45,11 @@ const App = () => {
             <Route path="/silver" element={<Silver/>} />
             <Route path="/demifine" element={<Demifine/>}/>
             <Route path="/checkout" element={<Checkout/>}/>
+            <Route path="/about" element={<About/>}/>
+             <Route path="/contact" element={<Contact/>}/>
+             <Route path ="/TermsAndConditions" element={<TermsAndConditions/>}/>
+             <Route path="/policy" element={<PrivacyPolicy />} />
+
 
           </Routes>
 
